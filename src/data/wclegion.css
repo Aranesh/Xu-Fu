@@ -1,0 +1,23 @@
+a.wcskull_n {
+    display: block;
+    width: 78px;
+    height: 56px;
+    text-decoration: none;
+    background: url("../images/wcskull_n.png");
+    }
+
+a.wcskull_n:hover {
+    background-position: -78px 0;
+    }
+
+a.wcskull_c {
+    display: block;
+    width: 78px;
+    height: 56px;
+    text-decoration: none;
+    background: url("../images/wcskull_c.png");
+    }
+
+a.wcskull_c:hover {
+    background-position: -78px 0;
+    }

@@ -1,0 +1,239 @@
+div.news_main_wrapper {
+    max-width: 900px;
+    display: inline-block;
+}
+
+div.news_main_inner {
+    padding: 22px;
+    display: inline-block;
+}
+
+div.news_content_block {
+    background-color: #ffffff;
+    box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.3);
+    transition: box-shadow 0.3s ease-in-out;
+    margin: 10px;
+    padding: 0px;
+    display: inline-block;
+}
+
+
+
+div.news_title {
+    float: left;
+    text-align: left;
+    display: inline-block;
+    margin: 0 0 0 0;
+    font-family: MuseoSans-500,Roboto;
+    font-size: 26px;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: 0 1px 1px rgba(255,255,255,0.4);
+    width: 100%;
+}
+
+div.news_edit {
+    position: absolute;
+    top: 0px;
+}
+
+.file_upload {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+.file_upload + label {
+    margin-top: 5px;
+    width: 106px;
+    height: 21px;
+    background-image: url(../images/articles_edit_image.png);
+    display: inline-block;
+    cursor: pointer;
+}
+
+.submit_button {
+  color: #494949 !important;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: #ffffff;
+  padding: 2px;
+  border: 2px solid #494949 !important;
+  display: inline;
+  transition: all 0.4s ease 0s;
+  cursor: pointer;
+}
+.submit_button:hover {
+  color: #ffffff !important;
+  background: #f6b93b;
+  border-color: #f6b93b !important;
+}
+
+div.news_subtitle {
+    float: left;
+    text-align: left;
+    margin: 15 0 25 0;
+    font-family: MuseoSans-300,Roboto;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: 0 1px 1px rgba(255,255,255,0.4);
+    color: #707070;
+}
+div.news_date {
+    float: right;
+    text-align: right;
+    display: inline-block;
+    margin: 15 0 25 0;
+    font-family: MuseoSans-300,Roboto;
+    font-size: 14px;
+    text-decoration: none;
+    text-shadow: 0 1px 1px rgba(255,255,255,0.4);
+    color: #707070;
+}
+
+
+div.news_content {
+    float: left;
+    width: 100%;
+    text-align: left;
+    margin: 25 0 0 0;
+    color: #000000;
+    font-family: MuseoSans-300,Roboto;
+    font-size: 16px;
+    font-weight: normal;
+    text-decoration: none;
+    text-shadow: 0 1px 1px rgba(255,255,255,0.4);
+}
+
+img.news_title {
+    min-width: 5%;
+    width: 100%;
+}
+
+
+
+/* article images */
+
+img.news_image {
+    border-radius: 2px;
+    max-width: 830px;
+}
+img.news_left {
+    display: block;
+    margin: 8 8 8 0;
+}
+img.news_floatleft {
+    float: left;
+    margin: 8 8 8 0;
+}
+img.news_floatright {
+    float: right;
+    margin: 8 0 8 8;
+}
+div.news_right {
+    text-align: right;
+    margin: 8 0 8 8;
+}
+div.news_center
+{
+    text-align: center;
+    margin: 8px;
+}
+
+div.social_media_buttons {
+  position: absolute;
+  display: block;
+  margin: 5 0 0 10;
+}
+
+.soc_m_share {
+  margin-left: 5px;
+  filter: url(filters.svg#grayscale);
+  filter: gray;
+  -webkit-filter: grayscale(1);
+  transition: 0.6s all;
+}
+.soc_m_share:hover {
+  filter: none;
+  -webkit-filter: none;
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+
+.socm_fb {
+  opacity: 0.6;
+  filter: alpha(opacity=60);
+}
+.socm_pint {
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
+
+/* Headlines formatting */
+
+h1.news {
+    color: #103672;
+    font-family: MuseoSans-700,Roboto;
+    font-size: 22px;
+    font-weight: bold;
+    margin-left: 8px;
+    line-height: 40px;
+}
+h2.news {
+    color: #0e2954;
+    font-family: MuseoSans-700,Roboto;
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 8px;
+    line-height: 38px;
+}
+h3.news {
+    color: #0e2954;
+    font-family: MuseoSans-500,Roboto;
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 8px;
+    line-height: 28px;
+}
+
+a.h3_bullet:before {
+    content:"• ";
+}
+/* Link formatting */
+
+
+a.weblink
+{
+    font-family: MuseoSans-300,Roboto;
+    font-size: 16px;
+    -webkit-transition-property: color; /* Safari */
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-property: color;
+    transition-duration: 0.4s;
+    color: #2a5889;
+    font-weight: bold;
+    cursor: pointer;
+}
+a.weblink:hover {
+    color: #b5d1ff;
+}
+
+
+a.creatorlink
+{
+    font-family: MuseoSans-300,Roboto;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 14px;
+    -webkit-transition-property: color; /* Safari */
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-property: color;
+    transition-duration: 0.4s;
+    color: #2a5889;
+}
+a.creatorlink:hover {
+    color: #b5d1ff;
+}

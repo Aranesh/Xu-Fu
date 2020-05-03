@@ -1,0 +1,2474 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-03 15:22+0200\n"
+"PO-Revision-Date: 2020-01-06 15:54+0000\n"
+"Last-Translator: \n"
+"Language-Team: English (USA)\n"
+"Language: en_US\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Loco-Source-Locale: en_DE\n"
+"X-Generator: Poedit 2.0.6\n"
+"X-Poedit-Basepath: ../../..\n"
+"X-Loco-Parser: loco_parse_po\n"
+"X-Poedit-SearchPath-0: index.php\n"
+
+# Specific string for Spanish translation only. No need to translate into other languages (leave empty)
+msgid "PetCardAnyLevelES"
+msgstr ""
+
+#: Main Menu on top Button - Home
+msgid "MainbarStart"
+msgstr "Home"
+
+#: Main Menu on top Button - About
+msgid "MainbarAbout"
+msgstr "Chi Siamo"
+
+#: Main Menu on top Button - Useful Addons
+msgid "MainbarAddons"
+msgstr "Addon Utili"
+
+#: Main Menu on top Button - Pets & Statistics
+msgid "MainbarStatistics"
+msgstr "Mascotte e Statistiche"
+
+#: Main Menu on top Button - Blog
+msgid "MainbarBlog"
+msgstr "Blog"
+
+#: Main Menu on top Button - Legion
+msgid "MainbarLegion"
+msgstr "Legion"
+
+#: Main Menu on top Button - Legion World Quests
+msgid "MainbarLegionWQ"
+msgstr "Missioni Mondiali di Legion"
+
+#: Main Menu on top Button - Family Familiar
+msgid "MainbarFF"
+msgstr "Mascotte delle mascotte"
+
+#: Main Menu on top Button - Sternfathom's Pet Journal
+msgid "MainbarSternfathom"
+msgstr "Registro dei Combattenti di Asprofato"
+
+#: Main Menu on top Button - Legion Ready Checker
+msgid "MainbarLegionReady"
+msgstr "Legion Ready-Checker"
+
+#: Main Menu on top Button - Draenor
+msgid "MainBarDraenor"
+msgstr "Draenor"
+
+#: Main Menu on top Button - Pet Menagerie
+msgid "MainbarMenagerie"
+msgstr "Il Serraglio"
+
+#: Main Menu on top Button - Draenor Master Tamers
+msgid "MainbarDrMasterTamers"
+msgstr "Maestri Allenatori di Mascotte di Dreanor"
+
+#: Main Menu on top Button - Tanaan Jungle
+msgid "MainbarTanaan"
+msgstr "Giungla di Tanaan"
+
+#: Main Menu on top Button - Pandaria
+msgid "MainbarPandaria"
+msgstr "Pandaria"
+
+#: Main Menu on top Button - Pandaria's Master Tamers
+msgid "MainbarPandaTamers"
+msgstr "Maestri Allenatori di Mascotte di Pandaria"
+
+#: Main Menu on top Button - Pandaren Spirit Tamers
+msgid "MainbarPandaSpirits"
+msgstr "Spiriti dei Pandaren"
+
+#: Main Menu on top Button - The Beasts of Fable
+msgid "MainbarBeastsFable"
+msgstr "Bestie Leggendarie"
+
+#: Main Menu on top Button - Little Tommy Newcomer
+msgid "MainbarTommy"
+msgstr "Piccolo Tommy Benvenuti"
+
+#: Main Menu on top Button - The Celestial Tournament
+msgid "MainbarCelestialTournament"
+msgstr "Torneo dei Celestiali"
+
+#: Main Menu on top Button - Miscellaneous
+msgid "MainbarMisc"
+msgstr "Varie"
+
+#: Main Menu on top Button - The Darkmoon Faire
+msgid "MainbarDarkmoon"
+msgstr "Fiera di Lunacupa"
+
+#: Main Menu on top Button - An Awfully Big Adventure
+msgid "MainbarElekk"
+msgstr "Una grande avventura"
+
+# Main Menu on top Button - Miscellaneous
+msgid "Miscellaneous"
+msgstr "Varie"
+
+# Strategy pages link to Main Article
+msgid "MainArticle"
+msgstr "Articolo Principale"
+
+# Strategy pages link to Alternatives
+msgid "AlternativeMenu"
+msgstr "Alternative"
+
+# Strategy pages link to Alternatives - tooltip
+msgid "AlternativeTooltip"
+msgstr "Mascotte usate in questa battaglia:"
+
+# Strategy pages suggest strategy button - tooltip
+msgid "SuggestTooltip"
+msgstr "Suggerisci una Strategia"
+
+# Strategy pages suggest strategy button - tootlip text
+msgid "SuggestTooltipText"
+msgstr "Xu-Fu è sempre alla ricerca di nuove tattiche per il sito!<br>Clicca qui per suggerire una nuova strategia contro "
+
+# Strategy pages suggest strategy - ModalWindow text
+msgid "SuggestModalText"
+msgstr "Xu-Fu è sempre lieto di testare nuove strategie! Quando suggerisci delle strategie, tieni presente che sono interessato principalmente alle strategie che non richiedono tratti specifici.<br><br>Se lasci il tuo indirizzo email, ti contatterò direttamente quando avrò avuto modo di testare la strategia!"
+
+# Strategy pages suggest strategy - Thank you title after submission
+msgid "SuggestThankYouTitle"
+msgstr "Grazie!"
+
+# Strategy pages suggest strategy - Thank you text after submission - email was provided
+msgid "SuggestThankYouEmailYes"
+msgstr "Il tuo suggerimento è stato inoltrato! <br><br> Un'email contenente le indicazioni fornite è stata inviata anche al tuo indirizzo. <br><br>Proverò la tua strategia appena possibile! Ti farò sapere se posso aggiungere la strategia.<br><br>"
+
+# Strategy pages suggest strategy - Thank you text after submission - NO email was provided
+msgid "SuggestThankYouEmailNo"
+msgstr "Il tuo suggerimento è stato inoltrato! <br><br>Proverò la tua strategia appena possibile.<br> Tieni presente che non sarà possibile includere tutte le strategie. Se non vedi la tua qui e vuoi saperne il motivo, non esitare a contattarmi!<br>Ecco un riepilogo delle informazioni inviate:<br><br>"
+
+# Strategy pages suggest strategy - Close window button
+msgid "SuggestCloseWindow"
+msgstr "Chiudi la Finestra"
+
+# Strategy pages suggest strategy - Title for summary of strategy suggestion
+msgid "SuggestYourStrat"
+msgstr "La tua strategia consigliata:"
+
+# Snippet - Word "Pet" - being used in several places
+msgid "SnipPet"
+msgstr "Mascotte"
+
+# Snippet - Word "Skill" - being used in several places for example battle table
+msgid "SnipSkill"
+msgstr "Abilità"
+
+# Forms - Search field Placeholder
+msgid "SearchField"
+msgstr "Cerca..."
+
+# Forms - Prompt for name of submitter
+msgid "FormYourName"
+msgstr "Il tuo Nome:"
+
+# Forms - Prompt for email of submitter
+msgid "FormYourMail"
+msgstr "La tua Email:"
+
+# Forms - Send button
+msgid "FormButtonSend"
+msgstr "Invia"
+
+# Forms - Cancel button
+msgid "FormButtonCancel"
+msgstr "Annulla"
+
+# Forms - Placeholder for optional entries
+msgid "FormOptional"
+msgstr "(opzionale)"
+
+# Forms - Placeholder for strategy suggestion of text input
+msgid "FormSuggestionPlaceholder"
+msgstr "Aggiungi qui i passaggi della tua strategia"
+
+# Forms - Placeholder for name of pet input
+msgid "FormNamePlaceholder"
+msgstr "(Nome)"
+
+# Forms - Comment System - Prompt for posting the first comment
+msgid "FormComFirstPost"
+msgstr "Scrivi un commento per primo:"
+
+# Forms - Comment System - Placeholder Name
+msgid "FormComNamePlaceholder"
+msgstr "Nome (opzionale)"
+
+# Forms - Comment System - Placeholder Email
+msgid "FormComEmailPlaceholder"
+msgstr "Email (opzionale, non verrà pubblicata)"
+
+# Forms - Comment System - Placeholder Message
+msgid "FormComCommentPlaceholder"
+msgstr "Scrivi qui il tuo commento"
+
+# Forms - Comment System - Button Submit
+msgid "FormComButtonSubmit"
+msgstr "Invia"
+
+# Forms - Comment System - Button Edit
+msgid "FormComButtonEdit"
+msgstr "Modifica"
+
+# Forms - Comment System - Button Delete
+msgid "FormComButtonDelete"
+msgstr "Elimina"
+
+# Forms - Comment System - Button Respond
+msgid "FormComButtonRespond"
+msgstr "Rispondi"
+
+# Forms - Comment System - Formatting Bold
+msgid "FormComFormatBold"
+msgstr "grassetto"
+
+# Forms - Comment System - Formatting Italic
+msgid "FormComFormatItalic"
+msgstr "corsivo"
+
+# Forms - Comment System - Formatting Underline
+msgid "FormComFormatUnderline"
+msgstr "sottolineato"
+
+# Forms - Comment System - Title of comments. Format is: NAME wrote on DATE
+msgid "FormComTitle"
+msgstr "scritto il"
+
+# Forms - Comment System - Title of subcomments. Format is: NAME responded on DATE
+msgid "FormComTitleSub"
+msgstr "risposto il"
+
+# Forms - Comment System - Replacement name for anonyomous posters
+msgid "FormComAnon"
+msgstr "Anonimo"
+
+# Forms - Comment System - Prompt to write a New Comment
+msgid "FormComNewComment"
+msgstr "Nuovo Commento:"
+
+# Forms - Comment System - Button to save your changes
+msgid "FormComButtonSavechange"
+msgstr "Salva modifiche"
+
+# Forms - Comment System - Confirmation message to delete comment
+msgid "FormComButtonConfirm"
+msgstr "Sei sicuro?"
+
+# Forms - Comment System - Button Yes
+msgid "FormComButtonYes"
+msgstr "Sì"
+
+# Forms - Comment System - Button No
+msgid "FormComButtonNo"
+msgstr "No"
+
+# Forms - Comment System - Prompt on Blog to write a comment
+msgid "FormComBlogPrompt"
+msgstr "Scrivi un commento"
+
+# Forms - Comment System - Prompt on Blog to show comments - works like this: "-Show- XX Comments"
+msgid "FormComBlogPromptShow"
+msgstr "Mostra"
+
+# Forms - Comment System - Prompt on Blog to show comments - works like this: "Show 1 -Comment-"
+msgid "FormComBlogPromptComment"
+msgstr "Commento"
+
+# Forms - Comment System - Prompt on Blog to show comments - works like this: "Show XX -Comments-"
+msgid "FormComBlogPromptComments"
+msgstr "Commenti"
+
+# Forms - Comment System - Prompt to close the comment box again
+msgid "FormComBlogCloseComments"
+msgstr "Chiudi il Riquadro del Commento"
+
+# Pet Cards - Standard Tooltip of level pet
+msgid "PetCardLevelPetStandard"
+msgstr "Non ci sono requisiti specifici per questa mascotte."
+
+# Pet Cards - Name of "any pet"
+msgid "PetCardAnyPetName"
+msgstr "Qualsiasi Mascotte"
+
+# Pet Cards - Name combination prefix. Being used like this: "-Level- XX Pet"
+msgid "PetCardLevel"
+msgstr "Qualsiasi Livello"
+
+# Pet Cards - Name combination suffix. Being used like this: "Level XX -Pet-"
+msgid "PetCardPet"
+msgstr "Mascotte"
+
+# Pet Cards - Standard Tooltip of any pet
+msgid "PetCardAnyPetStandard"
+msgstr "Nessun requisito specifico, scegli la mascotte che preferisci. Non verrà usata in ogni caso."
+
+# Pet Cards - Name of Tanaan specific pets
+msgid "PetCardTanaanPet"
+msgstr "Mascotte di Tanaan"
+
+# Pet Cards - Description of Tanaan specific pets
+msgid "PetCardTanaanPetDesc"
+msgstr "Nella Giungla di Tanaan, i Piccoli Terrori sono accompagnati da mascotte casuali. Scegli una mascotte che possa neutralizzare quelle che si presentano in un dato giorno. Scelte affidabili sono:<br><br>- Idolo Anubisath (1 1 1)<br>-Proto-Draghetto di Smeraldo (2 2 2)"
+
+# Pet Cards - Name of "Any Frog"
+msgid "PetCardAnyFrog"
+msgstr "Qualsiasi Rana"
+
+# Pet Cards - Description of "Any Frog"
+msgid "PetCardAnyFrogDesc"
+msgstr "Scegli qualsiasi rana o rospo di livello 25 e qualità blu che hai disponibile per questo slot. Hanno tutte le stesse abilità e sono ugualmente efficaci."
+
+# Pet Cards - Name of "Any Lantern"
+msgid "PetCardAnyLantern"
+msgstr "Qualsiasi Lanterna"
+
+# Pet Cards - Description of "Any Lantern"
+msgid "PetCardAnyLanternDesc"
+msgstr "Andrà bene una qualsiasi delle tre Lanterne disponibili di livello 25 e qualità blu."
+
+# Pet Cards - Name of "Any Fox"
+msgid "PetCardAnyFox"
+msgstr "Qualsiasi Volpe"
+
+# Pet Cards - Description of "Any Fox"
+msgid "PetCardAnyFoxDesc"
+msgstr "Qualsiasi volpe di livello 25 e qualità blu andrà bene in questo slot."
+
+# Pet Cards - Name of "Any Spider"
+msgid "PetCardAnySpider"
+msgstr "Qualsiasi Ragno"
+
+# Pet Cards - Description of "Any Spider"
+msgid "PetCardAnySpiderDesc"
+msgstr "Quasi tutti i ragni di livello 25 e qualità blu vanno bene. Le uniche eccezioni sono: il Ragno delle Ossa Gigante ed il Ragno Roccioso."
+
+# Pet Cards - Name of "Any Snail"
+msgid "PetCardAnySnail"
+msgstr "Qualsiasi Lumaca"
+
+# Pet Cards - Description of "Any Snail"
+msgid "PetCardAnySnailDesc"
+msgstr "Puoi usare qualsiasi Lumaca o Buccino di livello 25 e qualità blu."
+
+# Pet Cards - Name of "Any Moth"
+msgid "PetCardAnyMoth"
+msgstr "Qualsiasi Falena"
+
+# Pet Cards - Description of "Any Moth"
+msgid "PetCardAnyMothDesc"
+msgstr "Usa qualsiasi falena di livello 25 e qualità blu presente nella tua collezione. L'unica eccezione da evitare è la Falena Reale, in quanto ha abilità diverse"
+
+# Pet Cards - Name of "Any Rabbit"
+msgid "PetCardAnyRabbit"
+msgstr "Qualsiasi Coniglio"
+
+# Pet Cards - Description of "Any Rabbit"
+msgid "PetCardAnyRabbitDesc"
+msgstr "Puoi usare qualsiasi Coniglio o Lepre di livello 25 e qualità blu."
+
+# Pet Cards - Name of "Any Snake"
+msgid "PetCardAnySnake"
+msgstr "Qualsiasi Serpente"
+
+# Pet Cards - Description of "Any Snake"
+msgid "PetCardAnySnakeDesc"
+msgstr "Puoi usare qualsiasi Serpente o Vipera di livello 25 e qualità blu."
+
+# Pet Cards - Name of "Any Roach"
+msgid "PetCardAnyRoach"
+msgstr "Qualsiasi Scarafaggio"
+
+# Pet Cards - Description of "Any Roach"
+msgid "PetCardAnyRoachDesc"
+msgstr "Puoi usare qualsiasi Scarafaggio, Scarabeo o Stercorario di livello 25 e qualità blu (tranne Scarabeo della Lava e Scarabeo del Fuoco!)"
+
+# Pet Cards - Prefix for "-Any- Family"
+msgid "PetCardPrefixAny"
+msgstr "Qualsiasi"
+
+# Pet Cards - Name combination suffix. Being used like this: "Level XX -Flyer-"
+msgid "PetCardSuffixFlyer"
+msgstr "Volante"
+
+# Pet Cards - Name combination suffix. Being used like this: "Level XX -Humanoid-"
+msgid "PetCardSuffixHumanoid"
+msgstr "Umanoide"
+
+# Pet Cards - Name combination suffix. Being used like this: "Level XX -Magic-"
+msgid "PetCardSuffixMagic"
+msgstr "Magica"
+
+# Pet Cards - Name combination suffix. Being used like this: "Level XX -Elemental-"
+msgid "PetCardSuffixElemental"
+msgstr "Elementale"
+
+# Pet Cards - Name combination suffix. Being used like this: "Level XX -Undead-"
+msgid "PetCardSuffixUndead"
+msgstr "Non Morta"
+
+# Pet Cards - Name combination suffix. Being used like this: "Level XX -Mech-"
+msgid "PetCardSuffixMech"
+msgstr "Meccanica"
+
+# Pet Cards - Name combination suffix. Being used like this: "Level XX -Critter-"
+msgid "PetCardSuffixCritter"
+msgstr "Animale"
+
+# Pet Cards - Name combination suffix. Being used like this: "Level XX -Aquatic-"
+msgid "PetCardSuffixAquatic"
+msgstr "Acquatica"
+
+# Pet Cards - Name combination suffix. Being used like this: "Level XX -Beast-"
+msgid "PetCardSuffixBeast"
+msgstr "Bestia"
+
+# Pet Cards - Name combination suffix. Being used like this: "Level XX -Dragonkin-"
+msgid "PetCardSuffixDragonkin"
+msgstr "Dragoide"
+
+# Pet Cards - Description of Any Family pet cards
+msgid "PetCardAnyFamDesc"
+msgstr "Per ottenere l'impresa dovrai aggiungere una mascotte della seguente famiglia in questo slot:"
+
+# Pet Family names - Flying
+msgid "PetFamiliesFlying"
+msgstr "Volante"
+
+# Pet Family names - Humanoid
+msgid "PetFamiliesHumanoid"
+msgstr "Umanoide"
+
+# Pet Family names - Magic
+msgid "PetFamiliesMagic"
+msgstr "Magica"
+
+# Pet Family names - Elemental
+msgid "PetFamiliesElemental"
+msgstr "Elementale"
+
+# Pet Family names - Undead
+msgid "PetFamiliesUndead"
+msgstr "Non Morta"
+
+# Pet Family names - Mechanical
+msgid "PetFamiliesMechanical"
+msgstr "Meccanica"
+
+# Pet Family names - Critter
+msgid "PetFamiliesCritter"
+msgstr "Animale"
+
+# Pet Family names - Aquatic
+msgid "PetFamiliesAquatic"
+msgstr "Acquatica"
+
+# Pet Family names - Beast
+msgid "PetFamiliesBeast"
+msgstr "Bestia"
+
+# Pet Family names - Dragonkin
+msgid "PetFamiliesDragonkin"
+msgstr "Dragoide"
+
+# Battle Table - Last Update
+msgid "BattletableLastUpdate"
+msgstr "Ultimo Aggiornamento:"
+
+# Battle Table - Text on Pet Card for Skills
+msgid "BattletableSkills"
+msgstr "Abilità:"
+
+# Battle Table - Rematch String button text
+msgid "BattletableRematchString"
+msgstr "Stringa di Rematch"
+
+# Battle Table - Rematch String confirmation text
+msgid "BattletableRematchStringConf"
+msgstr "Copiato negli appunti!"
+
+# Battle Table - Pop-Out Button text
+msgid "BattletablePopOut"
+msgstr "Pop-Out"
+
+# General - Page Description (HTML Tag)
+msgid "PageDescription"
+msgstr "Guide sugli Scontri di Mascotte di World of Warcraft - il tuo punto di riferimento per le strategie necessarie a completare tutte le missioni, le imprese ed a sconfiggere gli avversari negli scontri di mascotte in WoW!"
+
+# General - Page keywords (HTML Tag)
+msgid "PageKeywords"
+msgstr "mascotte warcraft, mascottewarcraft, wow mascotte, wow scontri mascotte, wow pet"
+
+# Pet Table - Table Header for column "Occurrences" showing a number of how often this pet is used in this category
+msgid "PetTableOccur"
+msgstr "Numero Scontri"
+
+# Pet Table - Table Header for column "Name" showing the name of the pets
+msgid "PetTableName"
+msgstr "Nome"
+
+# Pet Table - Mouse Tooltip showing Petname *is used against* and then listing the battles
+msgid "PetTableUsedAgainst"
+msgstr "è usato contro:"
+
+# Pet Table - Dropdown of header to select All Families
+msgid "PetTableAllFams"
+msgstr "Tutte le Famiglie"
+
+# Blog - Button to load more entries at the very bottom
+msgid "BlogLoadMore"
+msgstr "Carica altri risultati"
+
+# Blog - Title of page
+msgid "BlogTitle"
+msgstr "Blog di Xu-Fu"
+
+# Blog - Warning at top of Blog page that it's only available in English.
+msgid "BlogHeaderWarning"
+msgstr "Al momento il blog è disponibile solo in inglese, mi spiace."
+
+# Donation received page - title
+msgid "DonationReceived"
+msgstr "Donazione Ricevuta"
+
+# Donation received page - thank you text (<br> are line breaks)
+msgid "DonationThanks"
+msgstr "Grazie!<br><br>Il tuo contributo è molto apprezzato e servirà a coprire i costi del server."
+
+# Suggestions - Thank you text in email for the submitter (<br> are line breaks)
+msgid "SuggestionConfMail"
+msgstr "Grazie per aver inviato un suggerimento per questo scontro!<br>Lo testeremo appena possibile. Ci potrebbe volere un po', ma ti contatteremo e ti faremo sapere se è possibile includere il suggerimento nelle guide di Xu-Fu!<br>Naturalmente, per qualsiasi domanda non esitare a contattarci! Bata rispondere a questa mail :-)<br><br>Infine, ecco un riepilogo delle informazioni che ci hai inviato:<br><br>"
+
+# Suggestions - Snippet for "Fight" used in the thank you mails
+msgid "SuggestionSnipFight"
+msgstr "Scontro:"
+
+# Family Familiar - Name of the Family achievement (to be used in tooltips)
+msgid "FFHumanoid"
+msgstr "Murloc, Arpie e Volvar..."
+
+# Family Familiar - Name of the Family achievement (to be used in tooltips)
+msgid "FFDragonkin"
+msgstr "Potere ai draghi"
+
+# Family Familiar - Name of the Family achievement (to be used in tooltips)
+msgid "FFFlying"
+msgstr "Razziatori piumati"
+
+# Family Familiar - Name of the Family achievement (to be used in tooltips)
+msgid "FFUndead"
+msgstr "Il piccolo negromante"
+
+# Family Familiar - Name of the Family achievement (to be used in tooltips)
+msgid "FFCritter"
+msgstr "Animalista convinto"
+
+# Family Familiar - Name of the Family achievement (to be used in tooltips)
+msgid "FFMagic"
+msgstr "Signore della magia"
+
+# Family Familiar - Name of the Family achievement (to be used in tooltips)
+msgid "FFElemental"
+msgstr "Ragnaros, guarda e impara"
+
+# Family Familiar - Name of the Family achievement (to be used in tooltips)
+msgid "FFBeast"
+msgstr "Bestia tra le bestie"
+
+# Family Familiar - Name of the Family achievement (to be used in tooltips)
+msgid "FFAquatic"
+msgstr "Passione acquatica"
+
+# Family Familiar - Name of the Family achievement (to be used in tooltips)
+msgid "FFMechanical"
+msgstr "Ingegnere d'assalto"
+
+# Family Familiar - Word "Quest"
+msgid "FFQuest"
+msgstr "Missione"
+
+# Family Familiar - Warning about tough fights (<b> means printing in bold)
+msgid "FFWarningSmall"
+msgstr "<b>Attenzione:</b>Questo scontro è particolarmente difficile con la famiglia selezionata."
+
+# Family Familiar - Explanation of bulk Rematch strings
+msgid "FFBulkRematch"
+msgstr "Sotto trovi una lista di stringhe Rematch per questa parte dell'impresa.<br><br>Copia il codice su Rematch per importare tutte le strategie principali. Consiglio: Crea una scheda per ciascuna famiglia! La lista si riempie molto presto."
+
+# Family Familiar - Tooltip warning for tough family - hovering over the big skull
+msgid "FFWarningLong"
+msgstr "Questa è una delle combinazioni più difficili. Se puoi usare altre famiglie per completare l'impresa, ti consiglio di farlo. Anche se trovi una strategia qua, potrebbe richiedere mascotte e tratti specifici e potrebbe essere necessario ripetere lo scontro diverse volte."
+
+# Family Familiar - Text displayed when there is no strategy present on a page, explaining it is a tough fight - title
+msgid "FFNoStratTitle"
+msgstr "Questo scontro è impegnativo!"
+
+# Family Familiar - Text displayed when there is no strategy present on a page, explaining it is a tough fight - text, starting with "NAME OF FIGHT - FAMILY -"
+msgid "FFNoStratText"
+msgstr "è una delle combinazioni più difficili per questa impresa. Limitare la scelta a una famiglia specifica significa che ci troviamo in grosso svantaggio se le mascotte necessarie hanno le abilità perfette per neutralizzare quelle della famiglia scelta.<br>Se hai un'idea e la vuoi condividere con noi, saremo lieti di testarla!<br>Usa il form per i suggerimenti in basso e gli daremo un'occhiata al più presto.<br><br>"
+
+# BattleTable - Text displayed when there is no strategy present on a page - title
+msgid "BTNoStratTitle"
+msgstr "Oops! Non c'è ancora niente qui!"
+
+# BattleTable - Text displayed when there is no strategy present on a page - title
+msgid "BTNoStratText"
+msgstr "A quanto pare non abbiamo avuto ancora modo di testare questa strategia. Ci scusiamo per l'inconveniente. <br>Se hai un'idea su come vincere lo scontro e vuoi condividerla con noi, saremo più che felici di provarla!<br><br>Usa il form per i suggerimenti in basso. Se lasci anche il tuo indirizzo email, ti contatteremo appena possibile."
+
+# BattleTable - Thank you at bottom of suggestion form
+msgid "BTNoStratThanks"
+msgstr "Grazie per la collaborazione!"
+
+# BattleTable - Thank you at top of page after submitting a suggestion
+msgid "BTSuggThanks"
+msgstr "Grazie!"
+
+# BattleTable - Confirmation text after submitting a strategy suggestion - email has been provided
+msgid "BTSuggTextmail"
+msgstr "Il tuo suggerimento è stato inoltrato! <br><br>Una copia del messaggio contenente le informazioni inoltrate è stata inviata anche al tuo indirizzo. <br><br>Proveremo la strategia appena possibile e ti faremo sapere. Ci scusiamo se questo richiederà un po' di tempo."
+
+# BattleTable - Confirmation text after submitting a strategy suggestion - no email has been provided
+msgid "BTSuggTextNomail"
+msgstr "Il tuo suggerimento è stato inoltrato! <br><br>Proveremo la tua strategia appena possibile. Tieni presente che non sarà possibile includere tutte le strategie. Se non vedi la tua qui e vuoi saperne il motivo, non esitare a contattarci!<br><br>Ecco un riepilogo delle informazioni inviate:"
+
+# Main Menu on top - Algalon the Observer
+msgid "MainbarAlgalon"
+msgstr "Algalon l'Osservatore"
+
+# Main Menu on top - Crysa (Flying Pet Tamer)
+msgid "MainbarCrysa"
+msgstr "Crysa"
+
+# Pet Cards - Standard title for level pet with no specific level requirement
+msgid "PetCardLevelPetTitle"
+msgstr "Mascotte di livello basso"
+
+# Quality of items or pets: Poor
+msgid "QualityPoor"
+msgstr "Povera"
+
+# Quality of items or pets: Common
+msgid "QualityCommon"
+msgstr "Comune"
+
+# Quality of items or pets: Uncommon
+msgid "QualityUncommon"
+msgstr "Non Comune"
+
+# Quality of items or pets: Rare
+msgid "QualityRare"
+msgstr "Rara"
+
+# Quality of items or pets: Epic
+msgid "QualityEpic"
+msgstr "Epica"
+
+# Quality of items or pets: Legendary
+msgid "QualityLegendary"
+msgstr "Leggendaria"
+
+# Pet Collection Title of Chart: Families
+msgid "ColChartFamilies"
+msgstr "Famiglie"
+
+# Pet Collection Title of Chart: Family . Try to use the shortest possible term here or the table will be stretched
+msgid "ColChartFamily"
+msgstr "Famiglia"
+
+# Pet Collection Title of Chart: Quality. Try to use the shortest possible term here or the table will be stretched
+msgid "ColChartQuality"
+msgstr "Qualità"
+
+# Pet Collection Title of Chart: Breed. Try to use the shortest possible term here or the table will be stretched
+msgid "ColChartBreed"
+msgstr "Tipo"
+
+# Pet Collection Title of Chart: Level. Try to use the shortest possible term here or the table will be stretched
+msgid "ColChartLevel"
+msgstr "Livello"
+
+# Pet Collection Title of Chart: Tradable (meaning it can be traded / caged). Try to use the shortest possible term here or the table will be stretched
+msgid "ColChartTrade"
+msgstr "Scambiabile"
+
+# Pet Collection filter setting for "All"
+msgid "ColTableAll"
+msgstr "Tutti"
+
+# Pet Collection Title of Chart: Collected of all
+msgid "ColChartCollectedofall"
+msgstr "Collezionate (su tutte)"
+
+# Pet Collection Title of Chart: Level Distribution
+msgid "ColChartLevelDist"
+msgstr "Distribuzione dei Livelli"
+
+# Pet Collection data point description for pets collected
+msgid "ColChartCollected"
+msgstr "Collezionate"
+
+# Pet Collection data point description for pets missing
+msgid "ColChartMissing"
+msgstr "Mancanti"
+
+# Pet Collection table description with name: Pet Collection of USERNAME
+msgid "ColTableTitleWName"
+msgstr "Collezione di Mascotte di"
+
+# Pet Collection table description without name: Your Pet Collection
+msgid "ColTableTitleNName"
+msgstr "La tua Collezione di Mascotte"
+
+# Pet Collection chart header: Unique pets (no : )
+msgid "ColTableChartUnique"
+msgstr "Mascotte uniche"
+
+# Pet Collection chart header: Pets overall (no : )
+msgid "ColTableChartAllpets"
+msgstr "Mascotte totali"
+
+# Pet Collection chart description: Duplicates
+msgid "ColTableChartDupes"
+msgstr "Duplicati"
+
+# Pet Collection chart description for maximized pets (level 25 rare): "Maximized:" (with : )
+msgid "ColTableChartMaxed"
+msgstr "Massimizzate:"
+
+# Pet Collection chart description for not maximized pets (level 1-24 or not rare): "Not Maxed:" (with : )
+msgid "ColTableChartNotMaxed"
+msgstr "Non Massimizzate:"
+
+# Pet Collection table option to reset all filters
+msgid "ColTableReset"
+msgstr "Reset Filtri"
+
+# Pet Collection table button to reimport pets
+msgid "ColTableUpdate"
+msgstr "Aggiorna Collezione"
+
+# Pet Collection error when importing - generic
+msgid "ColTableErrorGen"
+msgstr "L'importazione non ha avuto successo"
+
+# Pet Collection error details
+msgid "ColTableErrorDetails"
+msgstr "Nota:<br>- I personaggi di livello inferiore a 20 non sono disponibili nell'armeria.<br>- Anche i personaggi inattivi potrebbero non essere disponibili fino a quando non viene effettuato un nuovo accesso."
+
+# Main Menu title for section "Xu-Fu's Pet Collection Viewer"
+msgid "MainbarColViewer"
+msgstr "Visualizzatore della Collezione di Mascotte"
+
+# Main Menu title for section Falcosaur Team Rumble
+msgid "MainbarFalosaur"
+msgstr "Lavoro di Squadra dei Falcosauri"
+
+# Main Menu title for section Wailing Critters
+msgid "MainbarWC"
+msgstr "Animaletti Lamentosi"
+
+# Main Menu title for section Deadmines
+msgid "MainbarDeadmines"
+msgstr "Miniere della Morte"
+
+# Main Menu title for section Dungeons
+msgid "MainbarDungeons"
+msgstr "Scenari"
+
+# Main Menu title for section Environeer Bert
+msgid "MainbarBert"
+msgstr "Environeer Bert"
+
+# Intro text for the Pet Collection Viewer Tool
+msgid "ColViewerIntro"
+msgstr "Con il Visualizzatore della Collezione di Mascotte di Xu-Fu, puoi controllare la collezione di qualsiasi giocatore WoW in modo facile e veloce.<br>Puoi filtrare e ordinare le tabelle delle mascotte come preferisci e anche cercare mascotte specifiche.<br><br>Digita il nome del personaggio e del reame qui sotto per cominciare:"
+
+# Form prompt, realm selection header for US
+msgid "FormSelectRealmUS"
+msgstr "Stati Uniti"
+
+# Form prompt, realm selection header for EU
+msgid "FormSelectRealmEU"
+msgstr "Europa"
+
+# Form prompt, realm selection header for KR
+msgid "FormSelectRealmKR"
+msgstr "Corea"
+
+# Form prompt, realm selection header for TW
+msgid "FormSelectRealmTW"
+msgstr "Taiwan"
+
+# Form prompt, realm selection
+msgid "FormSelectRealm"
+msgstr "Seleziona il tuo reame"
+
+# Form prompt, field to enter character name
+msgid "FormSelectCharName"
+msgstr "Nome personaggio"
+
+# Form prompt, button Import Pets
+msgid "FormSelectImportPets"
+msgstr "Importa Mascotte"
+
+# Form prompt, text while waiting for import
+msgid "FormSelectLoadText"
+msgstr "Recupero mascotte in corso..."
+
+# Main title category for Argus
+msgid "MainbarArgus"
+msgstr "Argus"
+
+# Menu button to select regular strategies instead of family specific ones
+msgid "SideBarRegularStrat"
+msgstr "Normal strategies"
+
+# Family Fighter - Family Achievement Name
+msgid "FF_Humanoid"
+msgstr "Humanoid Havoc"
+
+# Family Fighter - Family Achievement Name
+msgid "FF_Dragon"
+msgstr "Draconic Destruction"
+
+# Family Fighter - Family Achievement Name
+msgid "FF_Flying"
+msgstr "Fierce Fliers"
+
+# Family Fighter - Family Achievement Name
+msgid "FF_Undead"
+msgstr "Unstoppable Undead"
+
+# Family Fighter - Family Achievement Name
+msgid "FF_Critter"
+msgstr "Critical Critters"
+
+# Family Fighter - Family Achievement Name
+msgid "FF_Magic"
+msgstr "Magical Mayhem"
+
+# Family Fighter - Family Achievement Name
+msgid "FF_Elemental"
+msgstr "Elemental Escalation"
+
+# Family Fighter - Family Achievement Name
+msgid "FF_Beast"
+msgstr "Beast Blitz"
+
+# Family Fighter - Family Achievement Name
+msgid "FF_Aqua"
+msgstr "Aquatic Assault"
+
+# Family Fighter - Family Achievement Name
+msgid "FF_Mech"
+msgstr "Mechanical Melee"
+
+# Pet Collection title: Unique
+msgid "ColTableChartUniqueSingle"
+msgstr "Unique"
+
+# User System Menu Title: Pet Collection
+msgid "UM_PetCollection"
+msgstr "Pet Collection"
+
+# User System: Pet Collection, title for Connected Character
+msgid "PC_ConChar"
+msgstr "Connected character"
+
+# User System: Pet Collection, title for last update
+msgid "PC_LastUpdate"
+msgstr "Last update"
+
+# User System: Pet Collection, not imported yet
+msgid "PC_PromptImport"
+msgstr "Your pet collection has not been imported to Xu-Fu, yet. Click here to start the process:"
+
+# User System: Pet Collection error, China not supported
+msgid "PC_ErrChina"
+msgstr "At this time, China as a region is not supported by Xu-Fu. Sorry for the inconvenience."
+
+# User System: Login window - list of regions
+msgid "UL_RegionsW"
+msgstr "US/EU/KR/TW"
+
+# User System: Login window - list of regions 2
+msgid "UL_RegionsC"
+msgstr "China"
+
+# User System: Login window - login with bnet blue button
+msgid "UL_LogBnet"
+msgstr "Login with Battle.net"
+
+# User System: Login window - prompt for name or email
+msgid "UL_LogName"
+msgstr "Name or email"
+
+# User System: Login window - help link in case of forgotten username
+msgid "UL_ForgUsername"
+msgstr "Forgot your username?"
+
+# User System: Login window - prompt for password
+msgid "UL_LogPass"
+msgstr "Password"
+
+# User System: Login window - help link in case of forgotten password
+msgid "UL_ForgPass"
+msgstr "Forgot your password?"
+
+# User System: Login window - checkbox for 30 day cookie on login
+msgid "UL_RemLogin"
+msgstr "Remember login for 30 days"
+
+# User System: Top Menu Title text for Login
+msgid "UL_MBLogin"
+msgstr "Login"
+
+# User System: Simple text connector -or-
+msgid "UL_MBor"
+msgstr "or"
+
+# User System: Login window - text for button to register account
+msgid "UL_MBRegister"
+msgstr "Register Account"
+
+# User System: Login window - Link to subscribe to blog RSS feed
+msgid "Blog_RSS"
+msgstr "Subscribe via RSS"
+
+# User System: Subject line of Welcome Message after Registration
+msgid "UM_WelcSubject"
+msgstr "Welcome to Xu-Fu's Pet Guides!"
+
+# User System: Content of Welcome Message after Registration
+msgid "UM_WelcContent"
+msgstr "Thank you for signing up with Xu-Fu's Pet Guides!<br><br>There are many new options available to you now, most of which you can find in your account area right here.<br>I suggest going to your Pet Collection first to make sure your pet library has been imported correctly. This will power a lot of the more advanced features here!<br><br><br><br>If you go to My Profile, you can select what other battlers see when clicking on your profile. Maybe leave them a little introduction about yourself? Or just turn off all areas if you prefer a bit more privacy.<br><br>You might also want to check out the Settings. There you can not only change your profile picture but also find options for your saved email, password or preferred language.<br><br>I hope you have a pleasant stay here and wish you all the best in your battles!<br><br>Yours,<br>Xu-Fu"
+
+# User System: Registration error handling - Name in use
+msgid "UR_ErrNameDupe"
+msgstr "This name is already in use."
+
+# User System: Registration error handling - Name too long
+msgid "UR_ErrNameLength"
+msgstr "This username is too long. Please do not use more than 15 characters."
+
+# User System: Registration error handling - Name too short
+msgid "UR_ErrNameShort"
+msgstr "This name is too short. Please use at least 2 characters."
+
+# User System: Registration error handling - invalid characters used
+msgid "UR_ErrNameChars"
+msgstr "Please do not use empty spaces or any of these characters:"
+
+# User System: Registration error handling - name is an email, not allowed
+msgid "UR_ErrNameIsMail"
+msgstr "Please do not use an email address as your login name."
+
+# User System: Registration error handling - password too short
+msgid "UR_ErrPassShort"
+msgstr "Your password must be at least 6 characters long."
+
+# User System: Registration error handling - password confirmation did not match
+msgid "UR_ErrPassNomatch"
+msgstr "The two entries did not match. Please type in your preferred password again."
+
+# User System: Registration error handling - password is identical to username
+msgid "UR_ErrPassIsName"
+msgstr "Your password cannot be identical to your username."
+
+# User System: Registration error handling - email already registered
+msgid "UR_ErrMailDupe"
+msgstr "This email address is already registered to another account."
+
+# User System: Registration error handling - email not a valid address
+msgid "UR_ErrMailInvalid"
+msgstr "The email address you entered is not valid."
+
+# User System: Login failed - user not known
+msgid "UL_ErrUserUnknown"
+msgstr "No user with that name or email address found."
+
+# User System: Login failed - account temp locked due to too many failed attempts
+msgid "UL_ErrTempLock"
+msgstr "Your account is temporarily locked because of too many failed login attempts.<br> Please try again in 10 minutes."
+
+# User System: Login failed - account locked by admin
+msgid "UL_ErrAccLocked"
+msgstr "Your account is locked. Please contact a site admin for help."
+
+# User System: Menu Button Title for My Profile
+msgid "UM_BTProfile"
+msgstr "My Profile"
+
+# User System: Menu Button Title for My Comments
+msgid "UM_BTComments"
+msgstr "My Comments"
+
+# User System: Menu Button Title for Messages
+msgid "UM_BTMessages"
+msgstr "Messages"
+
+# User System: Menu Button Title for Settings
+msgid "UM_BTSettings"
+msgstr "Settings"
+
+# User System: Menu Button Title for Logout
+msgid "UM_BTLogout"
+msgstr "Logout"
+
+# Used in many places as selector for bnet region
+msgid "UM_Region"
+msgstr "Region"
+
+# Button to set selected region of bnet account
+msgid "UM_RegionButton"
+msgstr "Set Region"
+
+# Text displayed below waiting symbol when accessing blizzard API
+msgid "UM_waitingsymbold"
+msgstr "Importing data ..."
+
+# On Realm Selector - disclaimer if realms are not available
+msgid "PC_ErrRealmNotAv"
+msgstr "If your realm is not listed, it might be in maintenance. <br>In that case please try again later."
+
+# User System: Pet Collection error, import error - no wow character found
+msgid "PC_ErrConnection"
+msgstr "The connection worked, but I could not find any WoW character on your Battle.net account. <br><br></b>Please make sure you are connected to the correct Battle.net account. If not, you can always create a new account here."
+
+# User System: Pet Collection error, import was not successful, API not accessible - please try again
+msgid "PC_ErrImportcon"
+msgstr "Sorry, I was unable to read any character data from your account. There was an error connecting to the Battle.net services. <br><br></b>Please try again, this might be a temporary issue."
+
+# User System: Pet Collection error, button to offer new attempt of import
+msgid "PC_ErrImportconB"
+msgstr "Start import again"
+
+# User System: Error reading data from Battle.net account - notice to user with prompt to relog via Battle.net
+msgid "PC_ErrBattlenet"
+msgstr "There was an error retrieving your data.<br><br></b>Please log out of your Xu-Fu account and back in using the Battle.net Account login."
+
+# User System: Error reading data from Battle.net account - validation expired - notice to user with prompt to relog via Battle.net
+msgid "PC_ErrBattlenetexp"
+msgstr "Sorry, I was unable to read any character data from your account. <br><br></b>It seems the connection to the Battle.net service for your account has expired.<br> To correct this please log out of your Xu-Fu account and back in using the Battle.net Account login."
+
+# User System: Bnet error - no wow access granted - prompting user with instructions
+msgid "PC_ErrNowowaccess"
+msgstr "Xu-Fu has no access to your WoW character list. Importing your pets is therefore not possible. <br>Please go to your <a href=\"https://wow-petguide.com/index.php?page=settings\" class=\"wowhead\">account settings</a> for instructions on how to fix this."
+
+# Collection Import via Bnet - player has wow accounts on several regions. informing player
+msgid "PC_ErrMultiAcc"
+msgstr "Xu-Fu found characters on multiple WoW regions.</b><br><br>Since the pet battle collections are separated between regions, Xu-Fu can only connect to one of your collections.<br>Please select one region below with which to use your Xu-Fu account. <br>Changing this later on is currently not possible, but you can always create a new Xu-Fu account and link that manually with another region."
+
+# Collection Import via Bnet - player has wow accounts on several regions. title to show 3 highest level chars in each region
+msgid "PC_ErrMultiAccCharsel"
+msgstr "3 highest level characters"
+
+# Collection Import - Instructions regarding custom character connection
+msgid "PC_CustomCharacter"
+msgstr "The easiest way to import your pet collection is to connect your Battle.net Account with Xu-Fu.<br>If you want to do so, head over to your <a href='https://wow-petguide.com/index.php?page=settings' class='wowhead'>Settings</a>. You will find the option for it directly on top.<br><br>Alternatively enter your characters realm and name below. <br>The connected character will not be shown to others, and you can change the connected character at any time."
+
+# Collection Import - Instructions on changing the connected character
+msgid "PC_CustomCharacterChange"
+msgstr "You can change the character connected to your Xu-Fu account here.<br>Changing the character will remove your current collection info. This includes any historical data that might be saved with Xu-Fu.<br><br>If you are sure you want to go ahead with it, please enter the new character details below:"
+
+# Collection Import - Growl notification: collection import successful
+msgid "GR_ColImported"
+msgstr "Congratulations! Your pet collection was imported successfully! "
+
+# Collection Import - Growl notification: collection update successful
+msgid "GR_ColUpdate"
+msgstr "Your pet collection was updated successfully."
+
+# Collection Import - Growl notification: collection update did not work
+msgid "GR_ColUpdateError"
+msgstr "There was an error updating your pet collection.<br>If this error persists, please check if your connected character is still valid and change it if necessary."
+
+# Collection Import - Growl notification: the entered character is already connected to account
+msgid "GR_ColUpdateCharError"
+msgstr "The connected character was not updated because it is already linked to your account."
+
+# Collection Import - Growl notification: new private message
+msgid "GR_NewMessage"
+msgstr "You have unread messages. Click <a href='index.php?page=messages' class='growl'>here</a> to read them."
+
+# Collection Import - Growl notification: Thanks for signing up
+msgid "GR_SignupThx"
+msgstr "Thanks for signing up!<br>Click on your name to access account settings.<br>I also sent you a <a href='?page=messages' class='growl'>welcome message</a> with more info."
+
+# Collection Import - Growl notification: Thanks for signing up with battle.net
+msgid "GR_SignupBnet"
+msgstr "Thank you for signing up! You are now logged in. <br>Note: You can change your username by clicking on your name in the top right corner."
+
+# Collection Import - Growl notification: Login confirmation
+msgid "GR_LoginConf"
+msgstr "You are now logged in."
+
+# Collection Import - Growl notification: password changed after retrieval and user now logged in
+msgid "GR_PWChanged"
+msgstr "Your password has been changed. Welcome back!"
+
+# Collection Import - Growl notification: incorrect link - redirect to landing page
+msgid "GR_WrongLink"
+msgstr "The link you followed could not be read. <br>You were redirected to the front page. Sorry for the inconvenience."
+
+# Collection Import - Growl notification: bnet authentication declined by user
+msgid "GR_BnetDecl"
+msgstr "The Battle.net authorization was declined. To login using your Battle.net Account please try again and authorize Xu-Fu.<br>Note: Your personal data (password, email address) will never be shared by Battle.net to authorized apps."
+
+# Collection Import - Growl notification: bnet down
+msgid "GR_BnetFailed"
+msgstr "There was a problem with the Battle.net Account service, most likely a timeout or perhaps the servers are in maintenance. Please try again later."
+
+# Collection Import - Growl notification: Username was changed
+msgid "GR_NameChanged"
+msgstr "Your Username was changed successfully."
+
+# Collection Import - Growl notification: Username was changed
+msgid "GR_PassChanged"
+msgstr "Your password was saved."
+
+# Collection Import - Growl notification: Battle.net Authorization failed due to some error on battle.net account of user
+msgid "GR_AuthFailed"
+msgstr "The connection to your Battle.net Account is disrupted.<br>Please visit the <a class='growl' href='index.php?page=settings'>Account settings</a> to fix this problem."
+
+# Collection Import - Growl notification: Confirmation that account was deleted
+msgid "GR_AccDeleted"
+msgstr "Your account has been deleted. <br>Thank you for your time with Xu-Fu!"
+
+# Collection Import - Growl notification: Generic error entering a comment
+msgid "GR_CommError"
+msgstr "There was a problem with processing your comment. I am sorry, please try again. If this error persists, please contact <a href='mailto:xufu@wow-petguide.com?subject=Problem with comment system' class='growl'>Aranesh</a>"
+
+# Collection Import - Growl notification: Generic error
+msgid "GR_GenError"
+msgstr "There was an error processing your data, I am sorry. Please try again."
+
+# User Settings - Profile - Title for Editing
+msgid "UP_Title"
+msgstr "Edit Your Profile"
+
+# User Settings - Profile - Button to view profile as a visitor
+msgid "UP_ViewVisitor"
+msgstr "View as Visitor"
+
+# User Settings - Profile - View profile as a visitor description
+msgid "UP_ViewDescript"
+msgstr "Use this link to see how your profile looks to others:"
+
+# User Settings - Profile - Button for general profile info options
+msgid "UP_BTProfile"
+msgstr "Profile Info"
+
+# User Settings - Profile - Button for icon
+msgid "UP_BTIcon"
+msgstr "Your Icon"
+
+# User Settings - Profile - Button for tooltip settings
+msgid "UP_BTTooltip"
+msgstr "Tooltip Settings"
+
+# User Settings - Profile - Icon instructions for wow avatar
+msgid "UP_WoWCharsIntro"
+msgstr "Pick an icon of your choice or click the button if you prefer a picture of your WoW character as your icon:"
+
+# User Settings - Profile - Button to load wow char avatars
+msgid "UP_BTWOWChars"
+msgstr "Show Available Characters"
+
+# User Settings - Profile - Button to Save
+msgid "UP_BTSave"
+msgstr "Save"
+
+# User Settings - Profile - WoW Avatar - no chars found on region part 1
+msgid "UP_WA_nochars1"
+msgstr "I checked for your characters in a specific region but could not find any. The region I checked was:"
+
+# User Settings - Profile - WoW Avatar - no chars found on region part 2
+msgid "UP_WA_nochars2"
+msgstr "If your characters are on another region, please select the correct one here:"
+
+# User Settings - Profile - WoW Avatar - instructions
+msgid "UP_WA_instr"
+msgstr "Click on a picture to select it as your avatar.<br>If a character is not showing up, then it was not logged in some time and the armory picture is not available."
+
+# User Settings - Profile - WoW Avatar - saved successfully growl
+msgid "UP_WA_Avasaved"
+msgstr "Your new avatar was saved :-)"
+
+# User Settings - Profile - WoW Avatar - error message no access to chars
+msgid "UP_WA_noaccess"
+msgstr "Xu-Fu has no access to your WoW character list. Adding a character picture as your avatar is therefore not possible. <br>Please check below for instructions on how to fix this."
+
+# User Settings - Profile - Button to retry
+msgid "UP_BTRetry"
+msgstr "Check again"
+
+# User Settings - Profile - Instructions for profile info
+msgid "UP_PRInst"
+msgstr "Customize what others see when visiting your profile.<br>Changes are saved automatically."
+
+# User Settings - Profile - title for Your Introduction field
+msgid "UP_PRTIntro"
+msgstr "Your introduction:"
+
+# User Settings - Profile - Header for selector: Title
+msgid "UP_PRHTitle"
+msgstr "Title:"
+
+# User Settings - Profile - Header for selector: BattleTag
+msgid "UP_PRHBtag"
+msgstr "BattleTag:"
+
+# User Settings - Profile - Header for selector: Discord
+msgid "UP_PRHDiscord"
+msgstr "Discord"
+
+# User Settings - Profile - Header for selector: Favorite Pet
+msgid "UP_PRHFavpet"
+msgstr "Favorite Pet:"
+
+# User Settings - Profile - Header for selector: Show Collection
+msgid "UP_PRHShowcol"
+msgstr "Show Collection:"
+
+# User Settings - Profile - Header for selector: Facebook
+msgid "UP_PRHFacebook"
+msgstr "Facebook"
+
+# User Settings - Profile - Header for selector: Twitter
+msgid "UP_PRHTwitter"
+msgstr "Twitter"
+
+# User Settings - Profile - Header for selector: Instagram
+msgid "UP_PRHInstagram"
+msgstr "Instagram"
+
+# User Settings - Profile - Header for selector: Youtube
+msgid "UP_PRHYoutube"
+msgstr "Youtube"
+
+# User Settings - Profile - Header for selector: Reddit
+msgid "UP_PRHReddit"
+msgstr "Reddit"
+
+# User Settings - Profile - Header for selector: Twitch
+msgid "UP_PRHTwitch"
+msgstr "Twitch"
+
+# User Settings - Profile - Instructions at bottom
+msgid "UP_PRInstbot"
+msgstr "If you want a field to be hidden, simply remove all text from it."
+
+# User Settings - Tooltip - Instructions - part 1
+msgid "UP_TTInst1"
+msgstr "Others can see a quick view of your profile while hovering over your name, like this:"
+
+# User Settings - Tooltip - Instructions - part 2
+msgid "UP_TTInst2"
+msgstr "You can decide here what is shown in your own quick view:"
+
+# User Settings - Tooltip - Title: Preview
+msgid "UP_TTHPreview"
+msgstr "Preview:"
+
+# User Settings - Tooltip - Last activity. Part one is this, then one of the next strings will be added afterwards depending last activity time
+msgid "UP_TTLL"
+msgstr "Last active:"
+
+# User Settings - Tooltip - Last login estimate
+msgid "UP_TTLL1"
+msgstr "more than a year ago"
+
+# User Settings - Tooltip - Last login estimate
+msgid "UP_TTLL2"
+msgstr "a year ago"
+
+# User Settings - Tooltip - Last login estimate
+msgid "UP_TTLL3"
+msgstr "several months ago"
+
+# User Settings - Tooltip - Last login estimate
+msgid "UP_TTLL4"
+msgstr "a few months ago"
+
+# User Settings - Tooltip - Last login estimate
+msgid "UP_TTLL5"
+msgstr "two months ago"
+
+# User Settings - Tooltip - Last login estimate
+msgid "UP_TTLL6"
+msgstr "this month"
+
+# User Settings - Tooltip - Last login estimate
+msgid "UP_TTLL7"
+msgstr "this week"
+
+# User Settings - Tooltip - Last login estimate
+msgid "UP_TTLL8"
+msgstr "today"
+
+# User Settings - Tooltip - Last login estimate
+msgid "UP_TTLL9"
+msgstr "an hour ago"
+
+# User Settings - Tooltip - Currently Online. this will only have a green dot in front of it. Use capital letter for the first one
+msgid "UP_TTLLco"
+msgstr "Currently online"
+
+# User Settings - Tooltip - link to read full introduction if its too long and not shown at all, just the link
+msgid "UP_TTintrolong1"
+msgstr "Read full introduction"
+
+# User Settings - Tooltip - link to read full introduction if its too long and cut short
+msgid "UP_TTintrolong2"
+msgstr "continue reading"
+
+# User Settings - Tooltip - XXX unique pets collected
+msgid "UP_TTunipets"
+msgstr "unique pets collected"
+
+# User Settings - Tooltip - title for Joined
+msgid "UP_TTTjoined"
+msgstr "Joined"
+
+# User Settings - Tooltip - Button to send a message
+msgid "UP_TTSendMsg"
+msgstr "Send message"
+
+# User Settings - Tooltip - Error, cannot send message without account
+msgid "UP_TTErrNoAcc"
+msgstr "You must be logged in to send messages"
+
+# User Settings - Tooltip - Error, cannot send message to yourself
+msgid "UP_TTNoMsgToS"
+msgstr "Cannot send messages to yourself"
+
+# User Settings - Tooltip - Error in fetching user data from database
+msgid "UP_TTDBerror"
+msgstr "There was an error fetching the user data. Please refresh the page and try again"
+
+# User Settings - Tooltip - Title for Availabler Backgrounds
+msgid "UP_TTAvBGs"
+msgstr "Available backgrounds"
+
+# User Settings - Tooltip - Title for Options
+msgid "UP_TTTOptions"
+msgstr "Options"
+
+# User Settings - Tooltip - Title for Intro Text selector
+msgid "UP_TTTIntro"
+msgstr "Intro text"
+
+# User Settings - Tooltip - Title for Social Media selector
+msgid "UP_TTTSS"
+msgstr "Social Media"
+
+# User Settings - Tooltip - Title for Online Status
+msgid "UP_TTTonlinestat"
+msgstr "Online status"
+
+# User Settings - Tooltip - Prompt to edit your profile introduction
+msgid "UP_TTInsteditin"
+msgstr "Edit your profile introduction"
+
+# User Settings - Tooltip - Prompt to edit your profile introduction
+msgid "UP_TTTInsteditsm"
+msgstr "Edit your Social Media links"
+
+# User Settings - Tooltip - Instructions how to edit your profile introduction
+msgid "UP_TTInsteditsm"
+msgstr "Add links to social media profiles that you want to share.<br>Empty fields will not be displayed."
+
+# User Login - Login Failed - header
+msgid "UL_ErrHead"
+msgstr "There was a problem with your login"
+
+# User Login - Login Failed - description
+msgid "UL_ErrDesc"
+msgstr "I am sorry, but there was a problem with your login. <br>Please check your details and try again."
+
+# User Login - Login Failed - prompto to retrieve account
+msgid "UL_RetrievAcc"
+msgstr "Click here to retrieve your account."
+
+# User Login - Login Failed - Error - Caps lock is on
+msgid "UL_CapsOn"
+msgstr "Warning! Caps Lock is on!"
+
+# User System - Private Messages - Title of page
+msgid "PM_Title"
+msgstr "Private Messages"
+
+# User System - Private Messages - Title for tab: Inbox
+msgid "PM_TInbox"
+msgstr "Inbox"
+
+# User System - Private Messages - Title for tab: Sent Messages
+msgid "PM_TSent"
+msgstr "Sent Messages"
+
+# User System - Private Messages - Title for tab: Write New Message
+msgid "PM_TWrite"
+msgstr "Write New Message"
+
+# User System - Private Messages - prompt confirmation if thread is being deleted
+msgid "PM_Deleteconf"
+msgstr "Are you sure you want to delete this message?"
+
+# User System - Private Messages - button to show older messages
+msgid "PM_BTShowOld"
+msgstr "Click here to show older messages"
+
+# User System - Private Messages - placeholder text in textfield to send response
+msgid "PM_PHResponse"
+msgstr "Send a response"
+
+# User System - Private Messages - display when no messages
+msgid "PM_NoMsgs"
+msgstr "There are no messages to display"
+
+# User System - Private Messages - title of message thread, conversation with name X
+msgid "PM_TConvWith"
+msgstr "Conversation with"
+
+# User System - Private Messages - Description of username field to send message to
+msgid "PM_SendTo"
+msgstr "Send to"
+
+# User System - Private Messages - placeholder text in field of recipient
+msgid "PM_PHRecipient"
+msgstr "Name of recipient"
+
+# User System - Private Messages - placeholder text for message input field
+msgid "PM_PHTypeMsg"
+msgstr "Type your message here"
+
+# User System - Private Messages - prompt when user typed in a name and script is searching
+msgid "PM_searching"
+msgstr "Searching..."
+
+# User System - Private Messages - error when entereing a too short username
+msgid "PM_ErrTooShort"
+msgstr "Please enter 2 or more characters"
+
+# User System - Private Messages - error that no user with that name was found
+msgid "PM_ErrNoUser"
+msgstr "No user found"
+
+# User System - Private Messages - title of page
+msgid "CM_PageTitle"
+msgstr "My Comments"
+
+# User System - My Comments section - growl notifying of new comment replies
+msgid "CM_NewReplies"
+msgstr "Some of your comments got replies from other pet battlers!<br>They are highlighted in green. A click on the link brings you to the respective thread."
+
+# User System - My Comments section - Displayed when user has not written any comments at all
+msgid "CM_NoComs"
+msgstr "You have not written any comments so far. Go forth and tell your tale with pride! :-)"
+
+# User System - My Comments section - table column header for links
+msgid "CM_TblLinks"
+msgstr "Link to thread"
+
+# User System - My Comments section - table column header for You wrote
+msgid "CM_TblYouWrt"
+msgstr "You wrote"
+
+# User System - My Comments section - table column header for Responses
+msgid "CM_TblResponses"
+msgstr "Responses"
+
+# User System - My Comments section - table column header for Votes
+msgid "CM_TblVotes"
+msgstr "Votes"
+
+# User System - My Comments section - table column header for Year
+msgid "CM_TblYear"
+msgstr "Year"
+
+# User System - My Comments section - table column header for Month
+msgid "CM_TblMonth"
+msgstr "Month"
+
+# User System - My Comments section - table column header for Day
+msgid "CM_TblDay"
+msgstr "Day"
+
+# User System - Password Reset - error no user found
+msgid "PWR_NoUser"
+msgstr "No user with that name or email address found."
+
+# User System - Password Reset - error No email associated to account
+msgid "PWR_NoEmail"
+msgstr "There is no email address associated with this account."
+
+# User System - Password Reset - error too many pw reset attempts
+msgid "PWR_Locked"
+msgstr "There were too many attempts to reset the password of this account.<br>The function is now blocked for 30 minutes."
+
+# User System - Password Reset - Email with new password - subject line
+msgid "PWR_EMSubj"
+msgstr "Password reset for WoW-Petguide.com"
+
+# User System - Password Reset - Email content part 1
+msgid "PWR_EMCont1"
+msgstr "Sorry to hear you have problems logging in. To set a new password for your account, please follow this link:"
+
+# User System - Password Reset - Email content part 2 -button
+msgid "PWR_EMCont2"
+msgstr "Set new password"
+
+# User System - Password Reset - Email content part 3 - after this there is part 4 as a link
+msgid "PWR_EMCont3"
+msgstr "This reset code is valid for 24 hours. If you need any additional help, you can use the"
+
+# User System - Password Reset - Email content part 4 - this is a link
+msgid "PWR_EMCont4"
+msgstr "account retrieval page"
+
+# User System - Password Reset - Email content part 5 - after this the name Xu-Fu will be displayed
+msgid "PWR_EMCont5"
+msgstr "If you did not request this email, you can safely ignore it.<br><br>Yours,"
+
+# User System - Password Reset - title of page
+msgid "PWR_PGTitle"
+msgstr "Recover your Password"
+
+# User System - Password Reset - Instruction
+msgid "PWR_Instruct"
+msgstr "Please enter your username or email below. If you registered your email address when signing up, an email will be sent to you to reset your password."
+
+# User System - Password Reset - Button
+msgid "PWR_BTReco"
+msgstr "Recover password"
+
+# User System - Password Reset - success message
+msgid "PWR_Success"
+msgstr "An email was sent to your registered email address. Please follow the instructions in that mail to recover your account!<br> If you did not receive the email, please check your spam folder.<br><br>You will be redirect back to your previous page in <span id=\"counter\">10</span> seconds."
+
+# User System - Register Account - Title of page
+msgid "RG_Title"
+msgstr "Register Your Account"
+
+# User System - Register Account - Instructions
+msgid "RG_Instructions"
+msgstr "Thank you for your interest!<br>Creating an account is super easy and will allow you to use all features of Xu-Fu's Pet Guides."
+
+# User System - Register Account - Header for Nickname
+msgid "RG_HNick"
+msgstr "Nickname"
+
+# User System - Register Account - Nickname question mark mouseover info
+msgid "RG_NickDesc"
+msgstr "Your nickname is the name under which your comments and info are shown.<br> The following restrictions are in place:"
+
+# User System - Register Account - Nickname restrictions 1
+msgid "RG_NickRest1"
+msgstr "Usernames must be between <b>2</b> and <b>15</b> characters long."
+
+# User System - Register Account - Nickname restrictions 2
+msgid "RG_NickRest2"
+msgstr "Empty spaces and the following characters are not allowed:"
+
+# User System - Register Account - Nickname restrictions 3
+msgid "RG_NickRest3"
+msgstr "No offensive names :P"
+
+# User System - Register Account - Password info 1
+msgid "RG_PassRest1"
+msgstr "Your password has to be at least 6 characters long. It is advisable to use a complex password."
+
+# User System - Register Account - Password info 2
+msgid "RG_PassRest2"
+msgstr "Your password will be encrypted. No one, including the site admin, can see your real password."
+
+# User System - Register Account - second password entry field
+msgid "RG_RepPass"
+msgstr "Repeat password"
+
+# User System - Register Account - Email input field 1
+msgid "RG_RepMail1"
+msgstr "Email"
+
+# User System - Register Account - Email input field 2
+msgid "RG_RepMail2"
+msgstr "Email (optional)"
+
+# User System - Register Account - Email info text 1
+msgid "RG_MailInfo1"
+msgstr "There is no requirement to enter your email address, however it is recommended in case you lose access to your account and need to reset your password."
+
+# User System - Register Account - Email info text 2
+msgid "RG_MailInfo2"
+msgstr "If you enter an email address, it will never be published. It will also not be used to send you emails unless you request them (for example to recover your password or as a confirmation when you submit strategy suggestions)."
+
+# User System - Account Retrieval page - invalid email entered
+msgid "AR_EMInv"
+msgstr "Please enter a valid email address."
+
+# User System - Account Retrieval page - subject line of confirmation mail for requester
+msgid "AR_CMSubj"
+msgstr "Account Retrieval Request"
+
+# User System - Account Retrieval page - confirmation mail for requester, message content
+msgid "AR_CMMsg"
+msgstr "WoW-Petguide.com received an account retrieval request from your email address.<br> If you did not send any request, you can safely ignore this email. <br><br>Below is the information that was submitted:"
+
+# User System - Account Retrieval page - confirmation mail for requester, signature. Below the name Xu-Fu will be displayed
+msgid "AR_CMSig"
+msgstr "Yours,"
+
+# User System - Account Retrieval page - Page title
+msgid "AR_PTitle"
+msgstr "Retrieve Your Account"
+
+# User System - Account Retrieval page - Instructions part 1
+msgid "AR_Instr1"
+msgstr "If you are unable to login or recover your password, you can use below form to request help."
+
+# User System - Account Retrieval page - Instructions part 2
+msgid "AR_Instr2"
+msgstr "Please add every bit of info you might find relevant, such as your username, the icon you used, which character you linked through the armory or how many comments you wrote.<br> Anything you remember might help us recover your account for you. Please note that we cannot guarantee a successful retrieval of your account."
+
+# User System - Account Retrieval page - prompt for your information
+msgid "AR_YD"
+msgstr "Your details"
+
+# User System - Account Retrieval page - Button to send retrieval request
+msgid "AR_BTSend"
+msgstr "Send Retrieval request"
+
+# User System - Account Retrieval page - message after submitting a request part 1
+msgid "AR_SucMsg1"
+msgstr "Your request was sent successfully. We will get back to you as soon as possible.<br><br>A copy of your request was also sent to your email address as confirmation."
+
+# User System - Account Retrieval page - message after submitting a request part 2
+msgid "AR_SucMsg2"
+msgstr "You will be redirected to the front page in <span id=\"counter\">10</span> seconds."
+
+# User System - Password Reset page - title of page
+msgid "RP_Title"
+msgstr "Password Retrieval"
+
+# User System - Password Reset page - Error - link used not valid part 1
+msgid "RP_ErrInvLink1"
+msgstr "I am sorry, the link to reset your password is not valid.<br>Possible reasons are:"
+
+# User System - Password Reset page - Error - link used not valid part 2
+msgid "RP_ErrInvLink2"
+msgstr "Another password reset was requested in the meanwhile. Only the most recent link is valid."
+
+# User System - Password Reset page - Error - link used not valid part 3
+msgid "RP_ErrInvLink3"
+msgstr "Password reset links expire after 24 hours. If this mail is older, please request a new one."
+
+# User System - Password Reset page - Error - link used not valid part 4 - after this a link will be shown saying -account retrieval page-
+msgid "RP_ErrInvLink4"
+msgstr "Should you have any more trouble, please use the "
+
+# User System - Password Reset page - Prompt to put in new password after using a valid link from email
+msgid "RP_NPPrompt"
+msgstr "Please enter a new password for your account below."
+
+# User System - Password Reset page - Prompt for field to enter new password
+msgid "RP_NPField"
+msgstr "New password"
+
+# User System - Password Reset page - Prompt for field to repeat new password
+msgid "RP_NPRepPW"
+msgstr "Repeat password"
+
+# User System - Password Reset page - Button to save the new password
+msgid "RP_Save"
+msgstr "Save Password"
+
+# User System - Password Reset page - Success message 1
+msgid "RP_PWChanged1"
+msgstr "Your password was updated successfully!"
+
+# User System - Password Reset page - Success message 2
+msgid "RP_PWChanged2"
+msgstr "You have been logged in and will be redirected to the front page in <span id=\"counter\">5</span> seconds."
+
+# Public User Profiles - Tab for About
+msgid "UP_TabAbout"
+msgstr "About"
+
+# Public User Profiles - Tab for Collection
+msgid "UP_TabCollection"
+msgstr "Collection"
+
+# Public User Profiles - Tab for Strategies
+msgid "UP_TabStrategies"
+msgstr "Strategies"
+
+# Public User Profiles - About tab - message if user has not added and info. Sentence starts with the user name
+msgid "UP_ABNoInfo"
+msgstr "has not added any personal information."
+
+# Public User Profiles - About tab - title for pets collected number
+msgid "UP_ABPetsCol"
+msgstr "Pets Collected"
+
+# Public User Profiles - About tab - title for favourite pet
+msgid "UP_ABFavPet"
+msgstr "Favourite Pet"
+
+# Public User Profiles - About tab - title for registration date
+msgid "UP_ABRegDate"
+msgstr "Registered"
+
+# Public User Profiles - About tab - prompt to send private message - full sentence is Send private message to NAME
+msgid "UP_ABSendPM"
+msgstr "Send private message to"
+
+# Collection Viewer - Excel Export - generic error
+msgid "CV_ExportErr"
+msgstr "There was a problem exporting your collection. Please try again"
+
+# Comment System - link to quick switch language to EN part 1. in between part 1 and 2 the number of comments is shown. You can also use only part 1 - number - and leave part 2 empty or vice versa.
+msgid "CM_QuickLng1"
+msgstr "Click to see"
+
+# Comment System - link to quick switch language to EN part 2. in between part 1 and 2 the number of comments is shown. You can also use only part 1 - number - and leave part 2 empty or vice versa.
+msgid "CM_QuickLng2"
+msgstr "English comments"
+
+# Comment System - link to quick switch language back to native language.
+msgid "CM_QuickLng3"
+msgstr "Click to go back to your own language"
+
+# Comment System - Filter setting of order in which comments are shown - title
+msgid "CM_FiltersT"
+msgstr "Show first"
+
+# Comment System - Filter setting of order in which comments are shown
+msgid "CM_FiltersS1"
+msgstr "Newest"
+
+# Comment System - Filter setting of order in which comments are shown
+msgid "CM_FiltersS2"
+msgstr "Oldest"
+
+# Comment System - Filter setting of order in which comments are shown
+msgid "CM_FiltersS3"
+msgstr "Highest rating"
+
+# Comment System - Filter setting of order in which comments are shown
+msgid "CM_FiltersS4"
+msgstr "Lowest rating"
+
+# Comment System - Error loading more comments
+msgid "CM_ErrLoad"
+msgstr "There was an error fetching comments, please reload the page."
+
+# Comment System - mouseover warning when trying to vote on comment while not logged in
+msgid "CM_ErrVNAcc"
+msgstr "You must be logged in to vote on comments"
+
+# Comment System - header when editing comment
+msgid "CM_EditTimer"
+msgstr "Editing is possible for 5 minutes after submitting"
+
+# Comment System - confirmation prompt when deleting a comment
+msgid "CM_DelConf"
+msgstr "Are you sure you want to delete this comment?"
+
+# Comment System - Mouseover error - user already sent a report about this comment
+msgid "CM_RPDouble"
+msgstr "You already reported this comment."
+
+# Comment System - Report comment window - instruction text
+msgid "CM_RPInst"
+msgstr "Please describe what you want to report this comment for"
+
+# Comment System - Report comment categories - inappropriate content, harassment, insults etc.
+msgid "CM_RPCInapp"
+msgstr "Inappropriate"
+
+# Comment System - Report comment categories - Spam, advertisement etc.
+msgid "CM_RPCSpam"
+msgstr "Spam"
+
+# Comment System - Report comment categories - other reports
+msgid "CM_RPCOther"
+msgstr "Other"
+
+# Comment System - Report comment - button to send it
+msgid "CM_RPBTSend"
+msgstr "Send Report"
+
+# Pet Tables - table header for required level of pets - please translate this as well as the two below
+msgid "TBL_ReqLevel"
+msgstr "Required Level"
+
+# Pet Tables - table header for required level of pets - if you need to use 2 or more longer words, split them between these two and there will be a line break in between
+msgid "TBL_ReqLevel1"
+msgstr "Required"
+
+# Pet Tables - table header for required level of pets - if you need to use 2 or more longer words, split them between these two and there will be a line break in between
+msgid "TBL_ReqLevel2"
+msgstr "Level"
+
+# Pet Tables - mouseover help text introduction for all types of any pet x, like any roach or any rabbit
+msgid "TBL_AnyPetInst"
+msgstr "Possible pets for this slot:"
+
+# Pet Tables - mouseover help text introduction for all types of any pet x, explanation at bottom
+msgid "TBL_AnyPetInst2"
+msgstr "Brackets show the highest pet of each in your collection"
+
+# Comment System - Gold comment reached triggers a message to the user - subject line of message
+msgid "CM_GoldSubj"
+msgstr "Gold Comment Reached!"
+
+# Comment System - Gold comment reached triggers a message to the user - content part 1
+msgid "CM_GoldCont1"
+msgstr "Congratulations!"
+
+# Comment System - Gold comment reached triggers a message to the user - content part 2
+msgid "CM_GoldCont2"
+msgstr "One of your comments got enough upvotes from other pet battlers to reach Gold status"
+
+# Comment System - Gold comment reached triggers a message to the user - content part 3 - after this a link to the comment is shown
+msgid "CM_GoldCont3"
+msgstr "It will now be highlighted much more prominently, go check it out:"
+
+# Comment System - Gold comment reached triggers a message to the user - content part 4
+msgid "CM_GoldCont4"
+msgstr "Thank you for your contribution!"
+
+# User System - Login error handling - password incorrect
+msgid "AC_PWWrong1"
+msgstr "Submitted password was not correct."
+
+# User System - Login error handling - password incorrect repeatedly
+msgid "AC_PWWrong2"
+msgstr "Submitted password incorrect. <br>Your account will be temporarily locked if you enter a wrong password too often."
+
+# User System - Login error handling - password incorrect too often, account locked
+msgid "AC_PWWrong3"
+msgstr "Incorrect password. <br>Your account has been temporarily locked. <br>Please try again in 10 minutes."
+
+# Account Settings - Error message when user tried to cheat the system to rename account, but is not eligible.
+msgid "AS_ErrNameCh"
+msgstr "Your account is not eligible for a name change. You little trickster ;-)"
+
+# Account Settings - Title of Page
+msgid "AS_Title"
+msgstr "Account Settings"
+
+# Account Settings - Account Deletion Process - header for step 1
+msgid "AS_AccDelSt1"
+msgstr "Account Deletion Process - Step 1"
+
+# Account Settings - Account Deletion Process - header for step 2
+msgid "AS_AccDelSt2"
+msgstr "Account Deletion Process - Step 2"
+
+# Account Settings - Account Deletion Process - Warning signal
+msgid "AS_AccDelWarn"
+msgstr "Warning!"
+
+# Account Settings - Account Deletion Process - warning text
+msgid "AS_AccDelTx1"
+msgstr "Following this process will permanently remove your user account.<br>In the next step you can decide what will happen to your comments or strategies, in case you submitted any."
+
+# Account Settings - Account Deletion Process - warning text 2
+msgid "AS_AccDelTx2"
+msgstr "To continue, please enter your current password:"
+
+# Account Settings - Account Deletion Process - button to continue
+msgid "AS_AccDelBTC"
+msgstr "Continue Deletion Process"
+
+# Account Settings - Account Deletion Process - instruction to press button to continue
+msgid "AS_AccDelInst1"
+msgstr "Please confirm that you want to continue with the deletion"
+
+# Account Settings - Account Deletion Process - instruction for user comments etc.
+msgid "AS_AccDelInst2"
+msgstr "Before continuing, please select what should happen to some of your data"
+
+# Account Settings - Account Deletion Process - table with info about user data, after this the amount of comments is shown
+msgid "AS_AccDelInfCom"
+msgstr "Your comments. You wrote in total"
+
+# Account Settings - Account Deletion Process - option 1 for comments - keep all
+msgid "AS_AccDelComOpt1"
+msgstr "Keep all your comments with your name."
+
+# Account Settings - Account Deletion Process - option 2 keep but make anonymous
+msgid "AS_AccDelComOpt2"
+msgstr "Keep your comments with the name <i>Anonymous</i>."
+
+# Account Settings - Account Deletion Process - option 3 delete all
+msgid "AS_AccDelComOpt3"
+msgstr "Delete all comments."
+
+# Account Settings - Account Deletion Process - table with info about user data, after this the amount of strategies is shown
+msgid "AS_AccDelInfStrat"
+msgstr "Your strategies. You created a total of"
+
+# Account Settings - Account Deletion Process - option 1 for strategies - keep all
+msgid "AS_AccDelStratOpt1"
+msgstr "Keep strategies with your name as the creator."
+
+# Account Settings - Account Deletion Process - option 2 keep but make anonymous
+msgid "AS_AccDelStratOpt2"
+msgstr "Keep strategies with creator name <i>Anonymous</i>."
+
+# Account Settings - Account Deletion Process - option 3 delete all
+msgid "AS_AccDelStratOpt3"
+msgstr "Delete all your strategies including all comments submitted to them."
+
+# Account Settings - Account Deletion Process - button to finalize
+msgid "AS_AccDelBTFin"
+msgstr "Finish account deletion"
+
+# Account Settings - Account Deletion Process - instruction for final step
+msgid "AS_AccDelInst3"
+msgstr "This is the last step of the account deletion.<br>If you confirm below, your account will be irrevocably deleted."
+
+# Account Settings - Account Deletion Process - button for final deletion confirmation
+msgid "AS_AccDelBTEnd"
+msgstr "I'm sure, delete my account"
+
+# Account Settings - Bnet Connection Refresh - Title
+msgid "AS_BnetRfTitle"
+msgstr "Battle.net Account Connection Needs Refreshing"
+
+# Account Settings - Bnet Connection Refresh - Instructions Pt1
+msgid "AS_BnetRfInst1"
+msgstr "Your authentication with Battle.net is not working properly. This can have many reasons, for example"
+
+# Account Settings - Bnet Connection Refresh - Instructions Pt2
+msgid "AS_BnetRfInst2"
+msgstr "You are logged into Battle.net with a different account than the one linked to Xu-Fu"
+
+# Account Settings - Bnet Connection Refresh - Instructions Pt3
+msgid "AS_BnetRfInst3"
+msgstr "Your Battle.net Account has been locked by Blizzard<"
+
+# Account Settings - Bnet Connection Refresh - Instructions Pt4
+msgid "AS_BnetRfInst4"
+msgstr "You revoked access for Xu-Fu within your Battle.net Account"
+
+# Account Settings - Bnet Connection Refresh - Instructions Pt5
+msgid "AS_BnetRfInst5"
+msgstr "To re-authenticate Xu-Fu, please click here"
+
+# Account Settings - Bnet Connection Refresh - Button to re-authenticate
+msgid "AS_BnetRfBTRefresh"
+msgstr "Start Authentication"
+
+# Account Settings -  Missing WoW access through Bnet - Title
+msgid "AS_NoWoWTitle"
+msgstr "Missing Battle.net WoW Access"
+
+# Account Settings -  Missing WoW access through Bnet - Instructions Part 1
+msgid "AS_NoWoWInst1"
+msgstr "Your Battle.net account is successfully linked with Xu-Fu, but you chose to grant no access to WoW data, which is limited to the list of your characters. If this was intentional, all is well and you don't need to do anything."
+
+# Account Settings -  Missing WoW access through Bnet - Instructions Part 2
+msgid "AS_NoWoWInst2"
+msgstr "It does mean, however, that Xu-Fu cannot import your pet collection automatically, and you will not be able to chose a character picture as your avatar."
+
+# Account Settings -  Missing WoW access through Bnet - Instructions Part 3
+msgid "AS_NoWoWInst3"
+msgstr "If you want to change this, follow these steps"
+
+# Account Settings -  Missing WoW access through Bnet - Instructions Part 4
+msgid "AS_NoWoWInst4"
+msgstr "Visit your"
+
+# Account Settings -  Missing WoW access through Bnet - Instructions Part 5 - this is a clickable link
+msgid "AS_NoWoWInst5"
+msgstr "Battle.net Account Settings"
+
+# Account Settings -  Missing WoW access through Bnet - Instructions Part 6
+msgid "AS_NoWoWInst6"
+msgstr "Go to Security -> Approved Apps"
+
+# Account Settings -  Missing WoW access through Bnet - Instructions Part 7
+msgid "AS_NoWoWInst7"
+msgstr "Remove Xu-Fu from the list"
+
+# Account Settings -  Missing WoW access through Bnet - Instructions Part 8
+msgid "AS_NoWoWInst8"
+msgstr "Log out of wow-petguide.com and back in with Battle.net"
+
+# Account Settings -  Missing WoW access through Bnet - Instructions Part 9
+msgid "AS_NoWoWInst9"
+msgstr "When prompted to authorize Xu-Fu again, make sure the tick box is active at -Your World of Warcraft Profile-."
+
+# Account Settings - Account Name - Title
+msgid "AS_UNTitle"
+msgstr "Your Account Name"
+
+# Account Settings - Account Name - Instructions to change it part 1
+msgid "AS_UNChInst1"
+msgstr "Since you signed up through Battle.net, your BattleTag was entered as your account name. It is now visible to others when you post comments."
+
+# Account Settings - Account Name - Instructions to change it part 2
+msgid "AS_UNChInst2"
+msgstr "If you do not want your BattleTag shown you can change it here."
+
+# Account Settings - Account Name - Instructions to change it part 3
+msgid "AS_UNChInst3"
+msgstr "Please note that your account name can only be changed <b>once<b>."
+
+# Account Settings - Account Name - heading of the input field for the new name
+msgid "AS_UNHead1"
+msgstr "New name"
+
+# Account Settings - Account Name - Button to save new name
+msgid "AS_UNBTSave"
+msgstr "Save New Name"
+
+# Account Settings - Password - page title
+msgid "AS_PWTitle"
+msgstr "Password Protection"
+
+# Account Settings - Password - instruction - part 1
+msgid "AS_PWInst1"
+msgstr "Your account does not have a password associated. Logging in through Battle.net is perfectly fine. Adding a password gives you the additional option to login with your username and password instead."
+
+# Account Settings - Password - instruction - part 2
+msgid "AS_PWInst2"
+msgstr "You can change your password at any time."
+
+# Account Settings - Battle.net Connection - Page Title
+msgid "AS_BNTitle"
+msgstr "Battle.net Connection"
+
+# Account Settings - Battle.net Connection - Instructions part 1
+msgid "AS_BNInst1"
+msgstr "Linking your Battle.net Account with your Xu-Fu Account is optional, but brings a few advantages:"
+
+# Account Settings - Battle.net Connection - Instructions part 2
+msgid "AS_BNInst2"
+msgstr "You can login with Battle.net, without the need of a password."
+
+# Account Settings - Battle.net Connection - Instructions part 3
+msgid "AS_BNInst3"
+msgstr "Xu-Fu can update your pet collection automaticallyn, no manual refreshing required."
+
+# Account Settings - Battle.net Connection - Instructions part 4
+msgid "AS_BNInst4"
+msgstr "You can chose a character picture as your avatar."
+
+# Account Settings - Battle.net Connection - Instructions part 5
+msgid "AS_BNInst5"
+msgstr "Xu-Fu will not receive any of your personal information by connecting with Battle.net (such as your password, email address or any billing information)."
+
+# Account Settings - Battle.net Connection - Instructions part 6
+msgid "AS_BNInst6"
+msgstr "To link your account, select your account region and click on the button:"
+
+# Account Settings - Battle.net Connection - Button to start connection
+msgid "AS_BNBTCon"
+msgstr "Connect Battle.net Account"
+
+# Account Settings - Battle.net Connection - text snippet
+msgid "AS_PleaseNote"
+msgstr "Please note"
+
+# Account Settings - Battle.net Connection - account already connected - instructions 1
+msgid "AS_BNDupCon1"
+msgstr "The authorization was successful but there is another Xu-Fu account already connected to your Battle.net account."
+
+# Account Settings - Battle.net Connection - account already connected - instructions 2
+msgid "AS_BNDupCon2"
+msgstr "You can select which one to use in the future in association with your Battle.net account:"
+
+# Account Settings - Battle.net Connection - account already connected - instructions 3
+msgid "AS_BNDupCon3"
+msgstr "If you connect your current account with Battle.net, your old account could be lost. <br>To check the account, log out and select -Login with Battle.net-"
+
+# Account Settings - Battle.net Connection - header for a table where the old and new account are being compared, column for the current account
+msgid "AS_BNDupT1"
+msgstr "This account"
+
+# Account Settings - Battle.net Connection - header for a table where the old and new account are being compared, column for the old account
+msgid "AS_BNDupT2"
+msgstr "The old account"
+
+# Account Settings - Battle.net Connection - footnote on the account that has the bnet connection already
+msgid "AS_BNDupT3"
+msgstr "Has active Battle.net connection"
+
+# Account Settings - Language selection - title of page
+msgid "AS_LNTitle"
+msgstr "Language Selection"
+
+# Account Settings - Language selection - instructions part 1
+msgid "AS_LNInst1"
+msgstr "You can set your preferred language here."
+
+# Account Settings - Language selection - instructions part 2
+msgid "AS_LNInst2"
+msgstr "If a language is flagged as <i>incomplete</i> only spell and pet names are localized. Most other page assets will default to English."
+
+# Account Settings - Language selection - header of language dropdown
+msgid "AS_LNHead"
+msgstr "Select language"
+
+# Account Settings - Email settings - page title
+msgid "AS_EMAddTitle"
+msgstr "Add Your Email Address"
+
+# Account Settings - Email settings, add email - instructions part 1
+msgid "AS_EMAddInst1"
+msgstr "Here you can add an email address to your account. Should you forget your password, your email address can be used to recover your account."
+
+# Account Settings - Email settings, add email - instructions part 2
+msgid "AS_EMAddInst2"
+msgstr "You can change or remove it at any time."
+
+# Account Settings - Email settings, add email - header of input field to add email
+msgid "AS_EMAddH"
+msgstr "Your email address"
+
+# Account Settings - Email settings, add email - button to save email address
+msgid "AS_EMBTSave"
+msgstr "Save Email"
+
+# Account Settings - Email settings, change email - title
+msgid "AS_EMCTitle"
+msgstr "Change Email Address"
+
+# Account Settings - Email settings, display of current email address
+msgid "AS_EMCurrent"
+msgstr "Your currently saved email address is"
+
+# Account Settings - Email settings, header of input field for new email address
+msgid "AS_EMCHeader"
+msgstr "New email address"
+
+# Account Settings - Email settings, button to update email with new value
+msgid "AS_EMCBTUpdate"
+msgstr "Update Email"
+
+# Account Settings - Email settings, button to remove saved email address
+msgid "AS_EMCBTRemove"
+msgstr "Remove Email"
+
+# Account Settings - Change password - title
+msgid "AS_PWCTitle"
+msgstr "Change Password"
+
+# Account Settings - Beta Features - title
+msgid "AS_BTTitle"
+msgstr "Beta Features"
+
+# Account Settings - Beta Features - instructions part 1
+msgid "AS_BTInst1"
+msgstr "Aranesh is regularly adding new features. If you want to test them before they are released, activate this option."
+
+# Account Settings - Beta Features - instructions part 2
+msgid "AS_BTInst2"
+msgstr "activating beta features might replace parts of the page with versions that are not fully functional!"
+
+# Account Settings - Beta Features - instructions part 3 - afterwards clickable name Aranesh is shown
+msgid "AS_BTInst3"
+msgstr "To learn what is currently in development, contact"
+
+# Account Settings - Beta Features - Button On
+msgid "Button_On"
+msgstr "On"
+
+# Account Settings - Beta Features - Button Off
+msgid "Button_Off"
+msgstr "Off"
+
+# Account Settings - Delete Account - title
+msgid "AS_DLTitle"
+msgstr "Delete Account"
+
+# Account Settings - Delete Account - Button to start deletion
+msgid "AS_DLBTStart"
+msgstr "Start Account Deletion Process"
+
+# Account Settings - Growl Notification - Bnet connected successfully
+msgid "AS_GRBnetCon"
+msgstr "Your Battle.net Account was connected successfully!"
+
+# Account Settings - Growl Notification - Bnet authorization was successful
+msgid "AS_GRBnetConY"
+msgstr "Your Battle.net Account Authorization was successful. Thank you!"
+
+# Account Settings - Growl Notification - Email saved
+msgid "AS_GREMSaved"
+msgstr "Your email address was saved successfully."
+
+# Account Settings - Growl Notification - email removed
+msgid "AS_GREMRemoved"
+msgstr "Email address removed."
+
+# Account Settings - Growl Notification - language changed
+msgid "AS_GRLngChanged"
+msgstr "Language changed."
+
+# Landing Page - Intro Part 1
+msgid "LP_Intro1"
+msgstr "Xu-Fu's Pet Guides are a welcoming community all around pet battles in World of Warcraft."
+
+# Landing Page - Intro Part 2 - this is the start of a sentence, between part 2 and 3 is a clickable link called -Aranesh-.
+msgid "LP_Intro2"
+msgstr "Created by"
+
+# Landing Page - Intro Part 3 - see description of part 2!
+msgid "LP_Intro3"
+msgstr "in 2015, the site has since grown immensely. It hosts hundreds of different strategies for pet challenges, tools to analyze and optimize your collection, and is localized in several languages."
+
+# Landing Page - Intro Part 4
+msgid "LP_Intro4"
+msgstr "All that is possible thanks to a group of dedicated contributors and visitors just like yourself! Be part of it, and enjoy your stay!"
+
+# Landing Page - Team Button
+msgid "LP_BTTeam"
+msgstr "Learn more about the team behind Xu-Fu"
+
+# Landing Page - Team Modal window - titles
+msgid "LP_TeamAdmin"
+msgstr "Site creator and admin"
+
+# Landing Page - Team Modal window - titles
+msgid "LP_TeamMods"
+msgstr "Moderators"
+
+# Landing Page - Team Modal window - titles
+msgid "LP_TeamLoca"
+msgstr "Localization"
+
+# Landing Page - Team Modal window - titles
+msgid "LP_TeamFormer"
+msgstr "Former Contributors"
+
+# Landing Page - Header for latest comments
+msgid "LP_HeadComs"
+msgstr "Latest comments"
+
+# Landing Page - Sidebar Heading - Your Account
+msgid "LP_SB_Account"
+msgstr "Your Account"
+
+# Landing Page - Sidebar Button - Login Register
+msgid "LP_SB_BTLog"
+msgstr "Login / Register"
+
+# Landing Page - Sidebar Heading - Notifications
+msgid "LP_SB_Notes"
+msgstr "Notifications"
+
+# Landing Page - Sidebar Heading -  Newest Members
+msgid "LP_SB_NewM"
+msgstr "Newest Members"
+
+# Landing Page - Sidebar Heading -  Quicklinks
+msgid "LP_SB_QL"
+msgstr "Quicklinks"
+
+# Landing Page - Sidebar Heading -  Contact
+msgid "LP_SB_Contact"
+msgstr "Contact"
+
+# Landing Page - Sidebar Heading -  Support Xu-Fu
+msgid "LP_SB_Sup"
+msgstr "Support Xu-Fu"
+
+# Landing Page - Notifications - XX new messages
+msgid "LP_NF_NewMsgs"
+msgstr "new messages"
+
+# Landing Page - Notifications - XX comment responses
+msgid "LP_NF_NewCms"
+msgstr "comment responses"
+
+# Name of Strategy Tag: Breed
+msgid "Tag_Breed"
+msgstr "Breed"
+
+# Name of Strategy Tag: Fast
+msgid "Tag_Fast"
+msgstr "Fast"
+
+# Name of Strategy Tag: Long
+msgid "Tag_Long"
+msgstr "Long"
+
+# Name of Strategy Tag: RNG
+msgid "Tag_RNG"
+msgstr "RNG"
+
+# Name of Strategy Tag: TCG
+msgid "Tag_TCG"
+msgstr "TCG"
+
+# Name of Strategy Tag: Shop
+msgid "Tag_Shop"
+msgstr "Shop"
+
+# Name of Strategy Tag: Level
+msgid "Tag_Level"
+msgstr "Level"
+
+# Name of Strategy Tag: Tricky
+msgid "Tag_Tricky"
+msgstr "Tricky"
+
+# Name of Strategy Tag: Reliable
+msgid "Tag_Reliable"
+msgstr "Reliable"
+
+# Name of Strategy Tag: TD Script
+msgid "Tag_TD"
+msgstr "TD Script"
+
+# Name of Strategy Tag: Unobtainable
+msgid "Tag_Unobtainable"
+msgstr "Unobtainable"
+
+# Name of Strategy Tag: Level 2-10+
+msgid "Tag_Level2_10"
+msgstr "Level 2-10+"
+
+# Name of Strategy Tag: Staff Pick
+msgid "Tag_StaffPick"
+msgstr "Staff Pick"
+
+# Name of Strategy Tag: Unchecked
+msgid "Tag_Unchecked"
+msgstr "Unchecked"
+
+# Name of Strategy Tag: Verified
+msgid "Tag_Verified"
+msgstr "Verified"
+
+# Name of Strategy Tag: Level 11-20+
+msgid "Tag_Level11_20"
+msgstr "Level 11-20+"
+
+# Name of Strategy Tag: Level 21+
+msgid "Tag_Level21_plus"
+msgstr "Level 21+"
+
+# Name of Strategy Tag: High XP
+msgid "Tag_HighXP"
+msgstr "High XP"
+
+# Name of Strategy Tag: Medium XP
+msgid "Tag_MidXP"
+msgstr "Medium XP"
+
+# Name of Strategy Tag: Low XP
+msgid "Tag_LowXP"
+msgstr "Low XP"
+
+# Description of Strategy Tag: Breed
+msgid "Tag_Desc_Breed"
+msgstr "At least one of the pets for this strategy require the use of a specific breed."
+
+# Description of Strategy Tag: Fast
+msgid "Tag_Desc_Fast"
+msgstr "This strategy has been built to be as fast as possible."
+
+# Description of Strategy Tag: Long
+msgid "Tag_Desc_Long"
+msgstr "The strategy takes a while. Sit back, get yourself a warm drink and relax the scenery."
+
+# Description of Strategy Tag: RNG
+msgid "Tag_Desc_RNG"
+msgstr "Not every strategy can be bullet proof. This is one of them. You might have to restart it, since there are some random elements that increase the risk of your pets failing. Don't blame them, please!"
+
+# Description of Strategy Tag: TCG
+msgid "Tag_Desc_TCG"
+msgstr "This strategy is using pets obtainable from the Wow Trading Card Game (TCG) or the auction house for potentially high sums of gold."
+
+# Description of Strategy Tag: Shop
+msgid "Tag_Desc_Shop"
+msgstr "This strategy is using pets obtainable only from the Wow In-Game Shop for Battle.net Balance or real money."
+
+# Description of Strategy Tag: Level
+msgid "Tag_Desc_Level"
+msgstr "You can use this strategy to carry a level 1 level pet to give it experience."
+
+# Description of Strategy Tag: Tricky
+msgid "Tag_Desc_Tricky"
+msgstr "Some instructions are more difficult to follow than others. That's exactly what you might find in this strategy!"
+
+# Description of Strategy Tag: Reliable
+msgid "Tag_Desc_Reliable"
+msgstr "You want a strategy that does the job in one shot? This might be the one for you!"
+
+# Description of Strategy Tag: TD Script
+msgid "Tag_Desc_TD"
+msgstr "The strategy offers a TD script that can be used with the TD Script addon. You can copy the script by clicking on the button to the left of the pets."
+
+# Description of Strategy Tag: Unobtainable
+msgid "Tag_Desc_Unobtainable"
+msgstr "At least one pet in the strategy cannot be obtained anymore. If you have it, congrats!"
+
+# Description of Strategy Tag: Level 2-10+
+msgid "Tag_Desc_Level2_10"
+msgstr "You can use this strategy to carry a lower level pet to give it some experience."
+
+# Description of Strategy Tag: Staff Pick
+msgid "Tag_Desc_StaffPick"
+msgstr "A Strategy Curator found this strategy to be especially helpful and higlighted it with this tag to give it more exposure."
+
+# Description of Strategy Tag: Unchecked
+msgid "Tag_Desc_Unchecked"
+msgstr "This strategy has not been tested by any Strategy Curator, yet."
+
+# Description of Strategy Tag: Verified
+msgid "Tag_Desc_Verified"
+msgstr "This strategy was tested by a Strategy Curator and found to be working"
+
+# Description of Strategy Tag: Level 11-20+
+msgid "Tag_Desc_Level11_20"
+msgstr "You can use this strategy to carry a mid level pet to give it some experience."
+
+# Description of Strategy Tag: Level 21+
+msgid "Tag_Desc_Level21_plus"
+msgstr "You can use this strategy to carry a mid level pet to give it some experience."
+
+# Name of Strategy Tag: Flagged
+msgid "Tag_Flagged"
+msgstr "SadPing"
+
+# Description of Strategy Tag: Flagged
+msgid "Tag_Desc_Flagged"
+msgstr "This strategy has been flagged as problematic and that makes Shenk sad."
+
+# Name of Strategy Tag: Patch 8.3
+msgid "Tag_patch_8_3"
+msgstr "Patch 8.3"
+
+# Description of Strategy Tag: Patch 8.3
+msgid "Tag_Desc_patch_8_3"
+msgstr "This strategy is impacted by changes to pet battles made in patch 8.3. The strategy might not work properly anymore and needs to be reviewed."
+
+# Name of Strategy Tag: Shadowlands
+msgid "Tag_Shadowlands"
+msgstr "Shadowlands"
+
+# Description of Strategy Tag: Shadowlands
+msgid "Tag_Desc_Shadowlands"
+msgstr "This strategy is impacted by changes to pet battles made with the Shadowlands Pre-Patch. The strategy might not work properly anymore and needs to be reviewed."

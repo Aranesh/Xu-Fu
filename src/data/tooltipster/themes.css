@@ -1,0 +1,116 @@
+.tooltipster-sidetip.tooltipster-usertooltip .tooltipster-box {
+    border: 0px solid #4e6f95;
+    border-radius: 0;
+    min-height: 100px;
+    min-width: 200px;
+}
+.tooltipster-sidetip.tooltipster-bbedit .tooltipster-box {
+    border: 0px;
+    min-height: 100px;
+}
+.tooltipster-sidetip.tooltipster-usertooltip .tooltipster-content {
+    color: #fff
+}
+.tooltipster-sidetip.tooltipster-usertooltip .tooltipster-arrow {
+    height: 11px;
+    margin-left: -11px;
+    width: 22px
+}
+.tooltipster-sidetip.tooltipster-usertooltip.tooltipster-left .tooltipster-arrow,
+.tooltipster-sidetip.tooltipster-usertooltip.tooltipster-right .tooltipster-arrow {
+    height: 22px;
+    margin-left: 0;
+    margin-top: -11px;
+    width: 11px
+}
+.tooltipster-sidetip.tooltipster-usertooltip .tooltipster-arrow-background {
+    border: 11px solid transparent
+}
+.tooltipster-sidetip.tooltipster-usertooltip.tooltipster-bottom .tooltipster-arrow-background {
+    border-bottom-color: #17222e;
+    top: 4px
+}
+.tooltipster-sidetip.tooltipster-usertooltip.tooltipster-left .tooltipster-arrow-background {
+    border-left-color: #17222e;
+    left: -4px
+}
+.tooltipster-sidetip.tooltipster-usertooltip.tooltipster-right .tooltipster-arrow-background {
+    border-right-color: #17222e;
+    left: 4px
+}
+.tooltipster-sidetip.tooltipster-usertooltip.tooltipster-top .tooltipster-arrow-background {
+    border-top-color: #17222e;
+    top: -4px
+}
+.tooltipster-sidetip.tooltipster-usertooltip .tooltipster-arrow-border {
+    border-width: 11px
+}
+.tooltipster-sidetip.tooltipster-usertooltip.tooltipster-bottom .tooltipster-arrow-uncropped {
+    top: -11px
+}
+.tooltipster-sidetip.tooltipster-usertooltip.tooltipster-right .tooltipster-arrow-uncropped {
+    left: -11px
+}
+
+
+
+
+
+.tooltipster-sidetip.tooltipster-smallnote .tooltipster-box {
+    border-radius: 5px 5px;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+    webkit-border-radius: 5px;
+    webkit-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+    moz-border-radius: 5px;
+    moz-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    padding: 5 8 5 8;
+    background-color: #363636;
+
+}
+.tooltipster-sidetip.tooltipster-smallnote .tooltipster-content {
+    font-family: MuseoSans-300,"Century Gothic";
+    font-size: 14px;
+    font-weight: normal;
+    text-decoration: none;
+}
+.tooltipster-sidetip.tooltipster-smallnote .tooltipster-arrow {
+    height: 11px;
+    margin-left: -11px;
+    width: 22px;
+}
+.tooltipster-sidetip.tooltipster-smallnote.tooltipster-left .tooltipster-arrow,
+.tooltipster-sidetip.tooltipster-smallnote.tooltipster-right .tooltipster-arrow {
+    height: 22px;
+    margin-left: 0;
+    margin-top: -11px;
+    width: 11px
+}
+.tooltipster-sidetip.tooltipster-smallnote .tooltipster-arrow-background {
+    border: 11px solid transparent
+}
+.tooltipster-sidetip.tooltipster-smallnote.tooltipster-bottom .tooltipster-arrow-background {
+    border-bottom-color: #363636;
+    top: 4px
+}
+.tooltipster-sidetip.tooltipster-smallnote.tooltipster-left .tooltipster-arrow-background {
+    border-left-color: #363636;
+    left: -4px
+}
+.tooltipster-sidetip.tooltipster-smallnote.tooltipster-right .tooltipster-arrow-background {
+    border-right-color: #363636;
+    left: 4px
+}
+.tooltipster-sidetip.tooltipster-smallnote.tooltipster-top .tooltipster-arrow-background {
+    border-top-color: #363636;
+    top: -4px
+}
+.tooltipster-sidetip.tooltipster-smallnote .tooltipster-arrow-border {
+    border-width: 11px
+}
+.tooltipster-sidetip.tooltipster-smallnote.tooltipster-bottom .tooltipster-arrow-uncropped {
+    top: -11px
+}
+.tooltipster-sidetip.tooltipster-smallnote.tooltipster-right .tooltipster-arrow-uncropped {
+    left: -11px
+}
