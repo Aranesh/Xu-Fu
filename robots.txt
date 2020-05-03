@@ -1,0 +1,14 @@
+User-agent: SemrushBot
+User-agent: MegaIndex.ru
+User-agent: istellabot
+User-agent: TencentTraveler
+Disallow: /
+Disallow: *
+
+User-agent: *
+Disallow: /*CTID=*
+Disallow: /*CTEnter=*
+Disallow: /*bnetlogin*
+Disallow: /*pwrecover*
+Disallow: /*acretrieve*
+Disallow: /*?user=*
