@@ -21,7 +21,7 @@ $command = \HTTP\argument_POST_or_GET_or_default ('command', FALSE);
     <img src="images/blank.png" width="50" height="1" alt="" />
 </td>
 <td>
-    <img class="ut_icon" width="84" height="84" <? echo $usericon ?>>
+    <img class="ut_icon" width="84" height="84" <?php echo $usericon ?>>
 </td>
 
 <td>
@@ -65,7 +65,7 @@ $command = \HTTP\argument_POST_or_GET_or_default ('command', FALSE);
 <td>
 <table style="width: 85%;" class="profile">
 
-    <? print_admin_menu('adm_peticons'); ?>
+    <?php print_admin_menu('adm_peticons'); ?>
 
     <tr style="background: #bcbcbc; border: 1px solid #bcbcbc;">
         <td class="profile">
@@ -149,7 +149,7 @@ while ($thispet =  mysqli_fetch_object($petsdb)) {
  $iconpets[$thispet->PetID]['Species'] = $thispet->RematchID;
  $iconpets[$thispet->PetID]['Name'] = $thispet->Name;
  $iconpets[$thispet->PetID]['Family'] = $thispet->Family;
- $iconpets[$thispet->PetID]['Fights'] = Database_query_single("SELECT COUNT(*) FROM Alternatives WHERE PetID1 = $thisid OR PetID2 = $thisid OR PetID3 = $thisid");
+ $iconpets[$thispet->PetID]['Fights'] = Database_query_single("SELECT COUNT(*) FROM Alternatives WHERE Published = '1' AND Deleted = '0' AND (PetID1 = $thisid OR PetID2 = $thisid OR PetID3 = $thisid)");
 }
 
 $dirrand = "images/pets";
@@ -223,28 +223,28 @@ Accepted file formats: JPG, JPEG and PNG.<br>
 <?
 
 foreach ($iconpets as $key => $value) { ?>
- <tr class="admin<? if ($value['Icon'] != TRUE) echo 'red'; if ($value['Quality'] == "Low-Resolution") echo 'orange'; if ($value['Quality'] == "Good") echo 'green'; ?>">
-    <td class="admin" style="text-align: center"><? echo $value['Species'] ?></td>
-    <td class="admin"><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/npc=<? echo $value['PetID'] ?>'><? echo $value['Name'] ?></a></td>
-    <td class="admin" style="text-align: center"><? echo $value['Family'] ?></td>
-    <td class="admin" style="text-align: center"><? if ($value['Icon'] == TRUE) { echo $value['Quality']; } else echo "Missing"; ?></td>
-    <td class="admin" style="text-align: center"><? echo $value['Fights'] ?></td>
+ <tr class="admin<?php if ($value['Icon'] != TRUE) echo 'red'; if ($value['Quality'] == "Low-Resolution") echo 'orange'; if ($value['Quality'] == "Good") echo 'green'; ?>">
+    <td class="admin" style="text-align: center"><?php echo $value['Species'] ?></td>
+    <td class="admin"><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/npc=<?php echo $value['PetID'] ?>'><?php echo $value['Name'] ?></a></td>
+    <td class="admin" style="text-align: center"><?php echo $value['Family'] ?></td>
+    <td class="admin" style="text-align: center"><?php if ($value['Icon'] == TRUE) { echo $value['Quality']; } else echo "Missing"; ?></td>
+    <td class="admin" style="text-align: center"><?php echo $value['Fights'] ?></td>
     <td class="admin" style="text-align: center"><?
      if ($value['Icon'] == TRUE) { 
       echo "<a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wow-petguide.com/images/pets/".$value['PetID'].".png'>View</a>" ?>
-    <? } else echo "-"; ?>
+    <?php } else echo "-"; ?>
     </td>
     <td class="admin" style="text-align: center">
      <form style="display: inline;" action="index.php" method="post" enctype="multipart/form-data">
      <input type="hidden" name="page" value="adm_peticons">
      <input type="hidden" name="command" value="uploadicon">
-     <input type="hidden" name="petid" value="<? echo $value['PetID'] ?>">
+     <input type="hidden" name="petid" value="<?php echo $value['PetID'] ?>">
      <input type="file" name="fileToUpload" id="fileToUpload" class="inputfile" required>
-     <input type="submit" class="cominputmedium" style="padding: 2px; margin:0px" value="<? if ($value['Icon'] == TRUE) echo 'Replace'; else echo 'Upload'; ?>" name="submit">
+     <input type="submit" class="cominputmedium" style="padding: 2px; margin:0px" value="<?php if ($value['Icon'] == TRUE) echo 'Replace'; else echo 'Upload'; ?>" name="submit">
      </form>
     </td>
  
-<? }
+<?php }
 mysqli_close($dbcon);
 echo " </tbody></table></body>";
 die;

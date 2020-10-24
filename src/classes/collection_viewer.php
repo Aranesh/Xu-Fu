@@ -34,7 +34,7 @@ else {
     <table width="100%" border="0" margin="0" cellpadding="0" cellspacing="0">
         <tr>
             <td><img src="https://www.wow-petguide.com/images/main_bg02_1.png"></td>
-            <td width="100%"><h class="megatitle"><? echo _("MainbarColViewer") ?></font></td>
+            <td width="100%"><h class="megatitle"><?php echo __("Xu-Fu's Pet Collection Viewer") ?></font></td>
             <td><img src="images/main_bg02_2.png"></td>
         </tr>
     </table>
@@ -52,7 +52,7 @@ else {
 // Character Selection form:
 if ($command != "import") {
 
-    echo _("ColViewerIntro")."<br><br>";
+    echo __("With Xu-Fu's Pet Collection Viewer you can check the collection of any WoW player fast and easy.<br>You can filter and sort the table of pets to your liking and search for individual pets as well.<br><br>Type in a characters name and realm below to get started:")."<br><br>";
 
     $realmlistsdb = mysqli_query($dbcon, "SELECT * FROM Realms WHERE id = '1'") or die(mysqli_error($dbcon));
     $realmlists = mysqli_fetch_object($realmlistsdb);
@@ -77,9 +77,9 @@ if ($command != "import") {
 
                 <td width="230">
 
-                    <select width="230" data-placeholder="<? echo _("FormSelectRealm") ?>" name="realm" class="chosen-select" tabindex="2" required>
+                    <select width="230" data-placeholder="<?php echo __("Select your realm") ?>" name="realm" class="chosen-select" tabindex="2" required>
                         <option value=""></option>
-                        <optgroup label="<? echo _("FormSelectRealmUS") ?>">
+                        <optgroup label="<?php echo __("United States") ?>">
                             <?
                             foreach($realmsus as $key => $value) {
                                 $thisrealm = explode("|",$value);
@@ -87,7 +87,7 @@ if ($command != "import") {
                             }
                             ?>
                         </optgroup>
-                        <optgroup label="<? echo _("FormSelectRealmEU") ?>">
+                        <optgroup label="<?php echo __("Europe") ?>">
                             <?
                             foreach($realmseu as $key => $value) {
                                 $thisrealm = explode("|",$value);
@@ -95,7 +95,7 @@ if ($command != "import") {
                             }
                             ?>
                         </optgroup>
-                        <optgroup label="<? echo _("FormSelectRealmKR") ?>">
+                        <optgroup label="<?php echo __("Korea") ?>">
                             <?
                             foreach($realmskr as $key => $value) {
                                 $thisrealm = explode("|",$value);
@@ -103,7 +103,7 @@ if ($command != "import") {
                             }
                             ?>
                         </optgroup>
-                        <optgroup label="<? echo _("FormSelectRealmTW") ?>">
+                        <optgroup label="<?php echo __("Taiwan") ?>">
                             <?
                             foreach($realmstw as $key => $value) {
                                 $thisrealm = explode("|",$value);
@@ -114,13 +114,13 @@ if ($command != "import") {
                     </select>
                 </td>
                 <td rowspan="2">
-                    <button style="margin-left: 15px;" type="submit" tabindex="4" class="bnetlogin"><? echo _("FormSelectImportPets") ?></button>
+                    <button style="margin-left: 15px;" type="submit" tabindex="4" class="bnetlogin"><?php echo __("Import Pets") ?></button>
                 </td>
                 </tr>
                 <tr>
                 <td></td>
                 <td>
-                    <input class="petselect" name="charname" tabindex="3" placeholder="<? echo _("FormSelectCharName") ?>" style="width: 230px;" width="230" required>
+                    <input class="petselect" name="charname" tabindex="3" placeholder="<?php echo __("Character name") ?>" style="width: 230px;" width="230" required>
                 </td>
 
                 </tr>
@@ -135,7 +135,7 @@ if ($command != "import") {
             </td>
         </tr>
     </table>
-<? }
+<?php }
 
 
 // Show collection:
@@ -149,7 +149,7 @@ if ($command == "import") { ?>
         <tr class="profile">
             <td class="profile">
                 <p class="blogodd">
-                <center><img src="images/loading.gif"><br><br><i><? echo _("FormSelectLoadText") ?></i><br></center>
+                <center><img src="images/loading.gif"><br><br><i><?php echo __("Fetching pets...") ?></i><br></center>
                 <br><br>
             </td>
         </tr>
@@ -158,7 +158,7 @@ if ($command == "import") { ?>
     <br>
     </div>
     
-    <?   
+    <?php   
     // Get Pet data
     $petdata_source = blizzard_api_character_pets($region, $realm, $name);
     // Get character data for header
@@ -200,28 +200,35 @@ if ($petdata_source != "error" && $chardata_summary_source != "error" && $charda
                 <table style="width: 100%" cellspacing="0" cellpadding="0" class="profile">
             <tr class="profile">
                 <td class="profile" width="30">
-                    <a target="_blank" href="https://worldofwarcraft.com/en-us/character/<? echo $region ?>/<? echo $realm ?>/<? echo $name ?>">
-                        <img src="<? echo $chardata_avatar['avatar_url'] ?>">
+                    <a target="_blank" href="https://worldofwarcraft.com/en-us/character/<?php echo $region ?>/<?php echo $realm ?>/<?php echo $name ?>">
+                        <img src="<?php echo $chardata_avatar['avatar_url'] ?>">
                     </a>
                 </td>
                 <td style="align:left; padding-left:15px; width:600px">
                     <h3 class="collection">
-                    <? echo $chardata_avatar['character']['name']." - ".$chardata_summary['realm']['name']; ?><br>
-                    Level <? echo $chardata_summary['level']." ".lookup_char_race($chardata_summary['race']['id'])." ".lookup_char_class($chardata_summary['character_class']['id']); ?>
+                    <?php echo $chardata_avatar['character']['name']." - ".$chardata_summary['realm']['name']; ?><br>
+                    Level <?php echo $chardata_summary['level']." ".lookup_char_race($chardata_summary['race']['id'])." ".lookup_char_class($chardata_summary['character_class']['id']); ?>
                 </td>
-                <td align="right">
+                <td align="right" style="padding-right:15px">
                     <?
                     $langpieces = decode_language($language);
                     ?>
-                    <a href="classes/export_collection_xlsx.php?m=Collection&language=<? echo $langpieces['short']; ?>&region=<? echo $region ?>&realm=<? echo $realm ?>&name=<? echo $name ?>&language=<? echo $langpieces['short']; ?>" target="_blank">
-                        <button style="margin-left: 15px; white-space:nowrap;" type="submit" tabindex="4" class="bnetlogin">Export to Excel</button>
+                    <a href="classes/export_collection_xlsx.php?m=Collection&language=<?php echo $langpieces['short']; ?>&region=<?php echo $region ?>&realm=<?php echo $realm ?>&name=<?php echo $name ?>&language=<?php echo $langpieces['short']; ?>" target="_blank">
+                        <button style="white-space:nowrap;" type="submit" tabindex="4" class="bnetlogin"><?php echo __('Export to Excel'); ?></button>
                     </a>
                 </td>
-                <td align="right" style="padding-right:25px">
-                    <a href="?m=Collection&region=<? echo $region ?>&realm=<? echo $realm ?>&name=<? echo $name ?>">
-                        <button style="margin-left: 15px; white-space:nowrap;" type="submit" tabindex="4" class="bnetlogin"><? echo _("ColTableUpdate") ?></button>
+                <td align="right" style="padding-right:15px">
+                    <a href="?m=Collection&region=<?php echo $region ?>&realm=<?php echo $realm ?>&name=<?php echo $name ?>">
+                        <button style="white-space:nowrap;" type="submit" tabindex="4" class="bnetlogin"><?php echo __("Update Collection") ?></button>
                     </a>
                 </td>
+                <?php if ($user && $collection) { ?>
+                  <td align="right" style="padding-right:15px">
+                    <a href="?m=Compare&user_1=<?php echo $user->id ?>&region_2=<?php echo $region ?>&realm_2=<?php echo $realm ?>&name_2=<?php echo $name ?>">
+                      <button style="white-space:nowrap;" type="submit" tabindex="4" class="bnetlogin"><?php echo __('Compare against your collection'); ?></button>
+                    </a>
+                  </td>
+                <?php } ?>
             </tr>
             </table>
         </td></tr>
@@ -246,14 +253,14 @@ if ($petdata_source != "error" && $chardata_summary_source != "error" && $charda
             document.getElementById('loading').style.display='none';
             document.getElementById('collection').style.display='block';
         </script>
-    <? }
+    <?php }
     else {
         print_collection($petdata,"1"); 
     }
     ?>
     </td></tr></table></div>
     <script>
-        window.history.replaceState("object or string", "Title", "?m=Collection&region=<? echo $region ?>&realm=<? echo $realm ?>&name=<? echo $name ?>");
+        window.history.replaceState("object or string", "Title", "?m=Collection&region=<?php echo $region ?>&realm=<?php echo $realm ?>&name=<?php echo $name ?>");
     </script>
     <?
 }
@@ -273,7 +280,7 @@ else {  // Fetch not successful
             <td class="profile">
                 <center><p class="blogodd"><b><br>
     
-                <? echo _("ColTableErrorGen") ?>
+                <?php echo __("Import was not successful") ?>
                 <br><br></b></center><p class="blogodd">
 Possible reasons:<br>
 <ul style="margin-left: 10px; margin-right: 10px">
@@ -294,9 +301,9 @@ Possible reasons:<br>
     
                     <td width="230">
     
-                        <select width="230" data-placeholder="<? echo _("FormSelectRealm") ?>" name="realm" class="chosen-select" tabindex="2" required>
+                        <select width="230" data-placeholder="<?php echo __("Select your realm") ?>" name="realm" class="chosen-select" tabindex="2" required>
                             <option value=""></option>
-                            <optgroup label="<? echo _("FormSelectRealmUS") ?>">
+                            <optgroup label="<?php echo __("United States") ?>">
                                 <?
                                 foreach($realmsus as $key => $value) {
                                     $thisrealm = explode("|",$value);
@@ -309,7 +316,7 @@ Possible reasons:<br>
                                 }
                                 ?>
                             </optgroup>
-                            <optgroup label="<? echo _("FormSelectRealmEU") ?>">
+                            <optgroup label="<?php echo __("Europe") ?>">
                                 <?
                                 foreach($realmseu as $key => $value) {
                                     $thisrealm = explode("|",$value);
@@ -322,7 +329,7 @@ Possible reasons:<br>
                                 }
                                 ?>
                             </optgroup>
-                            <optgroup label="<? echo _("FormSelectRealmKR") ?>">
+                            <optgroup label="<?php echo __("Korea") ?>">
                                 <?
                                 foreach($realmskr as $key => $value) {
                                     $thisrealm = explode("|",$value);
@@ -335,7 +342,7 @@ Possible reasons:<br>
                                 }
                                 ?>
                             </optgroup>
-                            <optgroup label="<? echo _("FormSelectRealmTW") ?>">
+                            <optgroup label="<?php echo __("Taiwan") ?>">
                                 <?
                                 foreach($realmstw as $key => $value) {
                                     $thisrealm = explode("|",$value);
@@ -351,13 +358,13 @@ Possible reasons:<br>
                         </select>
                     </td>
                     <td rowspan="2">
-                        <button style="margin-left: 15px;" type="submit" tabindex="4" class="bnetlogin"><? echo _("FormSelectImportPets") ?></button>
+                        <button style="margin-left: 15px;" type="submit" tabindex="4" class="bnetlogin"><?php echo __("Import Pets") ?></button>
                     </td>
                     </tr>
                     <tr>
                     <td></td>
                     <td>
-                        <input value="<? echo htmlentities($name, ENT_QUOTES, "UTF-8"); ?>" class="petselect" name="charname" tabindex="3" placeholder="<? echo _("FormSelectCharName") ?>" style="width: 230px;" width="230" required>
+                        <input value="<?php echo htmlentities($name, ENT_QUOTES, "UTF-8"); ?>" class="petselect" name="charname" tabindex="3" placeholder="<?php echo __("Character name") ?>" style="width: 230px;" width="230" required>
                     </td>
     
                     </tr>
@@ -378,7 +385,7 @@ Possible reasons:<br>
         $(".chosen-select").chosen({width: 230});
     }
     </script>
-<? }
+<?php }
 } 
 ?>
 
@@ -398,5 +405,3 @@ Possible reasons:<br>
     // ==== COMMENT SYSTEM 2.0 FOR MAIN ARTICLES HAPPENS HERE ====
     print_comments_outer("0",$mainselector,"medium");
 echo "</div>";
-
-

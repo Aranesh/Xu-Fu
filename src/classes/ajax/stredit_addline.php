@@ -45,19 +45,23 @@ if ($veri2 == "true") {
     $addstepdb = mysqli_query($dbcon, "SELECT * FROM Strategy WHERE SortingID = $oldstep->SortingID AND id > $oldstep->id ORDER BY id");
     mysqli_query($dbcon, "INSERT INTO Strategy (`SortingID`, `Step`) VALUES ('$oldstep->SortingID', '')") OR die(mysqli_error($dbcon));
     $newline = mysqli_insert_id($dbcon);
+    $new_line_db = mysqli_query($dbcon, "SELECT * FROM Strategy WHERE id = '$newline'");
+    $newline_full = mysqli_fetch_object($new_line_db);
     
     $petnext = "Name_".$user->Language;
     if ($user->Language == "en_US") {
         $petnext = "Name";
     }
    
-    bt_stredit_printline($newline, $strat, $language, $user->id);
+    bt_stredit_printline($newline_full, $strat, $language, $user->id);
  
     while ($addsteps = mysqli_fetch_object($addstepdb)){
         $nowid = $addsteps->id;
         $newnowid = DuplicateMySQLRecord('Strategy', 'id', $nowid, $addsteps);
         echo "<script>$('#step_".$nowid."').remove();</script>";
-        bt_stredit_printline($newnowid, $strat, $language, $user->id);
+        $new_line_db = mysqli_query($dbcon, "SELECT * FROM Strategy WHERE id = '$newnowid'");
+        $newline_full = mysqli_fetch_object($new_line_db);
+        bt_stredit_printline($newline_full, $strat, $language, $user->id);
         $deleteit = mysqli_query($dbcon, "DELETE FROM Strategy WHERE id = '$nowid'") OR die(mysqli_error($dbcon));
     }
 

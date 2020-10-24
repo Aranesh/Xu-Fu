@@ -16,6 +16,13 @@ function scrollto(anchor) {
     }, 800);
 }
 
+function load_petlist(main, user, lng, type=0, options=0) {
+ $('#pet_table_buttons').hide('0');
+ $('#loading_field').show('0');
+ $('#pet_table').load('classes/ajax/load_petlist.php?main='+main+'&user='+user+'&lng='+lng+'&type='+type+'&options='+options);
+}
+
+
 function remove_image(id) {
  var r = confirm("Are you sure you want to delete the current picture and replace it with the default image?");
  if (r == true) {
@@ -255,6 +262,7 @@ function stredit_quickfill(u, c, type, lineid, customid, lang) {
 
 // Strategy Editor 2.0 - QuickFill Options to edit lines
 function bb_strsave(u, c, lineid, lang) {
+ 
  var turn = document.getElementById('stredit_editstep_'+lineid).value;
  var inst = document.getElementById('stredit_editinst_'+lineid).value;
 
@@ -276,7 +284,6 @@ function bb_strsave(u, c, lineid, lang) {
      stredit_updateline(u, c, lineid, inputID, lang);
      $('.bt_step_quickfill_'+lineid).tooltipster('close');
      $('.bt_step_edit_'+lineid).tooltipster('close');
-
     }
     }
     if (this.status != 200 && this.status != 0 && this.readyState != 4){
@@ -349,16 +356,18 @@ function bt_initialize_tooltips(thisline) {
 }	
 
 // Strategy Editor 2.0 - Update Strategy Line
-function stredit_updateline(u, c, lineid, prevline, lang) {
+function stredit_updateline(u, c, lineid, prevline, l) {
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
+     // alert(this.responseText);
     if (this.responseText == 'NOK') {
       $.growl.error({ message: "There was a problem processing your request. Please refresh the page and try again. If this error persists, please contact <a href=\"mailto:xufu@wow-petguide.com?subject=Problem with comment system\" class=\"whitelink\">Aranesh</a>", duration: "15000", size: "large", location: "tc" });
     }
     else {
      $('#step_'+lineid).remove();
      $(this.responseText).insertAfter('#step_'+prevline);
+     // $.growl.error({ message: "green", duration: "15000", size: "large", location: "tc" });
     }
     }
     if (this.status != 200 && this.status != 0 && this.readyState != 4){
@@ -368,7 +377,7 @@ function stredit_updateline(u, c, lineid, prevline, lang) {
   xmlhttp.open("GET", "classes/ajax/stredit_updateline.php?lineid=" + encodeURIComponent(lineid)
   + "&userid=" + encodeURIComponent(u)
   + "&delimiter=" + encodeURIComponent(c)
-  + "&language=" + encodeURIComponent(lang), true);
+  + "&lang=" + encodeURIComponent(l), true);
   xmlhttp.send();
 }
 
@@ -781,12 +790,13 @@ function bb_stredit(lineid,type,customid) {
          txtfield.focus();
      }
  }
+
 if (type == "spell") {
   if (customid != "") {
-   var intaglt = customid.length + 8;
+   var intaglt = customid.length + 11; //
    txtfield.selectionStart = txtfield.selectionEnd;
    var crspos = $("#stredit_editinst_" + lineid).getCursorPosition();
-   newtext = txtfield.value.slice(0, crspos) + '[spell=' + customid + ']' + txtfield.value.slice(txtfield.selectionEnd);
+   newtext = txtfield.value.slice(0, crspos) + '[ability=' + customid + ']' + txtfield.value.slice(txtfield.selectionEnd); 
    txtfield.value = newtext;
    var newcrspos = crspos + intaglt;
    $("#stredit_editinst_" + lineid).setCursorPosition(newcrspos);
@@ -918,10 +928,10 @@ function bb_articles(type,content,area) {
         var e = document.getElementById("bb_skill_dd");
         var strUser = e.options[e.selectedIndex].value;
         if (strUser != "") {
-            var intaglt = strUser.length + 8;
+            var intaglt = strUser.length + 10;
             txtfield.selectionStart = txtfield.selectionEnd;
             var crspos = $("#article_ta_" + lng).getCursorPosition();
-            newtext = txtfield.value.slice(0, crspos) + '[skill=' + strUser + ']' + txtfield.value.slice(txtfield.selectionEnd);
+            newtext = txtfield.value.slice(0, crspos) + '[ability=' + strUser + ']' + txtfield.value.slice(txtfield.selectionEnd);
             txtfield.value = newtext;
             var newcrspos = crspos + intaglt;
             $("#article_ta_" + lng).setCursorPosition(newcrspos);
@@ -2168,6 +2178,13 @@ function messages_write() {
 
 
 
+function switch_tamers_menu(m) {
+ $('.tamers_menu').removeClass('settingsactive');
+ $('#'+m).addClass('settingsactive');
+ $('.tamers_content').hide();
+ $('#'+m+'_content').show();
+}
+
 // Text field functions:
 jQuery(document).ready(function($) {
     $('.to-top-btn').on('click', function(e) {
@@ -2360,8 +2377,6 @@ function delete_comment(h,t,s,n,u,v,c){
 }
 
 function delete_int_comment(i,u,s){
- 
- 
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -2387,7 +2402,7 @@ function edit_comment(h,u,v){
             }
             else if (this.responseText == 'OK') {
                 var post = document.createElement('p');
-                post.textContent = postText+' [i](edited)[/i]';
+                post.textContent = postText+' (edited)';
                 post.innerHTML = post.innerHTML.replace('[u]', '<u>');
                 post.innerHTML = post.innerHTML.replace('[/u]', '</u>');
                 post.innerHTML = post.innerHTML.replace('[i]', '<i>');
@@ -2402,14 +2417,6 @@ function edit_comment(h,u,v){
     xmlhttp.open("GET", "classes/ajax/com_edit.php?userid=" + encodeURIComponent(u) + "&delimiter=" + encodeURIComponent(v) + "&commentid=" + encodeURIComponent(h) + "&content=" + encodeURIComponent(postText), true);
     xmlhttp.send();
 }
-
-function cancel_comment_edit(c){
-    var orcon = document.getElementById('comcontent_'+c).innerHTML;
-    orcon = orcon.replace(/(<br ?\/?>)*/g,"");
-    document.getElementById('editcommentfield_'+c).value = orcon;
-    document.getElementById('editcommentfield_'+c).style.height = (document.getElementById('editcommentfield_'+c).scrollHeight)+"px";
-}
-
 
 function report_comment(h,t,s,n,l,u,v,c){
     var ReportText = document.getElementById('report_comment_field_'+h).value;
@@ -2501,6 +2508,14 @@ function com_vote(v,h,u,c,cga,cgr,cgo,cre,gol,s){
                     votes = votes-2;
                     arrows = 'down';
                     break;
+                case 'CancelUp':
+                    votes = votes-1;
+                    arrows = 'none';
+                  break;
+                case 'CancelDown':
+                    votes = votes+1;
+                    arrows = 'none';
+                 break;
             }
             switch(arrows) {
                 case 'up':
@@ -2522,6 +2537,10 @@ function com_vote(v,h,u,c,cga,cgr,cgo,cre,gol,s){
                         document.getElementById('upvpic_'+h).src = "https://www.wow-petguide.com/images/icon_vote_up_grey.png";
                         document.getElementById('downvpic_'+h).src = "https://www.wow-petguide.com/images/icon_vote_down_red.png";
                     }
+                    break;
+                case 'none':
+                    document.getElementById('upvpic_'+h).src = "https://www.wow-petguide.com/images/icon_vote_up_grey.png";
+                    document.getElementById('downvpic_'+h).src = "https://www.wow-petguide.com/images/icon_vote_down_grey.png";
                     break;
             }
             if (votes == 0) {

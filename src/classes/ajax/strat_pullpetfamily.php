@@ -31,4 +31,4 @@ if ($pet > "1") {
 }
 
 ?>
-<img style="vertical-align:middle;" src="<? echo $petimage ?>">
+<img style="vertical-align:middle;" src="<?php echo $petimage ?>">

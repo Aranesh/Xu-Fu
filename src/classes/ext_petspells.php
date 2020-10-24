@@ -26,35 +26,31 @@ var wowhead_tooltips = { "colorlinks": false, "iconizelinks": true, "renamelinks
     <?
 
     echo '<table class="admin" style="width: 80%"><tr>';
-    echo '<th class="admin">Spell ID</th>';
+    echo '<th class="admin">Ability ID</th>';
     echo '<th class="admin">Spell Family</th>';
-    echo '<th class="admin">Avl. to player pet</th>';
     echo '<th class="admin">Name EN</th>';
     echo '<th class="admin">Name DE</th>';
     echo '<th class="admin">Name FR</th>';
     echo '<th class="admin">Name IT</th>';
     echo '<th class="admin">Name ES</th>';
     echo '<th class="admin">Name PL</th>';
-    echo '<th class="admin">Name PT</th>';
     echo '<th class="admin">Name RU</th>';
     echo '<th class="admin">Name MX</th>';
-    echo '<th class="admin">Name BR</th>';
+    echo '<th class="admin">Name PT</th>';
     echo '<th class="admin">Name KR</th>';
     echo '<th class="admin">Name TW</th></tr>';
 
-    $allpetsdb = mysqli_query($dbcon, "SELECT * FROM Spells ORDER BY SpellID DESC");
+    $allpetsdb = mysqli_query($dbcon, "SELECT * FROM Pet_Abilities ORDER BY id DESC");
     while ($pet = mysqli_fetch_object($allpetsdb)){
         echo '<tr class="admin">';
-        echo '<td class="admin">'.$pet->SpellID.'</td>';
+        echo '<td class="admin">'.$pet->id.'</td>';
         echo '<td class="admin">'.$pet->Family.'</td>';
-        echo '<td class="admin">'.$pet->PetSpell.'</td>';
         echo '<td class="admin">'.$pet->en_US.'</td>';
         echo '<td class="admin">'.$pet->de_DE.'</td>';
         echo '<td class="admin">'.$pet->fr_FR.'</td>';
         echo '<td class="admin">'.$pet->it_IT.'</td>';
         echo '<td class="admin">'.$pet->es_ES.'</td>';
         echo '<td class="admin">'.$pet->pl_PL.'</td>';
-        echo '<td class="admin">'.$pet->pt_PT.'</td>';
         echo '<td class="admin">'.$pet->ru_RU.'</td>';
         echo '<td class="admin">'.$pet->es_MX.'</td>';
         echo '<td class="admin">'.$pet->pt_BR.'</td>';

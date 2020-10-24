@@ -1,9 +1,11 @@
 <?php
-
+ini_set ('display_errors', 0);
 include("../data/dbconnect.php");
 include("functions.php");
 require_once ('../data/blizzard_api.php');
 require_once ('../classes/HTTP.php');
+require_once ("../thirdparty/motranslator/vendor/autoload.php");
+PhpMyAdmin\MoTranslator\Loader::loadFunctions();
 
 $colerror = "";
 
@@ -62,15 +64,11 @@ if (!$language) {
 }
 
 // INIITIALIZE GETTEXT AND PULL LANGUAGE FILE
-putenv("LANG=".$language.".UTF-8");
-setlocale(LC_ALL, $language.".UTF-8");
-
-$domain = "messages";
-bindtextdomain($domain, "../Locale");
-textdomain($domain);
-
+  _setlocale(LC_MESSAGES, $language);
+  _textdomain('messages');
+  _bindtextdomain('messages', __DIR__ . '/../Locale/');
+  _bind_textdomain_codeset('messages', 'UTF-8');
 set_language_vars($language);
-
 // Get Collection from DB
 
 if (!$user) {
@@ -121,7 +119,7 @@ if (!$petdata){
 }
 
 if ($colerror == "true") {
-    echo _("CV_ExportErr");
+    echo __("There was a problem exporting your collection. Please try again");
     die;
 }
 
@@ -178,34 +176,34 @@ foreach($petdata as $pet) {
         if ($collection[$countcolpets]['InDB'] == TRUE) {
             switch ($all_pets[$pet['Species']]['Family'] ) {
                 case "Humanoid":
-                    $collection[$countcolpets]['Family'] = _("PetFamiliesHumanoid");
+                    $collection[$countcolpets]['Family'] = __("Humanoid");
                     break;
                 case "Dragonkin":
-                    $collection[$countcolpets]['Family'] = _("PetFamiliesDragonkin");
+                    $collection[$countcolpets]['Family'] = __("Dragonkin");
                     break;
                 case "Flying":
-                    $collection[$countcolpets]['Family'] = _("PetFamiliesFlying");
+                    $collection[$countcolpets]['Family'] = __("Flying");
                     break;
                 case "Undead":
-                    $collection[$countcolpets]['Family'] = _("PetFamiliesUndead");
+                    $collection[$countcolpets]['Family'] = __("Undead");
                     break;
                 case "Critter":
-                    $collection[$countcolpets]['Family'] = _("PetFamiliesCritter");
+                    $collection[$countcolpets]['Family'] = __("Critter");
                     break;
                 case "Magic":
-                    $collection[$countcolpets]['Family'] = _("PetFamiliesMagic");
+                    $collection[$countcolpets]['Family'] = __("Magic");
                     break;
                 case "Elemental":
-                    $collection[$countcolpets]['Family'] = _("PetFamiliesElemental");
+                    $collection[$countcolpets]['Family'] = __("Elemental");
                     break;
                 case "Beast":
-                    $collection[$countcolpets]['Family'] = _("PetFamiliesBeast");
+                    $collection[$countcolpets]['Family'] = __("Beast");
                     break;
                 case "Aquatic":
-                    $collection[$countcolpets]['Family'] = _("PetFamiliesAquatic");
+                    $collection[$countcolpets]['Family'] = __("Aquatic");
                     break;
                 case "Mechanical":
-                    $collection[$countcolpets]['Family'] = _("PetFamiliesMechanical");
+                    $collection[$countcolpets]['Family'] = __("Mechanical");
                     break;
             }
         }
@@ -240,24 +238,24 @@ foreach($petdata as $pet) {
         
         switch ($pet['Quality']) {
             case "0":
-                $collection[$countcolpets]['QualityN'] = _("QualityPoor");
+                $collection[$countcolpets]['QualityN'] = __("Poor");
                 break;
             case "1":
-                $collection[$countcolpets]['QualityN'] = _("QualityCommon");
+                $collection[$countcolpets]['QualityN'] = __("Common");
                 break;
             case "2":
-                $collection[$countcolpets]['QualityN'] = _("QualityUncommon");
+                $collection[$countcolpets]['QualityN'] = __("Uncommon");
                 break;
             case "3":
-                $collection[$countcolpets]['QualityN'] = _("QualityRare");
+                $collection[$countcolpets]['QualityN'] = __("Rare");
                 break;
         }
                 
         if ($collection[$countcolpets]['InDB'] == TRUE) {
             $collection[$countcolpets]['Name'] = $all_pets[$pet['Species']]['Name'];
             if ($all_pets[$pet['Species']]['Cageable'] == "0" || $all_pets[$pet['Species']]['Cageable'] == "") $collection[$countcolpets]['Cageable'] = "N/A";
-            if ($all_pets[$pet['Species']]['Cageable'] == "1") $collection[$countcolpets]['Cageable'] =  _("FormComButtonYes");
-            if ($all_pets[$pet['Species']]['Cageable'] == "2") $collection[$countcolpets]['Cageable'] = _("FormComButtonNo");
+            if ($all_pets[$pet['Species']]['Cageable'] == "1") $collection[$countcolpets]['Cageable'] =  __("Yes");
+            if ($all_pets[$pet['Species']]['Cageable'] == "2") $collection[$countcolpets]['Cageable'] = __("No");
         }
         $collection[$countcolpets]['Health'] = $all_pets[$pet['Species']]['Health'];
         $collection[$countcolpets]['Power'] = $all_pets[$pet['Species']]['Power'];
@@ -271,7 +269,7 @@ foreach($petdata as $pet) {
             $collection[$countcolpets]['Breed'] = "-";
         }
         $collection[$countcolpets]['Collected'] = TRUE;
-        $collection[$countcolpets]['CollectedN'] = _("FormComButtonYes");
+        $collection[$countcolpets]['CollectedN'] = __("Yes");
 
         $breedstring = "";
             if ($all_pets[$pet['Species']]['BB'] == 1) {
@@ -326,10 +324,10 @@ foreach ($all_pets as $pet) {
             $collection[$countcolpets]['Quality'] = "-";
             $collection[$countcolpets]['Breed'] = "-";
             if ($pet['Cageable'] == "0" || $pet['Cageable'] == "") $collection[$countcolpets]['Cageable'] = "N/A";
-            if ($pet['Cageable'] == "1") $collection[$countcolpets]['Cageable'] =  _("FormComButtonYes");
-            if ($pet['Cageable'] == "2") $collection[$countcolpets]['Cageable'] = _("FormComButtonNo");
+            if ($pet['Cageable'] == "1") $collection[$countcolpets]['Cageable'] =  __("Yes");
+            if ($pet['Cageable'] == "2") $collection[$countcolpets]['Cageable'] = __("No");
             $collection[$countcolpets]['Collected'] = FALSE;
-            $collection[$countcolpets]['CollectedN'] = _("FormComButtonNo");
+            $collection[$countcolpets]['CollectedN'] = __("No");
             $collection[$countcolpets]['Health'] = $pet['Health']; 
             $collection[$countcolpets]['Power'] = $pet['Power']; 
             $collection[$countcolpets]['Speed'] = $pet['Speed'];
@@ -375,8 +373,8 @@ sortBy('Name', $collection, 'asc');
 
 
 // Error reporting
-ini_set('display_errors', TRUE);
-ini_set('display_startup_errors', TRUE);
+// ini_set('display_errors', TRUE);
+// ini_set('display_startup_errors', TRUE);
 date_default_timezone_set('Europe/London');
 
 if (PHP_SAPI == 'cli')
@@ -416,15 +414,15 @@ else {
 // Add some data
 $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('A1', '#')
-            ->setCellValue('B1', _("PetTableName"))
+            ->setCellValue('B1', __("Name"))
             ->setCellValue('C1', 'Wowhead')
-            ->setCellValue('D1', _("ColChartLevel"))
-            ->setCellValue('E1', _("ColChartQuality"))
-            ->setCellValue('F1', _("ColChartBreed"))
-            ->setCellValue('G1', _("ColChartFamily"))
-            ->setCellValue('H1', _("ColTableChartDupes"))
-            ->setCellValue('I1', _("ColChartTrade"))
-            ->setCellValue('J1', _("ColChartCollected"))
+            ->setCellValue('D1', __("Level"))
+            ->setCellValue('E1', __("Quality"))
+            ->setCellValue('F1', __("Breed"))
+            ->setCellValue('G1', __("Families"))
+            ->setCellValue('H1', __("Duplicates"))
+            ->setCellValue('I1', __("Tradable"))
+            ->setCellValue('J1', __("Collected"))
             ->setCellValue('K1', "Base Health")
             ->setCellValue('L1', "Base Power")
             ->setCellValue('M1', "Base Speed")

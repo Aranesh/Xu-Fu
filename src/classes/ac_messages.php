@@ -1,7 +1,7 @@
 ﻿<?php
 
 // variable for messages shown at beginning
-$maxmsgs = "5";
+$maxmsgs = "10";
 $outthreads = "0";
 $inthreads = "0";
 
@@ -60,14 +60,14 @@ if ($page = "writemsg") {
     <img src="images/blank.png" width="50" height="1" alt="" />
 </td>
 <td>
-    <img class="ut_icon" width="84" height="84" <? echo $usericon ?>>
+    <img class="ut_icon" width="84" height="84" <?php echo $usericon ?>>
 </td>
 
 <td>
     <img src="images/blank.png" width="50" height="1" alt="" />
 </td>
 
-<td width="100%"><h class="megatitle"><? echo _("PM_Title") ?></h></td>
+<td width="100%"><h class="megatitle"><?php echo __("Private Messages") ?></h></td>
 <td><img src="images/main_bg02_2.png"></td>
 </tr>
 </table>
@@ -106,13 +106,13 @@ if ($page = "writemsg") {
             <table>
                 <tr>
                     <td>
-                        <button id="ButtonInbox" onclick="messages_inbox()" class="settings <? if ($redcat != "sent" AND $redcat != "write") { echo 'settingsactive'; } ?>" style="display: block"><? echo _("PM_TInbox") ?></button>
+                        <button id="ButtonInbox" onclick="messages_inbox()" class="settings <?php if ($redcat != "sent" AND $redcat != "write") { echo 'settingsactive'; } ?>" style="display: block"><?php echo __("Inbox") ?></button>
                     </td>
                     <td>
-                        <button id="ButtonSent" onclick="messages_sent()" class="settings <? if ($redcat == "sent") { echo 'settingsactive'; } ?>" style="display: block"><? echo _("PM_TSent") ?></button>
+                        <button id="ButtonSent" onclick="messages_sent()" class="settings <?php if ($redcat == "sent") { echo 'settingsactive'; } ?>" style="display: block"><?php echo __("Sent Messages") ?></button>
                     </td>
                     <td>
-                        <button id="ButtonWrite" onclick="messages_write()" class="settings <? if ($redcat == "write") { echo 'settingsactive'; } ?>" style="display: block"><? echo _("PM_TWrite") ?></button>
+                        <button id="ButtonWrite" onclick="messages_write()" class="settings <?php if ($redcat == "write") { echo 'settingsactive'; } ?>" style="display: block"><?php echo __("Write New Message") ?></button>
                     </td>
                 </tr>
             </table>
@@ -124,9 +124,9 @@ if ($page = "writemsg") {
 
             <div class="messagebox_outer">
 
-                <div style="display:none" id="inmsgs"><? echo $inthreads; ?></div>
-                <div style="display:none" id="outmsgs"><? echo $outthreads; ?></div>
-                <div class="messagebox" id="inbox" <? if ($redcat == "sent" OR $redcat == "write") { echo 'style="display:none;"'; } ?>>
+                <div style="display:none" id="inmsgs"><?php echo $inthreads; ?></div>
+                <div style="display:none" id="outmsgs"><?php echo $outthreads; ?></div>
+                <div class="messagebox" id="inbox" <?php if ($redcat == "sent" OR $redcat == "write") { echo 'style="display:none;"'; } ?>>
 
                         <?
                         if ($threads) {
@@ -139,9 +139,9 @@ if ($page = "writemsg") {
                                 else {
                                     $threadicon = "images/icon_msgrd.png";
                                 }
-                                $threadintro = _("PM_TConvWith")." ".$threads[$key]['partnername'];
+                                $threadintro = __("Conversation with")." ".$threads[$key]['partnername'];
                                 if ($threads[$key]['msgs'] > "1") {
-                                    $threadmsgs = $threads[$key]['msgs']." "._("UM_BTMessages")." - ".$threads[$key]['lastmsgdate'];
+                                    $threadmsgs = $threads[$key]['msgs']." ".__("Messages")." - ".$threads[$key]['lastmsgdate'];
                                 }
 
                                 if ($threads[$key]['type'] == "1") {
@@ -166,22 +166,22 @@ if ($page = "writemsg") {
                                 }
                                 ?>
 
-                            <div id="thread_<? echo $threads[$key]['id']; ?>">
-                                <div style="display:none" id="seenmarker_<? echo $threads[$key]['id'] ?>"><? echo $threads[$key]['seen']; ?></div>
-                                <div class="<? echo $threadstyle; ?>" onclick="msg_expand('<? echo $threads[$key]['id']; ?>')<? if ($threads[$key]['seen'] == "0") { ?>;msg_markread(<? echo "'".$threads[$key]['id']."','".$user->id."','".$user->ComSecret."','".$threads[$key]['type']."'"; ?>)<? } ?>">
+                            <div id="thread_<?php echo $threads[$key]['id']; ?>">
+                                <div style="display:none" id="seenmarker_<?php echo $threads[$key]['id'] ?>"><?php echo $threads[$key]['seen']; ?></div>
+                                <div class="<?php echo $threadstyle; ?>" onclick="msg_expand('<?php echo $threads[$key]['id']; ?>')<?php if ($threads[$key]['seen'] == "0") { ?>;msg_markread(<?php echo "'".$threads[$key]['id']."','".$user->id."','".$user->ComSecret."','".$threads[$key]['type']."'"; ?>)<?php } ?>">
                                     <div class="title_inner">
                                         <div style="width:40px;float:left;padding-top: 4px !important;">
-                                            <img id="threadicon_<? echo $threads[$key]['id'] ?>" src="<? echo $threadicon ?>">
+                                            <img id="threadicon_<?php echo $threads[$key]['id'] ?>" src="<?php echo $threadicon ?>">
                                         </div>
                                         <div style="float:left; padding-top: 8px !important;">
-                                            <span id="threadintro_<? echo $threads[$key]['id'] ?>" style="white-space: nowrap<? if ($threads[$key]['seen'] == "0") { echo ";font-weight: bold"; } ?>">
-                                                <? echo $threadintro ?>
+                                            <span id="threadintro_<?php echo $threads[$key]['id'] ?>" style="white-space: nowrap<?php if ($threads[$key]['seen'] == "0") { echo ";font-weight: bold"; } ?>">
+                                                <?php echo $threadintro ?>
                                             </span>
                                         </div>
 
                                         <div style="float:right; padding-top: 8px !important;">
                                             <span style="white-space: nowrap">
-                                                <? echo $threadmsgs; ?>
+                                                <?php echo $threadmsgs; ?>
                                             </span>
                                         </div>
 
@@ -190,14 +190,14 @@ if ($page = "writemsg") {
                                     </div>
                                 </div>
 
-                                <a data-remodal-target="modaldelete_<? echo $threads[$key]['id']; ?>">
+                                <a data-remodal-target="modaldelete_<?php echo $threads[$key]['id']; ?>">
                                     <div class="title_delete_button">
                                         <center>
                                         <img style="padding-top: 7px;" src="images/icon_bin.png">
                                     </div>
                                 </a>
 
-                                <div class="remodalcomments" data-remodal-id="modaldelete_<? echo $threads[$key]['id']; ?>">
+                                <div class="remodalcomments" data-remodal-id="modaldelete_<?php echo $threads[$key]['id']; ?>">
 
                                     <table width="300" class="profile">
                                             <tr class="profile">
@@ -206,7 +206,7 @@ if ($page = "writemsg") {
                                                                     <tr>
                                                                             <td><img src="images/icon_x.png"></td>
                                                                             <td><img src="images/blank.png" width="5" height="1"></td>
-                                                                            <td><p class="blogodd"><b><? echo _("PM_Deleteconf") ?></td>
+                                                                            <td><p class="blogodd"><b><?php echo __("Are you sure you want to delete this message?") ?></td>
                                                                     </tr>
                                                             </table>
                                                     </th>
@@ -217,10 +217,10 @@ if ($page = "writemsg") {
                                                             <table>
                                                                     <tr>
                                                                             <td style="padding-left: 12px;">
-                                                                                    <input data-remodal-action="close" onclick="delete_msg('<? echo $threads[$key]['id']; ?>','<? echo $user->id ?>','<? echo $user->ComSecret ?>','<? echo $threads[$key]['direction']; ?>')" type="submit" class="comdelete" value="<? echo _("FormComButtonDelete") ?>">
+                                                                                    <input data-remodal-action="close" onclick="delete_msg('<?php echo $threads[$key]['id']; ?>','<?php echo $user->id ?>','<?php echo $user->ComSecret ?>','<?php echo $threads[$key]['direction']; ?>')" type="submit" class="comdelete" value="<?php echo __("Delete") ?>">
                                                                             </td>
                                                                             <td style="padding-left: 15px;">
-                                                                                    <input data-remodal-action="close" type="submit" class="comedit" value="<? echo _("FormButtonCancel") ?>">
+                                                                                    <input data-remodal-action="close" type="submit" class="comedit" value="<?php echo __("Cancel") ?>">
                                                                             </td>
                                                                     </tr>
                                                             </table>
@@ -233,12 +233,12 @@ if ($page = "writemsg") {
                                     var options = {
                                         hashTracking: false
                                     };
-                                     $('[data-remodal-id=modaldelete_<? echo $threads[$key]['id']; ?>]').remodal(options);
+                                     $('[data-remodal-id=modaldelete_<?php echo $threads[$key]['id']; ?>]').remodal(options);
                                 </script>
 
 
 
-                                <div style="margin-bottom: 8px;position:relative;<? if ($redthread != $threads[$key]['id']) { echo 'display:none;'; } ?>" id="<? echo $threads[$key]['id']; ?>">
+                                <div style="margin-bottom: 8px;position:relative;<?php if ($redthread != $threads[$key]['id']) { echo 'display:none;'; } ?>" id="<?php echo $threads[$key]['id']; ?>">
 
                                     <?
                                     $subscounter = "0";
@@ -247,19 +247,19 @@ if ($page = "writemsg") {
                                             $ovflowend = $threads[$key]['msgs']-$maxmsgs;
                                             ?>
 
-                                            <div class="msg_out" style="cursor: pointer" id="msg_overflow_bt<? echo $threads[$key]['id']; ?>" onclick="$('#msg_overflow_<? echo $threads[$key]['id']; ?>').toggle(400);document.getElementById('msg_overflow_bt<? echo $threads[$key]['id']; ?>').style.display = 'none';">
+                                            <div class="msg_out" style="cursor: pointer" id="msg_overflow_bt<?php echo $threads[$key]['id']; ?>" onclick="$('#msg_overflow_<?php echo $threads[$key]['id']; ?>').toggle(400);document.getElementById('msg_overflow_bt<?php echo $threads[$key]['id']; ?>').style.display = 'none';">
                                                 <div class="msg_inner">   <br>
-                                                    <center>======= <? echo _("PM_BTShowOld") ?> (<? echo $ovflowend ?>) ========
+                                                    <center>======= <?php echo __("Click here to show older messages") ?> (<?php echo $ovflowend ?>) ========
                                                <br><br></div>
                                             </div>
 
-                                            <div style="display:none;" id="msg_overflow_<? echo $threads[$key]['id']; ?>">
+                                            <div style="display:none;" id="msg_overflow_<?php echo $threads[$key]['id']; ?>">
 
                                         <?
                                         }
                                         ?>
 
-                                        <div class="msg_<? echo $msgs[$threads[$key]['id']][$subscounter]['direction']; ?>">
+                                        <div class="msg_<?php echo $msgs[$threads[$key]['id']][$subscounter]['direction']; ?>">
                                             <div class="msg_inner">
                                                 <div class="msg_icon">
                                                     <?
@@ -270,10 +270,10 @@ if ($page = "writemsg") {
                                                 <div class="msg_header">
                                                     <?
                                                     if ($subscounter == "0") {
-                                                        $combiner = " "._("FormComTitle")." ";
+                                                        $combiner = " ".__("wrote on")." ";
                                                     }
                                                     else {
-                                                        $combiner = " "._("FormComTitleSub")." ";
+                                                        $combiner = " ".__("responded on")." ";
                                                     }
                                                     if ($threads[$key]['partnerdel'] == "1" && $msgs[$threads[$key]['id']][$subscounter]['senderid'] != $user->id) {
                                                         echo '<span style="font-size:14px">'.$msgs[$threads[$key]['id']][$subscounter]['sendername'].'</span>'.$combiner.$msgs[$threads[$key]['id']][$subscounter]['date'];
@@ -286,7 +286,7 @@ if ($page = "writemsg") {
                                                 </div>
 
                                                 <div class="msg_content">
-                                                    <? echo $msgs[$threads[$key]['id']][$subscounter]['content']; ?>
+                                                    <?php echo $msgs[$threads[$key]['id']][$subscounter]['content']; ?>
                                                 </div>
                                             </div>
                                         </div>
@@ -311,24 +311,24 @@ if ($page = "writemsg") {
                                                 </div>
 
                                                     <form action="?page=sentmsgs" method="post" style="display: inline;">
-                                                    <input type="hidden" name="sendto" value="<? echo $threads[$key]['partnerid']; ?>">
-                                                    <input type="hidden" name="parent" value="<? echo $threads[$key]['id']; ?>">
-                                                    <input type="hidden" name="delimiter" value="<? echo $user->ComSecret; ?>">
+                                                    <input type="hidden" name="sendto" value="<?php echo $threads[$key]['partnerid']; ?>">
+                                                    <input type="hidden" name="parent" value="<?php echo $threads[$key]['id']; ?>">
+                                                    <input type="hidden" name="delimiter" value="<?php echo $user->ComSecret; ?>">
                                                     <input type="hidden" name="cmd" value="sendrsp">
                                                 <div style="float:left">
-                                                    <textarea required name="msgcontent" placeholder="<? echo _("PM_PHResponse") ?>" class="usermsgs" id="rsp_field_<? echo $threads[$key]['id'] ?>" style="height: 50px; width: 600px;" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,<? echo $threads[$key]['id'] ?>,'10000')" maxlength="10000"></textarea>
+                                                    <textarea required name="msgcontent" placeholder="<?php echo __("Send a response") ?>" class="usermsgs" id="rsp_field_<?php echo $threads[$key]['id'] ?>" style="height: 50px; width: 600px;" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,<?php echo $threads[$key]['id'] ?>,'10000')" maxlength="10000"></textarea>
                                                 </div>
 
                                             </div>
 
                                             <div style="width:664px; text-align: right;">
-                                                    <span class="smallodd" style="padding-right: 10px" id="rsp_remaining_<? echo $threads[$key]['id'] ?>">0/10000</span>
-                                                    <input type="submit" class="comedit" value="<? echo _("FormButtonSend") ?>">
+                                                    <span class="smallodd" style="padding-right: 10px" id="rsp_remaining_<?php echo $threads[$key]['id'] ?>">0/10000</span>
+                                                    <input type="submit" class="comedit" value="<?php echo __("Send") ?>">
                                             </div>
                                                     </form>
                                         </div>
                                     </div>
-                                    <? } ?>
+                                    <?php } ?>
                                     </div>
                                 </div>
                             <?
@@ -337,8 +337,8 @@ if ($page = "writemsg") {
                     }
                     ?>
 
-                    <div class="msg_nomsgs" id="nomsgsboxin" <? if ($inthreads != "0") { echo 'style="display:none"'; } ?>>
-                        <? echo _("PM_NoMsgs") ?>
+                    <div class="msg_nomsgs" id="nomsgsboxin" <?php if ($inthreads != "0") { echo 'style="display:none"'; } ?>>
+                        <?php echo __("There are no messages to display") ?>
                     </div>
 
 
@@ -351,16 +351,16 @@ if ($page = "writemsg") {
 
             <div class="messagebox_outer">
 
-                <div class="messagebox" id="sent" <? if ($redcat != "sent") { echo 'style="display:none;"'; } ?>>
+                <div class="messagebox" id="sent" <?php if ($redcat != "sent") { echo 'style="display:none;"'; } ?>>
                         <?
                         if ($threads) {
                            foreach($threads as $key => $value) {
                                 if ($threads[$key]['direction'] == "out") {
 
                                 $threadicon = "images/icon_msgrd.png";
-                                $threadintro = _("PM_TConvWith")." ".$threads[$key]['partnername'];
+                                $threadintro = __("Conversation with")." ".$threads[$key]['partnername'];
                                 if ($threads[$key]['msgs'] > "1") {
-                                    $threadmsgs = $threads[$key]['msgs']." "._("UM_BTMessages")." - ".$threads[$key]['lastmsgdate'];
+                                    $threadmsgs = $threads[$key]['msgs']." ".__("Messages")." - ".$threads[$key]['lastmsgdate'];
                                 }
 
                                 if ($threads[$key]['type'] == "1") {
@@ -380,22 +380,22 @@ if ($page = "writemsg") {
                                 }
                                 ?>
 
-                            <div id="thread_<? echo $threads[$key]['id']; ?>">
+                            <div id="thread_<?php echo $threads[$key]['id']; ?>">
 
-                                <div class="<? echo $threadstyle; ?>" onclick="msg_expand('<? echo $threads[$key]['id']; ?>')">
+                                <div class="<?php echo $threadstyle; ?>" onclick="msg_expand('<?php echo $threads[$key]['id']; ?>')">
                                     <div class="title_inner">
                                         <div style="width:40px;float:left;padding-top: 4px !important;">
-                                            <img src="<? echo $threadicon ?>">
+                                            <img src="<?php echo $threadicon ?>">
                                         </div>
                                         <div style="float:left; padding-top: 8px !important;">
                                             <span style="white-space: nowrap">
-                                                <? echo $threadintro ?>
+                                                <?php echo $threadintro ?>
                                             </span>
                                         </div>
 
                                         <div style="float:right; padding-top: 8px !important;">
                                             <span style="white-space: nowrap">
-                                                <? echo $threadmsgs; ?>
+                                                <?php echo $threadmsgs; ?>
                                             </span>
                                         </div>
 
@@ -404,14 +404,14 @@ if ($page = "writemsg") {
                                     </div>
                                 </div>
 
-                                <a data-remodal-target="modaldelete_<? echo $threads[$key]['id']; ?>">
+                                <a data-remodal-target="modaldelete_<?php echo $threads[$key]['id']; ?>">
                                     <div class="title_delete_button">
                                         <center>
                                         <img style="padding-top: 7px;" src="images/icon_bin.png">
                                     </div>
                                 </a>
 
-                                <div class="remodalcomments" data-remodal-id="modaldelete_<? echo $threads[$key]['id']; ?>">
+                                <div class="remodalcomments" data-remodal-id="modaldelete_<?php echo $threads[$key]['id']; ?>">
 
                                     <table width="300" class="profile">
                                             <tr class="profile">
@@ -420,7 +420,7 @@ if ($page = "writemsg") {
                                                                     <tr>
                                                                             <td><img src="images/icon_x.png"></td>
                                                                             <td><img src="images/blank.png" width="5" height="1"></td>
-                                                                            <td><p class="blogodd"><b><? echo _("PM_Deleteconf") ?></td>
+                                                                            <td><p class="blogodd"><b><?php echo __("Are you sure you want to delete this message?") ?></td>
                                                                     </tr>
                                                             </table>
                                                     </th>
@@ -431,10 +431,10 @@ if ($page = "writemsg") {
                                                             <table>
                                                                     <tr>
                                                                             <td style="padding-left: 12px;">
-                                                                                    <input data-remodal-action="close" onclick="delete_msg('<? echo $threads[$key]['id']; ?>','<? echo $user->id ?>','<? echo $user->ComSecret ?>','<? echo $threads[$key]['direction']; ?>')" type="submit" class="comdelete" value="<? echo _("FormComButtonDelete") ?>">
+                                                                                    <input data-remodal-action="close" onclick="delete_msg('<?php echo $threads[$key]['id']; ?>','<?php echo $user->id ?>','<?php echo $user->ComSecret ?>','<?php echo $threads[$key]['direction']; ?>')" type="submit" class="comdelete" value="<?php echo __("Delete") ?>">
                                                                             </td>
                                                                             <td style="padding-left: 15px;">
-                                                                                    <input data-remodal-action="close" type="submit" class="comedit" value="<? echo _("FormButtonCancel") ?>">
+                                                                                    <input data-remodal-action="close" type="submit" class="comedit" value="<?php echo __("Cancel") ?>">
                                                                             </td>
                                                                     </tr>
                                                             </table>
@@ -447,12 +447,12 @@ if ($page = "writemsg") {
                                     var options = {
                                         hashTracking: false
                                     };
-                                     $('[data-remodal-id=modaldelete_<? echo $threads[$key]['id']; ?>]').remodal(options);
+                                     $('[data-remodal-id=modaldelete_<?php echo $threads[$key]['id']; ?>]').remodal(options);
                                 </script>
 
 
 
-                                <div style="margin-bottom: 8px;position:relative;<? if ($redthread != $threads[$key]['id']) { echo 'display:none;'; } ?>" id="<? echo $threads[$key]['id']; ?>">
+                                <div style="margin-bottom: 8px;position:relative;<?php if ($redthread != $threads[$key]['id']) { echo 'display:none;'; } ?>" id="<?php echo $threads[$key]['id']; ?>">
 
                                     <?
                                     $subscounter = "0";
@@ -461,19 +461,19 @@ if ($page = "writemsg") {
                                             $ovflowend = $threads[$key]['msgs']-$maxmsgs;
                                             ?>
 
-                                            <div class="msg_out" style="cursor: pointer" id="msg_overflow_bt<? echo $threads[$key]['id']; ?>" onclick="$('#msg_overflow_<? echo $threads[$key]['id']; ?>').toggle(400);document.getElementById('msg_overflow_bt<? echo $threads[$key]['id']; ?>').style.display = 'none';">
+                                            <div class="msg_out" style="cursor: pointer" id="msg_overflow_bt<?php echo $threads[$key]['id']; ?>" onclick="$('#msg_overflow_<?php echo $threads[$key]['id']; ?>').toggle(400);document.getElementById('msg_overflow_bt<?php echo $threads[$key]['id']; ?>').style.display = 'none';">
                                                 <div class="msg_inner">   <br>
-                                                    <center>======= <? echo _("PM_BTShowOld") ?> (<? echo $ovflowend ?>) ========
+                                                    <center>======= <?php echo __("Click here to show older messages") ?> (<?php echo $ovflowend ?>) ========
                                                <br><br></div>
                                             </div>
 
-                                            <div style="display:none;" id="msg_overflow_<? echo $threads[$key]['id']; ?>">
+                                            <div style="display:none;" id="msg_overflow_<?php echo $threads[$key]['id']; ?>">
 
                                         <?
                                         }
                                         ?>
 
-                                        <div class="msg_<? echo $msgs[$threads[$key]['id']][$subscounter]['direction']; ?>">
+                                        <div class="msg_<?php echo $msgs[$threads[$key]['id']][$subscounter]['direction']; ?>">
                                             <div class="msg_inner">
                                                 <div class="msg_icon">
                                                     <?
@@ -484,10 +484,10 @@ if ($page = "writemsg") {
                                                 <div class="msg_header">
                                                     <?
                                                     if ($subscounter == "0") {
-                                                        $combiner = " "._("FormComTitle")." ";
+                                                        $combiner = " ".__("wrote on")." ";
                                                     }
                                                     else {
-                                                        $combiner = " "._("FormComTitleSub")." ";
+                                                        $combiner = " ".__("responded on")." ";
                                                     }
                                                     if ($threads[$key]['partnerdel'] == "1" && $msgs[$threads[$key]['id']][$subscounter]['senderid'] != $user->id) {
                                                         echo '<span style="font-size:14px">'.$msgs[$threads[$key]['id']][$subscounter]['sendername'].'</span>'.$combiner.$msgs[$threads[$key]['id']][$subscounter]['date'];
@@ -499,7 +499,7 @@ if ($page = "writemsg") {
                                                 </div>
 
                                                 <div class="msg_content">
-                                                    <? echo $msgs[$threads[$key]['id']][$subscounter]['content']; ?>
+                                                    <?php echo $msgs[$threads[$key]['id']][$subscounter]['content']; ?>
                                                 </div>
                                             </div>
                                         </div>
@@ -526,24 +526,24 @@ if ($page = "writemsg") {
                                                 </div>
 
                                                     <form action="?page=sentmsgs" method="post" style="display: inline;">
-                                                    <input type="hidden" name="sendto" value="<? echo $threads[$key]['partnerid']; ?>">
-                                                    <input type="hidden" name="parent" value="<? echo $threads[$key]['id']; ?>">
-                                                    <input type="hidden" name="delimiter" value="<? echo $user->ComSecret; ?>">
+                                                    <input type="hidden" name="sendto" value="<?php echo $threads[$key]['partnerid']; ?>">
+                                                    <input type="hidden" name="parent" value="<?php echo $threads[$key]['id']; ?>">
+                                                    <input type="hidden" name="delimiter" value="<?php echo $user->ComSecret; ?>">
                                                     <input type="hidden" name="cmd" value="sendrsp">
                                                 <div style="float:left">
-                                                    <textarea required name="msgcontent" placeholder="<? echo _("PM_PHResponse") ?>" class="usermsgs" id="rsp_field_<? echo $threads[$key]['id'] ?>" style="height: 50px; width: 600px;" onkeyup="auto_adjust_textarea_size(this);count_remaining_msgs(this,<? echo $threads[$key]['id'] ?>,'10000')" maxlength="10000"></textarea>
+                                                    <textarea required name="msgcontent" placeholder="<?php echo __("Send a response") ?>" class="usermsgs" id="rsp_field_<?php echo $threads[$key]['id'] ?>" style="height: 50px; width: 600px;" onkeyup="auto_adjust_textarea_size(this);count_remaining_msgs(this,<?php echo $threads[$key]['id'] ?>,'10000')" maxlength="10000"></textarea>
                                                 </div>
 
                                             </div>
 
                                             <div style="width:664px; text-align: right;">
-                                                    <span class="smallodd" style="padding-right: 10px" id="rsp_remaining_<? echo $threads[$key]['id'] ?>">0/10000</span>
-                                                    <input type="submit" class="comedit" value="<? echo _("FormButtonSend") ?>">
+                                                    <span class="smallodd" style="padding-right: 10px" id="rsp_remaining_<?php echo $threads[$key]['id'] ?>">0/10000</span>
+                                                    <input type="submit" class="comedit" value="<?php echo __("Send") ?>">
                                             </div>
                                                     </form>
                                         </div>
                                     </div>
-                                    <? } ?>
+                                    <?php } ?>
                                     </div>
                                 </div>
                        <?
@@ -551,8 +551,8 @@ if ($page = "writemsg") {
                        }
                     } ?>
 
-                        <div class="msg_nomsgs" id="nomsgsboxout" <? if ($outthreads != "0") { echo 'style="display:none"'; } ?>>
-                            <? echo _("PM_NoMsgs") ?>
+                        <div class="msg_nomsgs" id="nomsgsboxout" <?php if ($outthreads != "0") { echo 'style="display:none"'; } ?>>
+                            <?php echo __("There are no messages to display") ?>
                         </div>
                     </div>
 
@@ -560,22 +560,22 @@ if ($page = "writemsg") {
 
 
 
-                    <div class="messagebox" id="write" <? if ($redcat != "write") { echo 'style="display:none;"'; } ?>>
+                    <div class="messagebox" id="write" <?php if ($redcat != "write") { echo 'style="display:none;"'; } ?>>
 
                         <div class="write_msg">
                             <form action="index.php?page=writemsg" method="post">
-                                <input type="hidden" name="delimiter" value="<? echo $user->ComSecret; ?>">
+                                <input type="hidden" name="delimiter" value="<?php echo $user->ComSecret; ?>">
                                 <input type="hidden" name="cmd" value="sendmsg">
 
                                 <table>
                                     <tr>
                                         <td>
-                                            <span style="white-space: nowrap"><p class="blogodd"><b><? echo _("PM_SendTo") ?>:</span>
+                                            <span style="white-space: nowrap"><p class="blogodd"><b><?php echo __("Send to") ?>:</span>
                                         </td>
                                         <td style="padding-left: 5px;">
-                                            <? if ($pregivento != "true") { ?>
+                                            <?php if ($pregivento != "true") { ?>
 
-                                                <select data-placeholder="<? echo _("PM_PHRecipient") ?>" id="username" name="recipient" class="chosen-select" required>
+                                                <select data-placeholder="<?php echo __("Name of recipient") ?>" id="username" name="recipient" class="chosen-select" required>
                                                     <option value="0"></option>
                                                 </select>
 
@@ -584,17 +584,17 @@ if ($page = "writemsg") {
                                                 </script>
 
 
-                                            <? }
+                                            <?php }
                                             else { ?>
-                                                <input type="hidden" name="recipient" value="<? echo $sendtouser->id ?>">
-                                                <span class="username" style="text-decoration: none;" rel="<? echo $sendtouser->id ?>" value="<? echo $user->id ?>"><p class="blogodd"><b><? echo $sendtouser->Name ?></b></p></span>
-                                            <? } ?>
+                                                <input type="hidden" name="recipient" value="<?php echo $sendtouser->id ?>">
+                                                <span class="username" style="text-decoration: none;" rel="<?php echo $sendtouser->id ?>" value="<?php echo $user->id ?>"><p class="blogodd"><b><?php echo $sendtouser->Name ?></b></p></span>
+                                            <?php } ?>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td></td>
                                         <td style="padding-left: 5px;">
-                                            <textarea required name="msgcontent" placeholder="<? echo _("PM_PHTypeMsg") ?>" class="usermsgs" id="rsp_field_write" style="height: 60px; width: 600px;" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'write','10000')" maxlength="10000"><? echo $msgcontent; ?></textarea>
+                                            <textarea required name="msgcontent" placeholder="<?php echo __("Type your message here") ?>" class="usermsgs" id="rsp_field_write" style="height: 60px; width: 600px;" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'write','10000')" maxlength="10000"><?php echo $msgcontent; ?></textarea>
                                         </td>
                                     </tr>
                                     <tr>
@@ -602,7 +602,7 @@ if ($page = "writemsg") {
                                         <td>
                                             <div style="width:100%; text-align: right;">
                                                 <span class="smallodd" style="padding-right: 10px" id="rsp_remaining_write">0/10000</span>
-                                                <input type="submit" class="comedit" value="<? echo _("FormButtonSend") ?>">
+                                                <input type="submit" class="comedit" value="<?php echo __("Send") ?>">
                                             </div>
                                         </td>
                                     </tr>
@@ -612,14 +612,14 @@ if ($page = "writemsg") {
                         </div>
                     </div>
 
-                    <? if ($pregivento != "true") { ?>
+                    <?php if ($pregivento != "true") { ?>
                     <script>
                     var x_timer;
                     $('.chosen-search-input').on('input',function(e){
                         var searchterm = $('.chosen-search-input').val();
                         clearTimeout(x_timer);
                         x_timer = setTimeout(function(){
-                            $(".no-results").text("<? echo _("PM_searching") ?>");
+                            $(".no-results").text("<?php echo __("Searching...") ?>");
                             if (searchterm.length >= '2') {
                                 clearTimeout(x_timer);
                                 x_timer = setTimeout(function(){
@@ -628,7 +628,7 @@ if ($page = "writemsg") {
                                     xmlhttp.onreadystatechange = function() {
                                         if (this.readyState == 4 && this.status == 200) {
                                             if (this.responseText == "[]") {
-                                                $(".no-results").text("<? echo _("PM_ErrNoUser") ?>");
+                                                $(".no-results").text("<?php echo __("No user found") ?>");
                                             }
                                             else {
                                                 var data = this.responseText;
@@ -644,7 +644,7 @@ if ($page = "writemsg") {
                                             }
                                         }
                                     };
-                                    xmlhttp.open("GET", "classes/ajax/ac_writemessage.php?q=" + encodeURIComponent(searchterm) + "&u=<? echo $user->id ?>", true);
+                                    xmlhttp.open("GET", "classes/ajax/ac_writemessage.php?q=" + encodeURIComponent(searchterm) + "&e=noxu&u=<?php echo $user->id ?>", true);
                                     xmlhttp.send();
                                 }, 1000);
                             }
@@ -652,13 +652,13 @@ if ($page = "writemsg") {
                                 clearTimeout(x_timer);
                                 x_timer = setTimeout(function(){
                                     $("#username").empty();
-                                    $(".no-results").text("<? echo _("PM_ErrTooShort") ?>");
+                                    $(".no-results").text("<?php echo __("Please enter 2 or more characters") ?>");
                                 }, 300);
                             }
                         }, 200);
                     });
                     </script>
-                    <? } ?>
+                    <?php } ?>
 
 
                 </div>
@@ -700,7 +700,7 @@ if ($page = "writemsg") {
 <?
 switch ($sendtoast) {
     case "rsperror":
-        echo '<script type="text/javascript">$.growl.error({ message: '._("GR_GenError").', duration: "7000", size: "large", location: "tc" });</script>';
+        echo '<script type="text/javascript">$.growl.error({ message: '.__("There was an error processing your data, I am sorry. Please try again.").', duration: "7000", size: "large", location: "tc" });</script>';
         break;
 }
 

@@ -12,15 +12,13 @@ $styleset = $_POST["styleset"];
 $visitorid = $_POST["visitorid"];
 
 // INIITIALIZE GETTEXT AND PULL LANGUAGE FILE
-putenv("LANG=".$language.".UTF-8");
-setlocale(LC_ALL, $language.".UTF-8");
-
-$domain = "messages";
-bindtextdomain($domain, "../../Locale");
-textdomain($domain);
-
+require_once ("../../thirdparty/motranslator/vendor/autoload.php");
+PhpMyAdmin\MoTranslator\Loader::loadFunctions();
+  _setlocale(LC_MESSAGES, $language);
+  _textdomain('messages');
+  _bindtextdomain('messages', __DIR__ . '/../../Locale/');
+  _bind_textdomain_codeset('messages', 'UTF-8');
 set_language_vars($language);
-
 print_commentbox($category,$sortingid,$parent,$styleset,"0",$userid,$visitorid,"en");
 
 mysqli_close($dbcon); 

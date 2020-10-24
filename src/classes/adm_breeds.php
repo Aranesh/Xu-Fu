@@ -22,14 +22,14 @@ $submitbreeds = $_POST['submitbreeds'];
     <img src="images/blank.png" width="50" height="1" alt="" />
 </td>
 <td>
-    <img class="ut_icon" width="84" height="84" <? echo $usericon ?>>
+    <img class="ut_icon" width="84" height="84" <?php echo $usericon ?>>
 </td>
 
 <td>
     <img src="images/blank.png" width="50" height="1" alt="" />
 </td>
 
-<td width="100%"><h class="megatitle">Administration - Breed Importer</h></td>
+<td width="100%"><h class="megatitle">Administration - Pet Stats Importer</h></td>
 <td><img src="images/main_bg02_2.png"></td>
 </tr>
 </table>
@@ -66,12 +66,12 @@ $submitbreeds = $_POST['submitbreeds'];
 <td>
 <table style="width: 85%;" class="profile">
 
-    <? print_admin_menu('adm_breeds'); ?>
+    <?php print_admin_menu('adm_breeds'); ?>
 
     <tr style="background: #bcbcbc; border: 1px solid #bcbcbc;">
         <td class="profile">
 
-            <? if ($submitbreeds == "true") {
+            <?php if ($submitbreeds == "true") {
                 $breedinfo = $_POST['breedinfo'];
 
                 // Validate File Integrity
@@ -203,6 +203,7 @@ $submitbreeds = $_POST['submitbreeds'];
                                 mysqli_query($dbcon, "UPDATE PetsUser SET `Speed` = '$newsp' WHERE RematchID = '$upcounter'") OR die(mysqli_error($dbcon));
 
                                 $allbreeds = explode(", ", $petstats[$upcounter]['breeds']);
+                                /* Deactivating breed import, this is done automatically now through users collections
                                 foreach ($allbreeds as $key => $value) {
                                     switch ($value) {
                                         case "3":
@@ -247,6 +248,7 @@ $submitbreeds = $_POST['submitbreeds'];
                                             break;
                                     }
                                 }
+                                */
                                 $thisresult = "<center>Updated";
                                 $newbr = substr($newbr, 0, -1);
                                 echo '<td class="admin">'.$upcounter.'</td>';
@@ -273,7 +275,7 @@ $submitbreeds = $_POST['submitbreeds'];
 
 
 
-            <? if ($submitbreeds != "true" OR $showinputfield == "true") { ?>
+            <?php if ($submitbreeds != "true" OR $showinputfield == "true") { ?>
                 <br>
                 <p class="blogodd">To update the database of pet breeds, follow these steps:
                 <ul>
@@ -285,9 +287,9 @@ $submitbreeds = $_POST['submitbreeds'];
                 <form action="index.php?page=adm_breeds" method="POST">
                     <input type="hidden" name="submitbreeds" value="true">
                     <textarea class="cominputbright" name="breedinfo" style="height: 300px; width: 700px;" required="true"></textarea><br> <br>
-                    <input class="cominputmedium"  type="submit" value="<? echo _("FormComButtonSubmit"); ?>">
+                    <input class="cominputmedium"  type="submit" value="<?php echo __("Submit"); ?>">
                  </form>
-            <? } ?>
+            <?php } ?>
 
 
 

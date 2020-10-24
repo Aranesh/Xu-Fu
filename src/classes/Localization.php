@@ -6,9 +6,9 @@ include_once ('Database.php');
 function Localization_subdomain_for_language ($language)
 {
   $sub = strtolower (decode_language ($language)['short']);
-  return $sub == 'kr' ? 'ko'
-       : $sub == 'tw' ? 'zh'
-       : $sub;
+  if ($sub == 'kr') $sub = 'ko';
+  if ($sub == 'tw') $sub = 'zh';
+  return $sub;
 }
 
 function Localization_display_string_for_language ($language)
@@ -31,7 +31,7 @@ function Localization_category ($id, $fallback)
 }
 function Localization_string ($name)
 {
-  return _ ($name);
+  return __ ($name);
 }
 
 function Localization_language_to_region ($language)
@@ -79,18 +79,7 @@ function Localization_spell_name ($id, $language)
   }
   $column = Database_escape_string ($language);
   return Database_query_single
-    ('SELECT ' . $column . ' FROM Spells WHERE SpellID = ' . $id . ' LIMIT 1');
-}
-
-
-function Localization_initialize_global_state ($language)
-{
-  putenv ('LANG=' . $language . '.UTF-8');
-  setlocale (LC_ALL, $language . '.UTF-8');
-  $domain = 'messages';
-  bindtextdomain ($domain, $_SERVER['DOCUMENT_ROOT'] . '/Locale');
-  textdomain ($domain);
-  set_language_vars ($language);
+    ('SELECT ' . $column . ' FROM Pet_Abilities WHERE id = ' . $id . ' LIMIT 1');
 }
 
 $Localization_possible_languages = ['de_DE', 'en_US', 'es_ES', 'it_IT', 'fr_FR', 'ru_RU', 'pt_BR', 'ko_KR', 'zh_TW'];

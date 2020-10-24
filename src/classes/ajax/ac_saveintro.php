@@ -6,6 +6,7 @@ $userid = $_REQUEST["userid"];
 $comsecret = $_REQUEST["delimiter"];
 $cat = $_REQUEST["cat"];
 $content = $_REQUEST["content"];
+$content = remove_emojis($content);
 $content = mysqli_real_escape_string($dbcon, $content);
 
 if (isset($_SERVER['HTTP_CLIENT_IP'])) {

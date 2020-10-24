@@ -72,7 +72,7 @@ if ($userrights['Edit_Menu'] == "yes" && $action == "save_item") {
     <img src="images/blank.png" width="50" height="1" alt="" />
 </td>
 <td>
-    <img class="ut_icon" width="84" height="84" <? echo $usericon ?>>
+    <img class="ut_icon" width="84" height="84" <?php echo $usericon ?>>
 </td>
 
 <td>
@@ -116,7 +116,7 @@ if ($userrights['Edit_Menu'] == "yes" && $action == "save_item") {
 <td>
 <table style="width: 85%;" class="profile">
 
-    <? print_admin_menu('menu'); ?>
+    <?php print_admin_menu('menu'); ?>
 
     <tr style="background: #bcbcbc; border: 1px solid #bcbcbc;">
         <td>
@@ -131,7 +131,7 @@ if ($userrights['Edit_Menu'] == "yes" && $action == "save_item") {
                 
                 If you accidentally move something around, just reload, it only saves when you press the button ^^<br><br>
             
-            <button onclick="save_nav_menu(<? echo $user->id ?>,<? echo $user->ComSecret ?>)" type="submit" class="comedit">Save Menu Order</button>
+            <button onclick="save_nav_menu(<?php echo $user->id ?>,<?php echo $user->ComSecret ?>)" type="submit" class="comedit">Save Menu Order</button>
             
             <form action="?page=adm_menu" method="post" style="display: inline">
                 <input type="hidden" name="action" value="add_item">
@@ -151,17 +151,17 @@ if ($userrights['Edit_Menu'] == "yes" && $action == "save_item") {
                         $line_opacity = 0.35;
                     }
                     ?>
-                    <li id="<? echo $itemdata->id ?>">
-                    <div id="adm_op_line_<? echo $itemdata->id ?>" class="adm_menu adm_line_trigger" data-lineid="<? echo $itemdata->id ?>" style="opacity: <? echo $line_opacity ?>">
-                        <? echo $itemdata->id ?> - <? echo $itemdata->Name_en_US ?> - # of ydvfights -
-                        <div class="adm_line_trigger" data-lineid="<? echo $lineid ?>" style="float: right">
-                            <div id="adm_line_<? echo $itemdata->id ?>" class="adm_all_lines" style="opacity: 0">
-                                <a href="?page=adm_menu&action=edit&item=<? echo $itemdata->id ?>"><img class="adm_line_trigger" src="https://www.wow-petguide.com/images/icon_pen.png" style="width: 18px; height: 15px; padding: 2 5 0 0; float: right;"></a>
-                                <img id="adm_eye_icon_<? echo $itemdata->id ?>" class="adm_line_trigger" onclick="adm_menu_toggle_active('<? echo $itemdata->id ?>','<? echo $user->id ?>','<? echo $user->ComSecret ?>')" src="https://www.wow-petguide.com/images/<? echo $eye_icon ?>.png" style="width: 20px; height: 15px; padding: 2 6 0 0; float: right;">
+                    <li id="<?php echo $itemdata->id ?>">
+                    <div id="adm_op_line_<?php echo $itemdata->id ?>" class="adm_menu adm_line_trigger" data-lineid="<?php echo $itemdata->id ?>" style="opacity: <?php echo $line_opacity ?>">
+                        <?php echo $itemdata->id ?> - <?php echo $itemdata->Name_en_US ?> - # of ydvfights -
+                        <div class="adm_line_trigger" data-lineid="<?php echo $lineid ?>" style="float: right">
+                            <div id="adm_line_<?php echo $itemdata->id ?>" class="adm_all_lines" style="opacity: 0">
+                                <a href="?page=adm_menu&action=edit&item=<?php echo $itemdata->id ?>"><img class="adm_line_trigger" src="https://www.wow-petguide.com/images/icon_pen.png" style="width: 18px; height: 15px; padding: 2 5 0 0; float: right;"></a>
+                                <img id="adm_eye_icon_<?php echo $itemdata->id ?>" class="adm_line_trigger" onclick="adm_menu_toggle_active('<?php echo $itemdata->id ?>','<?php echo $user->id ?>','<?php echo $user->ComSecret ?>')" src="https://www.wow-petguide.com/images/<?php echo $eye_icon ?>.png" style="width: 20px; height: 15px; padding: 2 6 0 0; float: right;">
                             </div>
                         </div>
                     </div>
-                <? }
+                <?php }
                 
                 $depths = 0;
                 $menu_primary_db = mysqli_query($dbcon, "SELECT * FROM Menu_Primary WHERE Parent = 0 ORDER BY Ordering ASC");
@@ -169,50 +169,50 @@ if ($userrights['Edit_Menu'] == "yes" && $action == "save_item") {
                 while ($menu_primary_item = mysqli_fetch_object($menu_primary_db)) {
                       print_one_menu_item($menu_primary_item); ?>
                       <ul>
-                        <? $menu_child1_db = mysqli_query($dbcon, "SELECT * FROM Menu_Primary WHERE Parent = $menu_primary_item->id ORDER BY Ordering ASC");
+                        <?php $menu_child1_db = mysqli_query($dbcon, "SELECT * FROM Menu_Primary WHERE Parent = $menu_primary_item->id ORDER BY Ordering ASC");
                         while ($menu_d1 = mysqli_fetch_object($menu_child1_db)) {                            
                               print_one_menu_item($menu_d1); ?>
                               <ul>
-                                <? $menu_child2_db = mysqli_query($dbcon, "SELECT * FROM Menu_Primary WHERE Parent = $menu_d1->id ORDER BY Ordering ASC");
+                                <?php $menu_child2_db = mysqli_query($dbcon, "SELECT * FROM Menu_Primary WHERE Parent = $menu_d1->id ORDER BY Ordering ASC");
                                 while ($menu_d2 = mysqli_fetch_object($menu_child2_db)) {                               
                                       print_one_menu_item($menu_d2); ?>
                                       <ul>
-                                        <? $menu_child3_db = mysqli_query($dbcon, "SELECT * FROM Menu_Primary WHERE Parent = $menu_d2->id ORDER BY Ordering ASC");
+                                        <?php $menu_child3_db = mysqli_query($dbcon, "SELECT * FROM Menu_Primary WHERE Parent = $menu_d2->id ORDER BY Ordering ASC");
                                         while ($menu_d3 = mysqli_fetch_object($menu_child3_db)) {                                  
                                               print_one_menu_item($menu_d3); ?>
                                               <ul>
-                                                <? $menu_child4_db = mysqli_query($dbcon, "SELECT * FROM Menu_Primary WHERE Parent = $menu_d3->id ORDER BY Ordering ASC");
+                                                <?php $menu_child4_db = mysqli_query($dbcon, "SELECT * FROM Menu_Primary WHERE Parent = $menu_d3->id ORDER BY Ordering ASC");
                                                 while ($menu_d4 = mysqli_fetch_object($menu_child4_db)) {                                                 
                                                       print_one_menu_item($menu_d4); ?>
                                                       <ul>
-                                                        <? $menu_child5_db = mysqli_query($dbcon, "SELECT * FROM Menu_Primary WHERE Parent = $menu_d4->id ORDER BY Ordering ASC");
+                                                        <?php $menu_child5_db = mysqli_query($dbcon, "SELECT * FROM Menu_Primary WHERE Parent = $menu_d4->id ORDER BY Ordering ASC");
                                                         while ($menu_d5 = mysqli_fetch_object($menu_child5_db)) {                                                         
                                                               print_one_menu_item($menu_d5); ?>
                                                               <ul>
-                                                                <? $menu_child6_db = mysqli_query($dbcon, "SELECT * FROM Menu_Primary WHERE Parent = $menu_d5->id ORDER BY Ordering ASC");
+                                                                <?php $menu_child6_db = mysqli_query($dbcon, "SELECT * FROM Menu_Primary WHERE Parent = $menu_d5->id ORDER BY Ordering ASC");
                                                                 while ($menu_d6 = mysqli_fetch_object($menu_child6_db)) {                                                                
                                                                     print_one_menu_item($menu_d6); ?>
                                                                       <ul></ul>
                                                                     </li>
-                                                                <? } ?>
+                                                                <?php } ?>
                                                               </ul>
                                                             </li>
-                                                        <? } ?>
+                                                        <?php } ?>
                                                       </ul>
                                                     </li>
-                                                <? } ?>
+                                                <?php } ?>
                                               </ul>
                                             </li>
-                                        <? } ?>
+                                        <?php } ?>
                                       </ul>
                                     </li>
-                                <? } ?>
+                                <?php } ?>
                               </ul>
                             </li>
-                        <? } ?>
+                        <?php } ?>
                       </ul>
                     </li>
-               <? } ?>          
+               <?php } ?>          
            </ul>
             
             
@@ -229,7 +229,7 @@ if ($userrights['Edit_Menu'] == "yes" && $action == "save_item") {
                 });
             </script>
             
-            <? } // End of Main menu
+            <?php } // End of Main menu
             
             
             
@@ -243,7 +243,7 @@ if ($userrights['Edit_Menu'] == "yes" && $action == "save_item") {
                      
                 <form action="?page=adm_menu" method="post">
                 <input type="hidden" name="action" value="save_item">
-                <input type="hidden" name="menu_item" value="<? echo $item->id ?>">
+                <input type="hidden" name="menu_item" value="<?php echo $item->id ?>">
                 <table>
                     <tr>
                         <td>
@@ -254,7 +254,7 @@ if ($userrights['Edit_Menu'] == "yes" && $action == "save_item") {
                             </div>
                         </td>
                         <td style="padding-left: 10px;">
-                            <input class="editable_input" name="name" tabindex="1" placeholder="" style="width: 400px;" required="" width="230" value="<? echo htmlentities($item->Name_en_US, ENT_QUOTES, "UTF-8") ?>">
+                            <input class="editable_input" name="name" tabindex="1" placeholder="" style="width: 400px;" required="" width="230" value="<?php echo htmlentities($item->Name_en_US, ENT_QUOTES, "UTF-8") ?>">
                         </td>
                     </tr>
 
@@ -268,7 +268,7 @@ if ($userrights['Edit_Menu'] == "yes" && $action == "save_item") {
                             </div>
                         </td>
                         <td style="padding-left: 10px;">
-                            <input class="editable_input" name="slug" tabindex="1" placeholder="" style="width: 400px;" width="230" value="<? echo htmlentities($item->Slug, ENT_QUOTES, "UTF-8") ?>">
+                            <input class="editable_input" name="slug" tabindex="1" placeholder="" style="width: 400px;" width="230" value="<?php echo htmlentities($item->Slug, ENT_QUOTES, "UTF-8") ?>">
                         </td>
                     </tr>
                     
@@ -281,7 +281,7 @@ if ($userrights['Edit_Menu'] == "yes" && $action == "save_item") {
                             </div>
                         </td>
                         <td style="padding-left: 10px;">
-                            <input class="editable_input" name="link" tabindex="1" placeholder="" style="width: 400px;" width="230" value="<? echo htmlentities($item->Link, ENT_QUOTES, "UTF-8") ?>">
+                            <input class="editable_input" name="link" tabindex="1" placeholder="" style="width: 400px;" width="230" value="<?php echo htmlentities($item->Link, ENT_QUOTES, "UTF-8") ?>">
                         </td>
                     </tr>
 
@@ -326,7 +326,7 @@ if ($userrights['Edit_Menu'] == "yes" && $action == "save_item") {
                         </td>
                         <td style="padding-left: 15px;">
                             <div id="ttcolswitch" class="armoryswitch">
-                                <input type="checkbox" name="dungeon" class="armoryswitch-checkbox" id="pr_col" <? if ($item->Dungeon == 1) { echo "checked"; } ?>>
+                                <input type="checkbox" name="dungeon" class="armoryswitch-checkbox" id="pr_col" <?php if ($item->Dungeon == 1) { echo "checked"; } ?>>
                                 <label class="armoryswitch-label" for="pr_col">
                                 <span class="armoryswitch-inner"></span>
                                 <span class="armoryswitch-switch"></span>
@@ -347,7 +347,7 @@ if ($userrights['Edit_Menu'] == "yes" && $action == "save_item") {
                         </td>
                         <td style="padding-left: 15px;">
                             <div id="ttcolswitch" class="armoryswitch">
-                                <input type="checkbox" name="hcdungeon" class="armoryswitch-checkbox" id="pr_hcdungeon" <? if ($item->Dng_AlwaysHC == 1) { echo "checked"; } ?>>
+                                <input type="checkbox" name="hcdungeon" class="armoryswitch-checkbox" id="pr_hcdungeon" <?php if ($item->Dng_AlwaysHC == 1) { echo "checked"; } ?>>
                                 <label class="armoryswitch-label" for="pr_hcdungeon">
                                 <span class="armoryswitch-inner"></span>
                                 <span class="armoryswitch-switch"></span>
@@ -358,7 +358,7 @@ if ($userrights['Edit_Menu'] == "yes" && $action == "save_item") {
 
                 <tr><td colspan="3"><hr class="profile"></td></tr>
                
-                <? /* LOCA OPTIONS DISABLED - need a separate menu for those in Loc tab!!
+                <?php /* LOCA OPTIONS DISABLED - need a separate menu for those in Loc tab!!
                     * Always split admin from Loc!
                     
                     foreach (['de_DE', 'fr_FR', 'it_IT', 'es_ES', 'ru_RU', 'pt_BR', 'ko_KR', 'zh_TW'] as $locale) {
@@ -366,17 +366,17 @@ if ($userrights['Edit_Menu'] == "yes" && $action == "save_item") {
                     
                     <tr>
                         <td>
-                            <div style="cursor: help;" class="description_tt" data-tooltip-content="#loc_<? echo $locale ?>_tt"><p class="blogodd" style="font-weight: bold">Name <? echo $locale ?>:</p></div>
+                            <div style="cursor: help;" class="description_tt" data-tooltip-content="#loc_<?php echo $locale ?>_tt"><p class="blogodd" style="font-weight: bold">Name <?php echo $locale ?>:</p></div>
                             <div style="display: none">
-                                <span id="loc_<? echo $locale ?>_tt">The translation for the title to be displayed in <? echo $locale ?>.</span>
+                                <span id="loc_<?php echo $locale ?>_tt">The translation for the title to be displayed in <?php echo $locale ?>.</span>
                             </div>
                         </td>
                         <td style="padding-left: 10px;">
-                            <input class="editable_input" name="loc_<? echo $locale ?>" placeholder="" style="width: 400px;" width="230" value="<? echo htmlentities($item->$urllink, ENT_QUOTES, "UTF-8") ?>">
+                            <input class="editable_input" name="loc_<?php echo $locale ?>" placeholder="" style="width: 400px;" width="230" value="<?php echo htmlentities($item->$urllink, ENT_QUOTES, "UTF-8") ?>">
                         </td>
                     </tr>
 
-                <? } */ ?>
+                <?php } */ ?>
 
 
 
@@ -407,7 +407,7 @@ if ($userrights['Edit_Menu'] == "yes" && $action == "save_item") {
                     <button type="submit" class="comsubmit">Save and go back</button>
                 </form>
         
-            <? } // End of Main menu ?>
+            <?php } // End of Main menu ?>
         <br>
         </td>
     </tr>

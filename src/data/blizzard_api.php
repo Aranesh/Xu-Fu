@@ -128,6 +128,27 @@ function blizzard_api_pets_singlepet($species, $zone = "us", $locale = "", $pref
     return $result;
 }
 
+function blizzard_api_abilities_masterlist($zone, $locale = "", $prefix = "") {
+    $token = blizzard_api_cache_token($zone, battlenet_api_client_id, battlenet_api_client_secret, $prefix.'data/blizzard_api_token.json');
+    $url = 'https://'.$zone.'.api.blizzard.com/data/wow/pet-ability/index?locale='.$locale.'&namespace=static-'.$zone;
+    $result = blizzard_api_execute_curl($url, $token);
+    return $result;
+}
+
+function blizzard_api_ability_details($ability, $zone = "us", $locale = "", $prefix = "") {
+    $token = blizzard_api_cache_token($zone, battlenet_api_client_id, battlenet_api_client_secret, $prefix.'data/blizzard_api_token.json');
+    $url = 'https://'.$zone.'.api.blizzard.com/data/wow/pet-ability/'.$ability.'?locale='.$locale.'&namespace=static-'.$zone;
+    $result = blizzard_api_execute_curl($url, $token);
+    return $result;
+}
+
+function blizzard_api_ability_media($ability, $zone = "us", $locale = "en_US", $prefix = "") {
+    $token = blizzard_api_cache_token($zone, battlenet_api_client_id, battlenet_api_client_secret, $prefix.'data/blizzard_api_token.json');
+    $url = 'https://'.$zone.'.api.blizzard.com/data/wow/media/pet-ability/'.$ability.'?locale='.$locale.'&namespace=static-'.$zone;
+    $result = blizzard_api_execute_curl($url, $token);
+    return $result;
+}
+
 function blizzard_api_execute_curl($url, $token, $source = "") {
 
     $ch = curl_init();

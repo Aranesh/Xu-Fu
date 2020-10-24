@@ -1,5 +1,4 @@
 <?php
-
 $subname = mysqli_real_escape_string($dbcon, $_POST['username']);
 
 if ($subname){
@@ -26,7 +25,7 @@ $checkuser = mysqli_fetch_object($usermaildb);
 
 if (!$checkuser) {
 $pwresetfail = "true";
-$pwresetfailreason = _("PWR_NoUser");
+$pwresetfailreason = __("No user with that name or email address found.");
 }
 
 
@@ -35,7 +34,7 @@ $pwresetfailreason = _("PWR_NoUser");
 
 if ($checkuser && $checkuser->Email == ""){
 $pwresetfail = "true";
-$pwresetfailreason = _("PWR_NoEmail");
+$pwresetfailreason = __("There is no email address associated with this account.");
 }
 
 
@@ -44,9 +43,9 @@ $pwresetfailreason = _("PWR_NoEmail");
 
 $resetsdb = mysqli_query($dbcon, "SELECT * FROM UserProtocol WHERE User = '$checkuser->id' AND Activity = 'Password Reset Mail Requested' AND  Date >= NOW()- INTERVAL 30 MINUTE");
 
-if (mysqli_num_rows($resetsdb) >= "3") {
+if (mysqli_num_rows($resetsdb) >= 36) {
 $pwresetfail = "true";
-$pwresetfailreason = _("PWR_Locked");
+$pwresetfailreason = __("There were too many attempts to reset the password of this account.<br>The function is now blocked for 30 minutes.");
 }
 
 
@@ -62,7 +61,7 @@ $pwresetfailreason = _("PWR_Locked");
 if ($pwresetfail == "false"){
 
    $resetcode = strtoupper(substr(md5(rand()), 0, 5));
-   $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`, `Main`, `Sub`, `Alternative`) VALUES ('$checkuser->id', '$user_ip_adress', '0', 'Password Reset Mail Requested', '$resetcode', '$mainselector', '$subselector', '$alternative')") OR die(mysqli_error($dbcon));
+   $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$checkuser->id', '$user_ip_adress', '0', 'Password Reset Mail Requested', '$resetcode')") OR die(mysqli_error($dbcon));
 
    $update = mysqli_query($dbcon, "UPDATE Users SET `ResetCode` = '$resetcode' WHERE id = '$checkuser->id'");
 
@@ -70,12 +69,12 @@ if ($pwresetfail == "false"){
    $recname = $checkuser->Name;
    $subject = "Password reset for WoW-Petguide.com";
 
-   $content = '<br>'._("PWR_EMCont1").'<br><br><center><a style="display: inline;font-size:18px;font-family: Verdana,sans-serif" href="https://wow-petguide.com/index.php?page=setpw&pwstring='.$resetcode.'">'._("PWR_EMCont2").'</a>';
-   $content = $content.'<br><br></center><p style="display: inline;font-size:14px;font-family: Verdana,sans-serif">'._("PWR_EMCont3").' <a style="display: inline;font-size:14px;font-family: Verdana,sans-serif" href="https://wow-petguide.com/index.php?page=acretrieve">'._("PWR_EMCont4").'</a>.<br>'._("PWR_EMCont5");
+   $content = '<br>'.__("Sorry to hear you have problems logging in. To set a new password for your account, please follow this link:").'<br><br><center><a style="display: inline;font-size:18px;font-family: Verdana,sans-serif" href="https://wow-petguide.com/index.php?page=setpw&pwstring='.$resetcode.'">'.__("Set new password").'</a>';
+   $content = $content.'<br><br></center><p style="display: inline;font-size:14px;font-family: Verdana,sans-serif">'.__("This reset code is valid for 24 hours. If you need any additional help, you can use the").' <a style="display: inline;font-size:14px;font-family: Verdana,sans-serif" href="https://wow-petguide.com/index.php?page=acretrieve">'.__("account retrieval page").'</a>.<br>'.__("If you did not request this email, you can safely ignore it.<br><br>Yours,");
 
-   $nonhtmlbody = _("PWR_EMCont1")." https://wow-petguide.com/index.php?page=setpw&pwstring=".$resetcode;
+   $nonhtmlbody = __("Sorry to hear you have problems logging in. To set a new password for your account, please follow this link:")." https://wow-petguide.com/index.php?page=setpw&pwstring=".$resetcode;
 
-   xufu_mail($recipient, $recname, $subject, $content, $nonhtmlbody);
+   xufu_mail($recipient, $recname, $subject, $content, $nonhtmlbody, '');
 
    $pwresetsuccess = "true";
 }
@@ -87,7 +86,7 @@ if ($pwresetfail == "false"){
 <table width="100%" border="0" margin="0" cellpadding="0" cellspacing="0">
 <tr>
 <td><img src="images/main_bg02_1.png"></td>
-<td width="100%"><center><h class="megatitle"><? echo _("PWR_PGTitle") ?></h></td>
+<td width="100%"><center><h class="megatitle"><?php echo __("Recover your Password") ?></h></td>
 <td><img src="images/main_bg02_2.png"></td>
 </tr>
 </table>
@@ -117,7 +116,7 @@ if ($pwresetsuccess != "true"){
         <td><img src="/images/xufu_small.png"></td>
         <td><img src="/images/blank.png" width="10"></td>
         <td valign="top"><p class="blogodd"><br>
-            <? echo _("PWR_Instruct") ?>
+            <?php echo __("Please enter your username or email below. If you registered your email address when signing up, an email will be sent to you to reset your password.") ?>
             </p></td>
         </tr>
     </table>
@@ -125,19 +124,19 @@ if ($pwresetsuccess != "true"){
     <br>
     <br>
 
-<form class="form-style-register" action="index.php?m=<? echo $mainshow ?>&s=<? echo $subselector ?>&a=<?php echo $alternative ?>" method="post">
+<form class="form-style-register" action="index.php?m=<?php echo $mainshow ?>&s=<?php echo $subselector ?>&a=<?php echo $alternative ?>" method="post">
 
 <table>
 <tr>
-<td align="right"><p class="blogodd"><b><? if ($pwresetfail == "true"){ echo "<font color=\"red\">"; } ?><? echo _("UL_LogName") ?>:</b></td>
+<td align="right"><p class="blogodd"><b><?php if ($pwresetfail == "true"){ echo "<font color=\"red\">"; } ?><?php echo __("Name or email") ?>:</b></td>
 <td><img src="images/blank.png" width="5" height="1"/></td>
-<td><input tabindex="1" placeholder="" type="text" name="username" value="<? echo stripslashes(htmlentities($subname, ENT_QUOTES, "UTF-8")); ?>" required>
+<td><input tabindex="1" placeholder="" type="text" name="username" value="<?php echo stripslashes(htmlentities($subname, ENT_QUOTES, "UTF-8")); ?>" required>
 </td>
 </tr>
 
 <?
 if ($pwresetfail == "true"){
-echo '<tr><td></td><td></td><td><div class="registerError"><p class="commenteven">'.$pwresetfailreason.'<br><a href="index.php?page=acretrieve&m='.$mainshow.'&s='.$subselector.'&a='.$alternative.'" class="loginbright loginlinklarger">'._("UL_RetrievAcc").'</a></div></td></tr>';
+echo '<tr><td></td><td></td><td><div class="registerError"><p class="commenteven">'.$pwresetfailreason.'<br><a href="index.php?page=acretrieve&m='.$mainshow.'&s='.$subselector.'&a='.$alternative.'" class="loginbright loginlinklarger">'.__("Click here to retrieve your account.").'</a></div></td></tr>';
 }
 ?>
 
@@ -153,11 +152,11 @@ echo '<tr><td></td><td></td><td><div class="registerError"><p class="commenteven
             <table border="0">
             <tr>
                 <td>
-                    <p class="blogodd"><button type="submit" tabindex="2" class="myGreenButton" name="page" value="pwrecover"><? echo _("PWR_BTReco") ?> </button></form> <? echo _("UL_MBor") ?>
+                    <p class="blogodd"><button type="submit" tabindex="2" class="comedit" name="page" value="pwrecover"><?php echo __("Recover password") ?> </button></form> <?php echo __("or") ?>
                 </td>
-                <form class="form-style-login" action="index.php?m=<? echo $mainshow ?>&s=<? echo $subselector ?>&a=<?php echo $alternative ?>" method="post">
+                <form class="form-style-login" action="index.php?m=<?php echo $mainshow ?>&s=<?php echo $subselector ?>&a=<?php echo $alternative ?>" method="post">
                 <td>
-                    <p class="blogeven"><button tabindex="3" type="submit" class="myRedButton"><? echo _("FormButtonCancel") ?></button>
+                    <p class="blogeven"><button tabindex="3" type="submit" class="comdelete"><?php echo __("Cancel") ?></button>
                 </td>
             </tr>
         </table>
@@ -181,14 +180,14 @@ else if ($pwresetsuccess == "true"){
         <td><img src="/images/xufu_small.png"></td>
         <td><img src="/images/blank.png" width="10"></td>
         <td valign="top"><p class="blogodd">
-            <? echo _("PWR_Success") ?></p></td>
+            <?php echo __("An email was sent to your registered email address. Please follow the instructions in that mail to recover your account!<br> If you did not receive the email, please check your spam folder.<br><br>You will be redirect back to your previous page in <span id=\"counter\">10</span> seconds.") ?></p></td>
 
-<META HTTP-EQUIV="refresh" CONTENT="10; URL=index.php?m=<? echo $mainshow ?>&s=<? echo $subselector ?>&a=<?php echo $alternative ?>">
+<META HTTP-EQUIV="refresh" CONTENT="10; URL=index.php?m=<?php echo $mainshow ?>&s=<?php echo $subselector ?>&a=<?php echo $alternative ?>">
 <script type="text/javascript">
 function countdown() {
     var i = document.getElementById('counter');
     if (parseInt(i.innerHTML)<=0) {
-        location.href = 'https://www.wow-petguide.com/index.php?m=<? echo $mainshow ?>&s=<? echo $subselector ?>&a=<?php echo $alternative ?>';
+        location.href = 'https://www.wow-petguide.com/index.php?m=<?php echo $mainshow ?>&s=<?php echo $subselector ?>&a=<?php echo $alternative ?>';
     }
     i.innerHTML = parseInt(i.innerHTML)-1;
 }

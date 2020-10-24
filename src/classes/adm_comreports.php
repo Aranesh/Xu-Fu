@@ -15,7 +15,7 @@
     <img src="images/blank.png" width="50" height="1" alt="" />
 </td>
 <td>
-    <img class="ut_icon" width="84" height="84" <? echo $usericon ?>>
+    <img class="ut_icon" width="84" height="84" <?php echo $usericon ?>>
 </td>
 
 <td>
@@ -59,7 +59,7 @@
 <td>
 <table style="width: 85%;" class="profile">
 
-    <? print_admin_menu('adm_comreports'); ?>
+    <?php print_admin_menu('adm_comreports'); ?>
 
     <tr style="background: #bcbcbc; border: 1px solid #bcbcbc;">
         <td class="profile">
@@ -136,13 +136,13 @@
             foreach($reports as $key => $value) {  ?>
 
                 <tr class="admin">
-                    <td class="admin"><center><a class="pr_contact" target="_blank" href="?Comment=<? echo $value['Comment'] ?>"><? echo $value['Comment'] ?></a></td>
+                    <td class="admin"><center><a class="pr_contact" target="_blank" href="?Comment=<?php echo $value['Comment'] ?>"><?php echo $value['Comment'] ?></a></td>
                     <td class="admin">
-                        <center><span style="text-decoration: none" class="username" rel="<? echo $value['User'] ?>" value="<? echo $user->id ?>"><a target="_blank" href="?user=<? echo $value['User'] ?>" class="pr_contact"><? echo $value['User'] ?></a></span>  
+                        <center><span style="text-decoration: none" class="username" rel="<?php echo $value['User'] ?>" value="<?php echo $user->id ?>"><a target="_blank" href="?user=<?php echo $value['User'] ?>" class="pr_contact"><?php echo $value['User'] ?></a></span>  
                     </td>
-                    <td class="admin"><? echo $value['Type'] ?></td>
-                    <td class="admin" style="min-width: 300px"><? echo $value['Note'] ?></td>
-                    <td class="admin"><center><? echo $value['Reviewed'] ?></center></td>
+                    <td class="admin"><?php echo $value['Type'] ?></td>
+                    <td class="admin" style="min-width: 300px"><?php echo $value['Note'] ?></td>
+                    <td class="admin"><center><?php echo $value['Reviewed'] ?></center></td>
 
             </tr>
             <?php

@@ -25,6 +25,7 @@ class OAuth
   function __construct ($regionselect, $command, $url)
   {
     $this->regionselect = $regionselect;
+
     switch ($regionselect)
     {
     case 'china':
@@ -58,7 +59,7 @@ class OAuth
                                       , battlenet_api_client_secret
                                       , $apiregion
                                       , $locale
-                                      , 'https://' . $_ENV['SERVER_NAME']
+                                      , 'https://' . $_SERVER['SERVER_NAME']
                                       . $url . '&command=' . $command
                                       );
 
@@ -161,6 +162,7 @@ class OAuth
     $useraccinfo = $oauth->fetch ('account');
     $bnetid = $useraccinfo['id'];
     $battletag = $useraccinfo['battletag'];
+
 
     $region = Localization_language_to_region ($language);
     $wowaccess = $oauth->has_wow_access();

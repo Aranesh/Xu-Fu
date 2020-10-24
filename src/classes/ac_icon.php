@@ -116,25 +116,25 @@ function create_profile_menu ($user, $active_page)
   }
 
   cpm__entry ( $ul, 'profile'
-             , Localization_string ('UM_BTProfile')
+             , Localization_string ('My Profile')
              , $active_page === 'profile'
              );
   cpm__entry ( $ul, 'collection'
-             , Localization_string ('UM_PetCollection')
+             , Localization_string ('Pet Collection')
              , $active_page === 'col'
              );
 
   cpm__entry ( $ul, 'strategies'
-             , 'My Strategies' . Util_maybe_braced_count ($new_strategy_comments)
+             , Localization_string ('My Strategies') . Util_maybe_braced_count ($new_strategy_comments)
              , $active_page === 'strategies'
              );
   cpm__entry ( $ul, 'mycomments'
-             , Localization_string ('UM_BTComments') . Util_maybe_braced_count ($new_comments)
+             , Localization_string ('My Comments') . Util_maybe_braced_count ($new_comments)
              , $active_page === 'mycomments'
              );
 
   $messages_elem = cpm__entry ( $ul, 'messages'
-                              , Localization_string ('UM_BTMessages')
+                              , Localization_string ('Messages')
                               , $active_page === 'messages'
                               );
 
@@ -149,7 +149,7 @@ function create_profile_menu ($user, $active_page)
   HTML_append_text ($messages_elem_out, $new_private_messages ? ')' : '');
 
   cpm__entry ( $ul, 'settings'
-             , Localization_string ("UM_BTSettings")
+             , Localization_string ("Settings")
              , $active_page === 'settings' || $active_page === 'notesettings' || $active_page === 'settings'
              );
 
@@ -164,7 +164,7 @@ function create_profile_menu ($user, $active_page)
   }
   
 
-  cpm__entry ($ul, 'logout', Localization_string ('UM_BTLogout'), false);
+  cpm__entry ($ul, 'logout', Localization_string ('Logout'), false);
 
   return $outer;
 }
@@ -179,7 +179,18 @@ function ac_profile_top_menu ($content_table, $active)
     $a->setAttribute ('href', '?page=' . $sub);
     $b = HTML_append_element ($a, 'button');
     $b->setAttribute ('class', 'category' . ($active == $sub ? ' activecategory' : ''));
-    HTML_append_text ($b, Localization_string ('UP_BT' . ucfirst ($sub)));
+        switch ($sub) {
+        case "profile":
+            HTML_append_text ($b, Localization_string ('Profile Info'));
+            break;
+        case "icon":
+            HTML_append_text ($b, Localization_string ('Your Icon'));
+            break;
+        case "tooltip":
+            HTML_append_text ($b, Localization_string ('Tooltip Settings'));
+            break;
+        }
+    
   }
 }
 
@@ -206,13 +217,13 @@ if ($settingspage != 'wowavatars')
     $intro = HTML_append_element ($form, 'p');
     $intro->setAttribute ('class', 'blogodd');
 
-    HTML_append_text ($intro, Localization_string ('UP_WoWCharsIntro'));
+    HTML_append_text ($intro, Localization_string ('Pick an icon of your choice or click the button if you prefer a picture of your WoW character as your icon:'));
 
     $button = HTML_append_element ($intro, 'button');
     $button->setAttribute ('tabindex', 30);
     $button->setAttribute ('type', 'submit');
     $button->setAttribute ('class', 'bnetlogin');
-    HTML_append_text ($button, Localization_string ('UP_BTWOWChars'));
+    HTML_append_text ($button, Localization_string ('Show Available Characters'));
   }
   $iconlist = array_map ( function ($id) use ($language)
                           {
@@ -256,7 +267,7 @@ if ($settingspage != 'wowavatars')
   $save_button->setAttribute ('tabindex', 36);
   $save_button->setAttribute ('type', 'submit');
   $save_button->setAttribute ('class', 'comedit');
-  HTML_append_text ($save_button, Localization_string ('UP_BTSave'));
+  HTML_append_text ($save_button, Localization_string ('Save'));
 
   foreach ($iconlist as $icon)
   {
@@ -301,7 +312,9 @@ else
 
   try
   {
-    $oauth = new \BattleNet\OAuth ($bnetuser->Region, 'charicon_'.$show_all_chars, '/index.php?page=icon');
+    $use_region = $bnetuser->Region;
+    if ($bnetuser->Region == "cn") $use_region = "china";
+    $oauth = new \BattleNet\OAuth ($use_region, 'charicon_'.$show_all_chars, '/index.php?page=icon');
 
     if (!$oauth->is_authed)
     {
@@ -353,7 +366,7 @@ else
                                   . '/' . $char['Name']
                       , 'name' => $char['Name']
 
-                      , 'desc' => Localization_string ('ColChartLevel') . ' '
+                      , 'desc' => Localization_string ('Level') . ' '
                                 . $char['Level'] . ' ' . lookup_char_race ($char['Race'])
                                 . ' ' . lookup_char_class ($char['Class'])
                       , 'realm' => $char['Realm'] . '-' . strtoupper ($bnetuser->Region)
@@ -374,7 +387,7 @@ else
 
   if (sizeof ($charlist) > 0)
   {
-    HTML_append_paragraph_text ($td, _("Click on the picture of a character to select it as your avatar."), 'blogodd');
+    HTML_append_paragraph_text ($td, __("Click on the picture of a character to select it as your avatar."), 'blogodd');
   
    
     $characters = HTML_append_element ($td, 'div');
@@ -403,7 +416,7 @@ else
     }
     
     if ($show_all_chars == false) {
-      HTML_append_paragraph_text ($td, _("Only characters level 100+ are shown. You can display all lower level characters but please be aware this might take a while to load."), 'blogodd');
+      HTML_append_paragraph_text ($td, __("Only characters level 100+ are shown. You can display all lower level characters but please be aware this might take a while to load."), 'blogodd');
 
       $form = HTML_append_form ($td, '/?page=icon', 'post', 'avatar_starter');
       HTML_append_hidden_form_input ($form, 'settingspage', 'wowavatars');
@@ -427,7 +440,7 @@ else
     $intro->setAttribute ('style', 'display: block');
     HTML_append_text
       ( HTML_append_element ($intro, 'b')
-      , Localization_string ('UP_WA_nochars1') . ' ' . strtoupper ($bnetuser->Region)
+      , Localization_string ('I checked for your characters in a specific region but could not find any. The region I checked was:') . ' ' . strtoupper ($bnetuser->Region)
       );
 
     HTML_append_paragraph_text
@@ -448,19 +461,19 @@ else
 switch ($sendtoast)
 {
     case 'bnetregfail':
-     Growl_show_error (Localization_string ('GR_BnetDecl'), 10000);
+     Growl_show_error (Localization_string ('The Battle.net authorization was declined. To login using your Battle.net Account please try again and authorize Xu-Fu.<br>Note: Your personal data (password, email address) will never be shared by Battle.net to authorized apps.'), 10000);
         break;
     case 'genericerror':
-     Growl_show_error (Localization_string ('GR_GenError'), 7000);
+     Growl_show_error (Localization_string ('There was an error processing your data, I am sorry. Please try again.'), 7000);
         break;
     case 'iconchanged':
-     Growl_show_notice (Localization_string ('UP_WA_Avasaved'), 5000);
+     Growl_show_notice (Localization_string ('Your new avatar was saved :-)'), 5000);
         break;
     case 'nowowaccess':
-     Growl_show_error (Localization_string ('UP_WA_noaccess'), 7000);
+     Growl_show_error (Localization_string ('Xu-Fu has no access to your WoW character list. Adding a character picture as your avatar is therefore not possible. <br>Please check below for instructions on how to fix this.'), 7000);
         break;
     case 'bnetapierror':
-     Growl_show_error (Localization_string ('GR_Bnetfailed'), 10000);
+     Growl_show_error (Localization_string ('There was a problem with the Battle.net Account service, most likely a timeout or perhaps the servers are in maintenance. Please try again later.'), 10000);
         break;
     case 'nowowscope':
      Growl_show_error ( 'When signing up with Battle.net, you have not '
@@ -482,7 +495,7 @@ switch ($sendtoast)
         break;
 }
 
-$htmls = [ create_blogtitle ($user, Localization_string ('UP_Title'))
+$htmls = [ create_blogtitle ($user, Localization_string ('Edit Your Profile'))
          , create_profile_menu ($user, 'profile')
          , $blogentryfirst
          ];

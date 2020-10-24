@@ -59,14 +59,14 @@ sortBy('Name', $all_pets, 'asc');
     <img src="images/blank.png" width="50" height="1" alt="" />
 </td>
 <td>
-    <img class="ut_icon" width="84" height="84" <? echo $usericon ?>>
+    <img class="ut_icon" width="84" height="84" <?php echo $usericon ?>>
 </td>
 
 <td>
     <img src="images/blank.png" width="50" height="1" alt="" />
 </td>
 
-<td width="100%"><h class="megatitle"><? echo _("UP_Title") ?></h></td>
+<td width="100%"><h class="megatitle"><?php echo __("Edit Your Profile") ?></h></td>
 <td><img src="images/main_bg02_2.png"></td>
 </tr>
 </table>
@@ -82,14 +82,14 @@ sortBy('Name', $all_pets, 'asc');
 
 <center>
 
-    <? // =============  Sharing option ============= ?>
+    <?php // =============  Sharing option ============= ?>
     <table width="200" class="profile">
         <tr class="profile">
             <td class="profile">
                 <p class="commentodd">
-                <b>Share your profile:</b><br>
-                <a style="cursor: pointer" id="cb_share_profile" data-clipboard-text="https://wow-petguide.com?user=<? echo $user->id ?>"><img class="icon_share" src="images/icon_share.png"></a>
-                <div class="remtt" style="display:none;" id="cb_share_profile_conf"><? echo _("BattletableRematchStringConf") ?></div>
+                <b><?php echo __('Share your profile:'); ?></b><br>
+                <a style="cursor: pointer" id="cb_share_profile" data-clipboard-text="https://wow-petguide.com?user=<?php echo $user->id ?>"><img class="icon_share" src="images/icon_share.png"></a>
+                <div class="remtt" style="display:none;" id="cb_share_profile_conf"><?php echo __("Copied to clipboard!") ?></div>
                 <script>
                     var btn = document.getElementById('cb_share_profile');
                     var clipboard = new Clipboard(btn);
@@ -104,6 +104,7 @@ sortBy('Name', $all_pets, 'asc');
                         console.log(e);
                     });
                 </script>
+                <br><p class="blogodd" style="font-size: 12px">https://wow-petguide.com?user=<?php echo $user->id ?></p>
                 </center>
             </td>
         </tr>
@@ -139,13 +140,13 @@ sortBy('Name', $all_pets, 'asc');
             <table>
                 <tr>
                     <td>
-                        <a href="?page=profile" style="text-decoration: none"><button class="settings<? if ($page == "profile") { echo "active"; } ?>" style="display: block"><? echo _("UP_BTProfile") ?></button></a>
+                        <a href="?page=profile" style="text-decoration: none"><button class="settings<?php if ($page == "profile") { echo "active"; } ?>" style="display: block"><?php echo __("Profile Info") ?></button></a>
                     </td>
                     <td>
-                        <a href="?page=icon" style="text-decoration: none"><button class="settings<? if ($page == "icon") { echo "active"; } ?>" style="display: block"><? echo _("UP_BTIcon") ?></button></a>
+                        <a href="?page=icon" style="text-decoration: none"><button class="settings<?php if ($page == "icon") { echo "active"; } ?>" style="display: block"><?php echo __("Your Icon") ?></button></a>
                     </td>
                     <td>
-                        <a href="?page=tooltip" style="text-decoration: none"><button class="settings<? if ($page == "tooltip") { echo "active"; } ?>" style="display: block"><? echo _("UP_BTTooltip") ?></button></a>
+                        <a href="?page=tooltip" style="text-decoration: none"><button class="settings<?php if ($page == "tooltip") { echo "active"; } ?>" style="display: block"><?php echo __("Tooltip Settings") ?></button></a>
                     </td>
                 </tr>
             </table>
@@ -157,11 +158,11 @@ sortBy('Name', $all_pets, 'asc');
 
 
 
-            <p class="blogodd"><? echo _("UP_PRInst") ?><br></p> <br>
+            <p class="blogodd"><?php echo __("Customize what others see when visiting your profile.<br>Changes are saved automatically.") ?><br></p> <br>
 
 
 
-           <p class="blogodd" style="font-weight: bold"><? echo _("UP_PRTIntro") ?></b></p>
+           <p class="blogodd" style="font-weight: bold"><?php echo __("Your introduction:") ?></b></p>
 
             <div style="max-width: 800px;">
                 <table style="width:100%;" cellpadding="0" cellspacing="0">
@@ -180,7 +181,7 @@ sortBy('Name', $all_pets, 'asc');
                     </tr>
                     <tr>
                         <td style="max-width: 100%; text-align: right; padding-top: 5px;">
-                            <span style="padding-right: 15px" class="smallodd" id="intro_remaining"></span><span style="white-space: nowrap;padding-left:15px"><p class="smallodd">[b]<b><? echo _("FormComFormatBold") ?></b>[/b] - [i]<i><? echo _("FormComFormatItalic") ?></i>[/i] - [u]<u><? echo _("FormComFormatUnderline") ?></u>[/u]</span>
+                            <span style="padding-right: 15px" class="smallodd" id="intro_remaining"></span><span style="white-space: nowrap;padding-left:15px"><p class="smallodd">[b]<b><?php echo __("bold") ?></b>[/b] - [i]<i><?php echo __("italic") ?></i>[/i] - [u]<u><?php echo __("underline") ?></u>[/u]</span>
                         </td>
                     </tr>
                 </table>
@@ -192,11 +193,11 @@ sortBy('Name', $all_pets, 'asc');
             <table>
                 <tr>
                     <td>
-                        <p class="blogodd" style="font-weight: bold"><? echo _("UP_PRHTitle") ?></p>
+                        <p class="blogodd" style="font-weight: bold"><?php echo __("Title:") ?></p>
                     </td>
                     <td style="padding-left: 10px;">
 
-                        <select data-placeholder="" id="titleselect" class="chosen-select" onchange="pr_save_title('<? echo $user->id ?>','<? echo $user->ComSecret ?>')" required>
+                        <select data-placeholder="" id="titleselect" class="chosen-select" onchange="pr_save_title('<?php echo $user->id ?>','<?php echo $user->ComSecret ?>')" required>
                             <?
                             foreach($titlelist as $key => $value) {
                                 if ($user->Title == $value['id']) {
@@ -223,18 +224,18 @@ sortBy('Name', $all_pets, 'asc');
 
                 <tr>
                     <td>
-                        <p class="blogodd" style="font-weight: bold"><? echo _("UP_PRHBtag") ?></p>
+                        <p class="blogodd" style="font-weight: bold"><?php echo __("BattleTag:") ?></p>
                     </td>
                     <td style="padding-left: 10px;">
                         
                         <table cellpadding="0" cellspacing="0">
                             <tr><td>
                                 <select data-placeholder=" " id="btagreg_select" width="50px" style="display: inline" class="chosen-select_region" onchange="pr_save_btagregion()" required>
-                                    <option value="us" <? if ($user->PrBTagRegion == "us" OR $user->PrBTagRegion == "") echo "selected" ?>>US</option>
-                                    <option value="eu" <? if ($user->PrBTagRegion == "eu") echo "selected" ?>>EU</option>
-                                    <option value="kr" <? if ($user->PrBTagRegion == "kr") echo "selected" ?>>KR</option>
-                                    <option value="tw" <? if ($user->PrBTagRegion == "tw") echo "selected" ?>>TW</option>
-                                    <option value="cn" <? if ($user->PrBTagRegion == "cn") echo "selected" ?>>CN</option>
+                                    <option value="us" <?php if ($user->PrBTagRegion == "us" OR $user->PrBTagRegion == "") echo "selected" ?>>US</option>
+                                    <option value="eu" <?php if ($user->PrBTagRegion == "eu") echo "selected" ?>>EU</option>
+                                    <option value="kr" <?php if ($user->PrBTagRegion == "kr") echo "selected" ?>>KR</option>
+                                    <option value="tw" <?php if ($user->PrBTagRegion == "tw") echo "selected" ?>>TW</option>
+                                    <option value="cn" <?php if ($user->PrBTagRegion == "cn") echo "selected" ?>>CN</option>
                                 </select>
                                  <script>
                                     $(".chosen-select_region").chosen({width: 63});
@@ -250,7 +251,7 @@ sortBy('Name', $all_pets, 'asc');
                             </td>
                             <td><p class="blogodd" style="font-weight: bold">#</td>
                             <td>
-                                <div id="btagnum" contenteditable="true" class="editable_input" style="width:45px" maxlength="4"><?
+                                <div id="btagnum" contenteditable="true" class="editable_input" style="width:45px" maxlength="6"><?
                                     if ($user->PrBTagNum != "") {
                                         echo htmlentities($user->PrBTagNum, ENT_QUOTES, "UTF-8");
                                     }
@@ -266,7 +267,7 @@ sortBy('Name', $all_pets, 'asc');
                 </tr>
                 <tr>
                     <td>
-                        <p class="blogodd" style="font-weight: bold"><? echo _("UP_PRHDiscord") ?>:</p>
+                        <p class="blogodd" style="font-weight: bold"><?php echo __("Discord") ?>:</p>
                     </td>
                     <td style="padding-left: 10px;">
                         <div id="discord" contenteditable="true" class="editable_input" maxlength="40"><?
@@ -285,12 +286,12 @@ sortBy('Name', $all_pets, 'asc');
 
                 <tr>
                     <td>
-                        <p class="blogodd" style="font-weight: bold"><? echo _("UP_PRHFavpet") ?></p>
+                        <p class="blogodd" style="font-weight: bold"><?php echo __("Favorite Pet:") ?></p>
                     </td>
                     <td style="padding-left: 10px;">
 
-                        <select data-placeholder="" id="petselect" class="chosen-select" onchange="pr_save_pet('<? echo $user->id ?>','<? echo $user->ComSecret ?>')" required>
-                            <option <? if ($user->PrFavPet == "0") { echo "selected"; } ?> value="0">None</option>
+                        <select data-placeholder="" id="petselect" class="chosen-select" onchange="pr_save_pet('<?php echo $user->id ?>','<?php echo $user->ComSecret ?>')" required>
+                            <option <?php if ($user->PrFavPet == "0") { echo "selected"; } ?> value="0">None</option>
                             <?
                             foreach($all_pets as $key => $value) {
                                 if ($user->PrFavPet == $value['PetID']) {
@@ -312,16 +313,16 @@ sortBy('Name', $all_pets, 'asc');
                 </tr>
 
 
-                <? if ($collection) { ?>
+                <?php if ($collection) { ?>
 
                 <tr><td colspan="3"><hr class="profile"></td></tr>
                 <tr>
                     <td>
-                        <p class="blogodd" style="font-weight: bold"><? echo _("UP_PRHShowcol") ?></p>
+                        <p class="blogodd" style="font-weight: bold"><?php echo __("Show Collection:") ?></p>
                     </td>
                     <td style="padding-left: 15px;">
                         <div id="ttcolswitch" class="armoryswitch">
-                            <input type="checkbox" class="armoryswitch-checkbox" id="pr_col" onchange="pr_colview('<? echo $user->id ?>','<? echo $user->ComSecret ?>');" <? if ($usersettings[7] == "1" OR $usersettings[7] == "") { echo "checked"; } ?>>
+                            <input type="checkbox" class="armoryswitch-checkbox" id="pr_col" onchange="pr_colview('<?php echo $user->id ?>','<?php echo $user->ComSecret ?>');" <?php if ($usersettings[7] == "1" OR $usersettings[7] == "") { echo "checked"; } ?>>
                             <label class="armoryswitch-label" for="pr_col">
                             <span class="armoryswitch-inner"></span>
                             <span class="armoryswitch-switch"></span>
@@ -332,14 +333,14 @@ sortBy('Name', $all_pets, 'asc');
                         <img class="suc_img" id="collection_suc">
                     </td>
                 </tr>
-                <? } ?>
+                <?php } ?>
 
 
                 <tr><td colspan="3"><hr class="profile"></td></tr>
 
                 <tr>
                     <td>
-                        <p class="blogodd" style="font-weight: bold"><? echo _("UP_PRHFacebook") ?>:</p>
+                        <p class="blogodd" style="font-weight: bold"><?php echo __("Facebook") ?>:</p>
                     </td>
                     <td style="padding-left: 10px;">
                         <div id="facebook" contenteditable="true" class="editable_input" maxlength="200"><?
@@ -355,7 +356,7 @@ sortBy('Name', $all_pets, 'asc');
 
                 <tr>
                     <td>
-                        <p class="blogodd" style="font-weight: bold"><? echo _("UP_PRHTwitter") ?>:</p>
+                        <p class="blogodd" style="font-weight: bold"><?php echo __("Twitter") ?>:</p>
                     </td>
                     <td style="padding-left: 10px;">
                         <div id="twitter" contenteditable="true" class="editable_input" maxlength="200"><?
@@ -371,7 +372,7 @@ sortBy('Name', $all_pets, 'asc');
 
                 <tr>
                     <td>
-                        <p class="blogodd" style="font-weight: bold"><? echo _("UP_PRHInstagram") ?>:</p>
+                        <p class="blogodd" style="font-weight: bold"><?php echo __("Instagram") ?>:</p>
                     </td>
                     <td style="padding-left: 10px;">
                         <div id="instagram" contenteditable="true" class="editable_input" maxlength="200"><?
@@ -387,7 +388,7 @@ sortBy('Name', $all_pets, 'asc');
 
                 <tr>
                     <td>
-                        <p class="blogodd" style="font-weight: bold"><? echo _("UP_PRHYoutube") ?>:</p>
+                        <p class="blogodd" style="font-weight: bold"><?php echo __("Youtube") ?>:</p>
                     </td>
                     <td style="padding-left: 10px;">
                         <div id="youtube" contenteditable="true" class="editable_input" maxlength="200"><?
@@ -403,7 +404,7 @@ sortBy('Name', $all_pets, 'asc');
 
                 <tr>
                     <td>
-                        <p class="blogodd" style="font-weight: bold"><? echo _("UP_PRHReddit") ?>:</p>
+                        <p class="blogodd" style="font-weight: bold"><?php echo __("Reddit") ?>:</p>
                     </td>
                     <td style="padding-left: 10px;">
                         <div id="reddit" contenteditable="true" class="editable_input" maxlength="200"><?
@@ -419,7 +420,7 @@ sortBy('Name', $all_pets, 'asc');
 
                 <tr>
                     <td>
-                        <p class="blogodd" style="font-weight: bold"><? echo _("UP_PRHTwitch") ?>:</p>
+                        <p class="blogodd" style="font-weight: bold"><?php echo __("Twitch") ?>:</p>
                     </td>
                     <td style="padding-left: 10px;">
                         <div id="twitch" contenteditable="true" class="editable_input" maxlength="200"><?
@@ -434,7 +435,7 @@ sortBy('Name', $all_pets, 'asc');
                 </tr>
             </table>
         <br>
-        <p class="blogodd"><i><? echo _("UP_PRInstbot") ?><br>
+        <p class="blogodd"><i><?php echo __("If you want a field to be hidden, simply remove all text from it.") ?><br>
         </td>
     </tr>
 
@@ -450,7 +451,7 @@ function pr_save_btagregion() {
     var bt_tag = $('#btag').text();
     var bt_num = $('#btagnum').text();
     var field_content = bt_reg+'__separatorzzuugg__'+bt_tag+'__separatorzzuugg__'+bt_num;
-    pr_save_fields_ajax('btag',field_content,'12','<? echo $user->id ?>','<? echo $user->ComSecret ?>');
+    pr_save_fields_ajax('btag',field_content,'12','<?php echo $user->id ?>','<?php echo $user->ComSecret ?>');
 }
 
 
@@ -495,13 +496,13 @@ $(document).ready(function() {
                     var bt_num = $('#btagnum').text();
                     field_content = bt_reg+'__separatorzzuugg__'+bt_tag+'__separatorzzuugg__'+bt_num;
                 }
-                pr_save_fields_ajax(field_type,field_content,cntMaxLength,'<? echo $user->id ?>','<? echo $user->ComSecret ?>');
+                pr_save_fields_ajax(field_type,field_content,cntMaxLength,'<?php echo $user->id ?>','<?php echo $user->ComSecret ?>');
             }, 700);
         }
         else {
             x_timer = setTimeout(function(){
                 var field_content = $('#user_intro').html();
-                pr_save_intro_ajax(field_content,cntMaxLength,'<? echo $user->id ?>','<? echo $user->ComSecret ?>');
+                pr_save_intro_ajax(field_content,cntMaxLength,'<?php echo $user->id ?>','<?php echo $user->ComSecret ?>');
             }, 1500);
         }
     });

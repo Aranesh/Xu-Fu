@@ -14,7 +14,8 @@ function process_news_full($article) {
     $article = \BBCode\bbparse_tables($article);                                  // Tables
     $article = \BBCode\bbparse_advanced($article);                                // Advanced text formats, quote, bluepost, bullets, aligning, font-size, code, hr
     $article = \BBCode\bbparse_cleanup($article);                                 // Clean-up of previous steps - always include at end!
-    return $article;
+    $toc['article'] = $article;
+    return $toc;
 }
 
 function process_news_preview($article, $img_size) {
@@ -60,7 +61,6 @@ function process_creator_comment($article) {
 
 // ======================================= FUNCTIONS FOR PARSING ===========================================================================
 
-
 function bbparse_tables($article) {
     $article = str_replace('[table]', '<table class="articles">', $article);
     $article = str_replace('[/table]', '</table>', $article);
@@ -68,6 +68,92 @@ function bbparse_tables($article) {
     $article = str_replace('[/tr]', '</tr>', $article);
     $article = str_replace('[td]', '<td>', $article);
     $article = str_replace('[/td]', '</td>', $article);
+    return $article;
+}
+
+function bbremove_code($article) {
+    $article = str_replace("[b]","",$article);
+    $article = str_replace("[/b]","",$article);
+    $article = str_replace("[h1]","",$article);
+    $article = str_replace("[/h1]","",$article);
+    $article = str_replace("[h2]","",$article);
+    $article = str_replace("[/h2]","",$article);
+    $article = str_replace("[i]","",$article);
+    $article = str_replace("[/i]","",$article);
+    $article = str_replace("[u]","",$article);
+    $article = str_replace("[/u]","",$article);
+    $article = str_replace("[s]","",$article);
+    $article = str_replace("[/s]","",$article);
+    $article = str_replace("[large]","",$article);
+    $article = str_replace("[/large]","",$article);
+    $article = str_replace("[small]","",$article);
+    $article = str_replace("[/small]","",$article);
+    $article = str_replace("[bl]","",$article);
+    $article = str_replace("[/bl]","",$article);
+    $article = str_replace("[qt]","",$article);
+    $article = str_replace("[/qt]","",$article);
+    $article = str_replace("[bluepost]","",$article);
+    $article = str_replace("[/bluepost]","",$article);
+    $article = str_replace("[code]","",$article);
+    $article = str_replace("[/code]","",$article);
+    $article = str_replace("[/hr]","",$article);
+    $article = str_replace("[center]","",$article);
+    $article = str_replace("[/center]","",$article);
+    if (strpos($article, '[url=') !== false && strpos($article, '[/url]') !== false) {
+        $cutarticle = explode("[url=", $article);
+        foreach ($cutarticle as $key => $value) {
+            if ($key > "0") {
+                $snippets1 = explode("[/url]", $value);
+                $snippets2 = explode("]", $snippets1[0]);
+                $replacestring = '[url='.$snippets2[0].']'.$snippets2[1].'[/url]';
+                $replacewith = $snippets2[1].' ('.$snippets2[0].')';
+                $article = str_replace($replacestring,$replacewith,$article);
+            }
+        }
+    }
+    if (strpos($article, '[img=') !== false) {
+        $cutarticle = explode("[img=", $article);
+        foreach ($cutarticle as $key => $value) {
+            if ($key > "0") {
+                $snippets1 = explode("]", $value);
+                $replacestring = '[img='.$snippets1[0].']';
+                $article = str_replace($replacestring,'',$article);
+            }
+        }
+    }
+    if (strpos($article, '[pet=') !== false) {
+        $cutarticle = explode("[pet=", $article);
+        foreach ($cutarticle as $key => $value) {
+            if ($key > "0") {
+                $snippets1 = explode("]", $value);
+                $snippets2 = explode(":", $snippets1[0]);
+                $replacestring = '[pet='.$snippets1[0].']';
+                $article = str_replace($replacestring,$snippets2[1],$article);
+            }
+        }
+    }
+    if (strpos($article, '[ability=') !== false) {
+        $cutarticle = explode("[ability=", $article);
+        foreach ($cutarticle as $key => $value) {
+            if ($key > "0") {
+                $snippets1 = explode("]", $value);
+                $snippets2 = explode(":", $snippets1[0]);
+                $replacestring = '[ability='.$snippets1[0].']';
+                $article = str_replace($replacestring,$snippets2[1],$article);
+            }
+        }
+    }
+    if (strpos($article, '[user=') !== false) {
+        $cutarticle = explode("[user=", $article);
+        foreach ($cutarticle as $key => $value) {
+            if ($key > "0") {
+                $snippets1 = explode("]", $value);
+                $snippets2 = explode(":", $snippets1[0]);
+                $replacestring = '[user='.$snippets1[0].']';
+                $article = str_replace($replacestring,$snippets2[1],$article);
+            }
+        }
+    }
     return $article;
 }
 
@@ -145,65 +231,141 @@ function bbparse_toc($article) {
 }
 
 function bbparse_pets($article, $link_size, $area = 'default') {
-    global $all_pets, $language, $dbcon, $wowhdomain;
-    
+    global $all_pets, $all_abilities, $all_npc_pets, $language, $dbcon, $wowhdomain;
+    if (!$all_abilities) $all_abilities = get_all_abilities();
+
     $link_class = "weblink";
     if ($area == "strategy") $link_class = "comlink";
+    if ($area == "strategy_step") $link_class = "battletablespell";
     
     // Replace Pets
     if (strpos($article, '[pet=') !== false) {
         $cutarticle = explode("[pet=", $article);
         $beginning = $cutarticle[0];
         foreach ($cutarticle as $key => $value) {
-            if ($key > "0") {
-                $snips2 = array();
-                $snips = explode("]", $value, 2);
-                if (strpos($snips[0], ':') !== false) {
-                    $snips2 = explode(":", $snips[0]);
-                    $snips[0] = $snips2[0];
+            if ($key > 0) {
+                $string_pieces = explode("]", $value, 2);
+                if (strpos($string_pieces[0], ':') !== false) { // New format detected [pet=1234:Name]
+                    $pet_details = explode(":", $string_pieces[0]);
+                    $search_key = $pet_details[0];
                 }
-                $search_pet = searchForId($snips[0], $all_pets, array());
-                if (!$search_pet && $snips2[1]) {
-                    $beginning = $beginning.'<font style="font-size: '.$link_size.'px"><b><i>'.$snips2[1].'</i></b></font>'.$snips[1];
+                else { // Old format [pet=Name]
+                    $pet_details = '';
+                    $search_key = $string_pieces[0];
                 }
-                else if (!$search_pet && !$snips2[1]) {
-                    $beginning = $beginning.'<font style="font-size: '.$link_size.'px"><b><i>Unknown Pet ('.$snips[0].')</i></b></font>'.$snips[1];
+                $search_pet = searchForId($search_key, $all_pets, array());
+                $found_pet_id = $all_pets[$search_pet[0]]['PetID'];
+                $found_pet_name = $all_pets[$search_pet[0]]['Name'];
+                if (!$search_pet && !is_numeric($search_key)) { // Check enemy pet database as well
+                    if (!$all_npc_pets) {
+                        $all_npc_pets = get_all_npc_pets();
+                    }
+                    $search_pet = searchForId($search_key, $all_npc_pets, array());
+                    $found_pet_id = $all_npc_pets[$search_pet[0]]['id'];
+                    $found_pet_name = $all_npc_pets[$search_pet[0]]['Name'];
                 }
-                else {
-                    $beginning = $beginning.'<a class="'.$link_class.'" style="font-size: '.$link_size.'px" href="http://'.$wowhdomain.'.wowhead.com/npc='.$snips[0].'" target="_blank">'.$all_pets[$search_pet[0]]['Name'].'</a>'.$snips[1];
+                
+                if (!$search_pet && !is_numeric($search_key)) { // No pet found but a name is given in the string
+                    if ($area == 'rematch') $beginning = $beginning.$search_key.$string_pieces[1];
+                    else $beginning = $beginning.'<font style="font-size: '.$link_size.'px"><b><i>'.$search_key.'</i></b></font>'.$string_pieces[1];
+                }
+                else if (!$search_pet && is_numeric($search_key) && $pet_details[1]) { // No pet found and unknown pet ID given, but a name provided
+                    if ($area == 'rematch') $beginning = $beginning.'Unknown Pet (ID: '.$search_key.')'.$string_pieces[1];
+                    else $beginning = $beginning.'<font style="font-size: '.$link_size.'px"><b><i>'.$pet_details[1].'</i></b></font>'.$string_pieces[1];
+                }
+                else if (!$search_pet && is_numeric($search_key)  && !$pet_details[1]) { // No pet found and unknown pet ID given, no name provided
+                    if ($area == 'rematch') $beginning = $beginning.'Unknown Pet (ID: '.$search_key.')'.$string_pieces[1];
+                    else $beginning = $beginning.'<font style="font-size: '.$link_size.'px"><b><i>Unknown Pet (ID: '.$search_key.')</i></b></font>'.$string_pieces[1];
+                }
+                else { // Pet was found
+                    if ($area == 'rematch') $beginning = $beginning.$found_pet_name.$string_pieces[1];
+                    else $beginning = $beginning.'<a class="'.$link_class.'" style="font-size: '.$link_size.'px" href="http://'.$wowhdomain.'.wowhead.com/npc='.$found_pet_id.'" target="_blank">'.$found_pet_name.'</a>'.$string_pieces[1];
                 }
             }
         }
         $article = $beginning;
     }
-    
-    // Replace Spells:
-    if (strpos($article, '[skill=') !== false) {
-        $cutarticle = explode("[skill=", $article);
+
+    // Replace Enemy pets:
+    if (strpos($article, '[enemy=') !== false) {
+        global $all_npc_pets;
+        if (!$all_npc_pets) {
+            $all_npc_pets = get_all_npc_pets();
+        }
+        $cutarticle = explode("[enemy=", $article);
         $beginning = $cutarticle[0];
         foreach ($cutarticle as $key => $value) {
-            if ($key > "0") {
-                $snips2 = array();
-                $snips = explode("]", $value, 2);
-                if (strpos($snips[0], ':') !== false) {
-                    $snips2 = explode(":", $snips[0]);
-                    $snips[0] = $snips2[0];
+            if ($key > 0) {
+                $string_pieces = explode("]", $value, 2);
+                if (strpos($string_pieces[0], ':') !== false) { // New format detected [enemy=1234:Name]
+                    $pet_details = explode(":", $string_pieces[0]);
+                    $search_key = $pet_details[0];
                 }
-                $ability_db = mysqli_query($dbcon, "SELECT * FROM Spells WHERE SpellID = '$snips[0]'") or die(mysqli_error($dbcon));
-                if (mysqli_num_rows($ability_db) == 0  && $snips2[1]) {
-                    $beginning = $beginning.'<font style="font-size: '.$link_size.'px"><b><i>'.$snips2[1].'</i></b></font>'.$snips[1];
+                else { // Old format [enemy=Name]
+                    $pet_details = '';
+                    $search_key = $string_pieces[0];
                 }
-                else if (mysqli_num_rows($ability_db) == 0 && !$snips2[1]) {
-                    $beginning = $beginning.'<font style="font-size: '.$link_size.'px"><b><i>Unknown Ability ('.$snips[0].')</i></b></font>'.$snips[1];
+                $search_pet = searchForId($search_key, $all_npc_pets, array());
+                if (!$search_pet && !is_numeric($search_key)) { // No enemy pet found but a name is given in the string
+                    if ($area == 'rematch') $beginning = $beginning.$search_key.$string_pieces[1];
+                    else $beginning = $beginning.'<font style="font-size: '.$link_size.'px"><b><i>'.$search_key.'</i></b></font>'.$string_pieces[1];
                 }
-                else {
-                    $ability = mysqli_fetch_object($ability_db);
-                    $beginning = $beginning.'<a class="'.$link_class.'" style="font-size: '.$link_size.'px" href="http://'.$wowhdomain.'.wowhead.com/pet-ability='.$ability->SpellID.'" target="_blank">'.$ability->{$language}.'</a>'.$snips[1];
+                else if (!$search_pet && is_numeric($search_key) && $pet_details[1]) { // No enemy pet found and unknown pet ID given, but a name provided
+                    if ($area == 'rematch') $beginning = $beginning.'Unknown Pet (ID: '.$search_key.')'.$string_pieces[1];
+                    else $beginning = $beginning.'<font style="font-size: '.$link_size.'px"><b><i>'.$pet_details[1].'</i></b></font>'.$string_pieces[1];
+                }
+                else if (!$search_pet && is_numeric($search_key) && !$pet_details[1]) { // No enemy pet found and unknown pet ID given, no name provided
+                    if ($area == 'rematch') $beginning = $beginning.'Unknown Pet (ID: '.$search_key.')'.$string_pieces[1];
+                    else $beginning = $beginning.'<font style="font-size: '.$link_size.'px"><b><i>Unknown Pet (ID: '.$search_key.')</i></b></font>'.$string_pieces[1];
+                }
+                else { // Pet was found
+                    if ($area == 'rematch') $beginning = $beginning.$all_npc_pets[$search_pet[0]]['Name'].$string_pieces[1];
+                    else $beginning = $beginning.'<a class="'.$link_class.'" style="font-size: '.$link_size.'px" href="http://'.$wowhdomain.'.wowhead.com/npc='.$all_npc_pets[$search_pet[0]]['id'].'" target="_blank">'.$all_npc_pets[$search_pet[0]]['Name'].'</a>'.$string_pieces[1];
+                }
+            }
+        }
+        $article = $beginning;
+    }   
+    
+    // Replace Spells
+    if (strpos($article, '[ability=') !== false OR strpos($article, '[spell=') !== false) {
+        if (strpos($article, '[spell=') !== false) $cutarticle = explode("[spell=", $article);
+        if (strpos($article, '[ability=') !== false) $cutarticle = explode("[ability=", $article);
+        $beginning = $cutarticle[0];
+        foreach ($cutarticle as $key => $value) {
+            if ($key > 0) {
+                $string_pieces = explode("]", $value, 2);
+                if (strpos($string_pieces[0], ':') !== false) { // New format detected [ability=1234:Name]
+                    $ability_details = explode(":", $string_pieces[0]);
+                    $search_key = $ability_details[0];
+                }
+                else { // Old format [ability=Name]
+                    $ability_details = '';
+                    $search_key = $string_pieces[0];
+                }
+                $search_ability = searchForId($search_key, $all_abilities, array());
+
+                if (!$search_ability && !is_numeric($search_key)) { // No ability found but a name is given in the string
+                    if ($area == 'rematch') $beginning = $beginning.$search_key.$string_pieces[1];
+                    else $beginning = $beginning.'<font style="font-size: '.$link_size.'px"><b><i>'.$search_key.'</i></b></font>'.$string_pieces[1];
+                }
+                else if (!$search_ability && is_numeric($search_key) && $ability_details[1]) { // No ability found and unknown ability ID given, but name provided
+                    if ($area == 'rematch') $beginning = $beginning.'Unknown Ability (ID: '.$search_key.')'.$string_pieces[1];
+                    else $beginning = $beginning.'<font style="font-size: '.$link_size.'px"><b><i>'.$ability_details[1].'</i></b></font>'.$string_pieces[1];
+                }
+                else if (!$search_ability && is_numeric($search_key) && !$ability_details[1]) { // No ability found and unknown ability ID given, no name provided
+                    if ($area == 'rematch') $beginning = $beginning.'Unknown Ability (ID: '.$search_key.')'.$string_pieces[1];
+                    else $beginning = $beginning.'<font style="font-size: '.$link_size.'px"><b><i>Unknown Ability (ID: '.$search_key.')</i></b></font>'.$string_pieces[1];
+                }
+                else { // ability was found
+                    if ($area == 'rematch') $beginning = $beginning.$all_abilities[$search_ability[0]]['Name'].$string_pieces[1];
+                    else $beginning = $beginning.'<a class="'.$link_class.'" style="font-size: '.$link_size.'px" href="http://'.$wowhdomain.'.wowhead.com/pet-ability='.$all_abilities[$search_ability[0]]['id'].'" target="_blank">'.$all_abilities[$search_ability[0]]['Name'].'</a>'.$string_pieces[1];
                 }
             }
         }
         $article = $beginning;
     }
+
     return $article;
 }
 
@@ -323,15 +485,28 @@ function bbparse_images($article, $area, $tooltips = 0) {
     return $article;
 }
 
-function bbparse_simple($article) { 
-    $article = str_replace("[u]", "<u>", $article);
-    $article = str_replace("[/u]", "</u>", $article);
-    $article = str_replace("[i]", "<i>", $article);
-    $article = str_replace("[/i]", "</i>", $article);
-    $article = str_replace("[b]", "<b>", $article);
-    $article = str_replace("[/b]", "</b>", $article);
-    $article = str_replace("[s]", "<del>", $article);
-    $article = str_replace("[/s]", "</del>", $article);
+function bbparse_simple($article, $area = '') {
+    
+    if ($area == 'rematch') {
+        $article = str_replace("[u]", "", $article);
+        $article = str_replace("[/u]", "", $article);
+        $article = str_replace("[i]", "", $article);
+        $article = str_replace("[/i]", "", $article);
+        $article = str_replace("[b]", "", $article);
+        $article = str_replace("[/b]", "", $article);
+        $article = str_replace("[s]", "", $article);
+        $article = str_replace("[/s]", "", $article); 
+    }
+    else {
+        $article = str_replace("[u]", "<u>", $article);
+        $article = str_replace("[/u]", "</u>", $article);
+        $article = str_replace("[i]", "<i>", $article);
+        $article = str_replace("[/i]", "</i>", $article);
+        $article = str_replace("[b]", "<b>", $article);
+        $article = str_replace("[/b]", "</b>", $article);
+        $article = str_replace("[s]", "<del>", $article);
+        $article = str_replace("[/s]", "</del>", $article);  
+    }
     return $article;
 }
 
@@ -444,29 +619,29 @@ function bbparse_cleanup($article) {
 // ======================================= FUNCTIONS FOR ADDING MENU OPTIONS TO MODAL WINDOWS ===========================================================================
 
 function bboptions_tables($area) { ?>
-    <td><button type="button" class="bbbutton" onclick="bb_articles('table', '','<? echo $area ?>')"><img style="padding: 1px" src="https://www.wow-petguide.com/images/icon_bb_table.png" alt="" /></button></td>
-<? }
+    <td><button type="button" class="bbbutton" onclick="bb_articles('table', '','<?php echo $area ?>')"><img style="padding: 1px" src="https://www.wow-petguide.com/images/icon_bb_table.png" alt="" /></button></td>
+<?php }
 
 function bboptions_spacer() { ?>
     <td style="width: 10px"></td>
-<? }
+<?php }
 
 function bboptions_simple($area) { ?>
-    <td><button type="button" class="bbbutton" onclick="bb_articles('simple','b','<? echo $area ?>')"><b>[b]</b></button></td>
-    <td><button type="button" class="bbbutton" onclick="bb_articles('simple','i','<? echo $area ?>')"><i>[i]</i></button></td>
-    <td><button type="button" class="bbbutton" onclick="bb_articles('simple','u','<? echo $area ?>')"><u>[u]</u></button></td>
-    <td><button type="button" class="bbbutton" onclick="bb_articles('simple','s','<? echo $area ?>')"><del>[s]</del></button></td> 
-<? }
+    <td><button type="button" class="bbbutton" onclick="bb_articles('simple','b','<?php echo $area ?>')"><b>[b]</b></button></td>
+    <td><button type="button" class="bbbutton" onclick="bb_articles('simple','i','<?php echo $area ?>')"><i>[i]</i></button></td>
+    <td><button type="button" class="bbbutton" onclick="bb_articles('simple','u','<?php echo $area ?>')"><u>[u]</u></button></td>
+    <td><button type="button" class="bbbutton" onclick="bb_articles('simple','s','<?php echo $area ?>')"><del>[s]</del></button></td> 
+<?php }
 
 function bboptions_advanced($area) { ?>
-    <td><button type="button" class="bbbutton" onclick="bb_articles('simple','large','<? echo $area ?>')"><img style="padding: 1px" src="https://www.wow-petguide.com/images/icon_bb_fontlarge.png" alt="" /></button></td>
-    <td><button type="button" class="bbbutton" onclick="bb_articles('simple','small','<? echo $area ?>')"><img style="padding: 1px" src="https://www.wow-petguide.com/images/icon_bb_fontsmall.png" alt="" /></button></td>
+    <td><button type="button" class="bbbutton" onclick="bb_articles('simple','large','<?php echo $area ?>')"><img style="padding: 1px" src="https://www.wow-petguide.com/images/icon_bb_fontlarge.png" alt="" /></button></td>
+    <td><button type="button" class="bbbutton" onclick="bb_articles('simple','small','<?php echo $area ?>')"><img style="padding: 1px" src="https://www.wow-petguide.com/images/icon_bb_fontsmall.png" alt="" /></button></td>
 
-    <td style="padding-left: 10px"><button type="button" data-tooltip-content="#bb_mjh_tt" class="bbbutton bb_mjh_tt" onclick="bb_articles('simple','h1','<? echo $area ?>')">h1</button>
+    <td style="padding-left: 10px"><button type="button" data-tooltip-content="#bb_mjh_tt" class="bbbutton bb_mjh_tt" onclick="bb_articles('simple','h1','<?php echo $area ?>')">h1</button>
         <div style="display: none"><span id="bb_mjh_tt">Formats the selection as a Major headline</span></div></td>
-    <td><button type="button" data-tooltip-content="#bb_mnh_tt" class="bbbutton bb_mnh_tt" onclick="bb_articles('simple','h2','<? echo $area ?>')">h2</button>
+    <td><button type="button" data-tooltip-content="#bb_mnh_tt" class="bbbutton bb_mnh_tt" onclick="bb_articles('simple','h2','<?php echo $area ?>')">h2</button>
         <div style="display: none"><span id="bb_mnh_tt">Formats the selection as a Minor headline</span></div></td>
-    <td><button type="button" class="bbbutton" onclick="bb_articles('simple','h3','<? echo $area ?>')">h3</button></td>
+    <td><button type="button" class="bbbutton" onclick="bb_articles('simple','h3','<?php echo $area ?>')">h3</button></td>
     <td>
         <script>
             $(document).ready(function() {
@@ -482,17 +657,17 @@ function bboptions_advanced($area) { ?>
         </script>
     </td>
 
-    <td style="padding-left: 10px"><button type="button" class="bbbutton" onclick="bb_articles('simple','bl','<? echo $area ?>')"><img style="padding: 2px" src="https://www.wow-petguide.com/images/icon_bb_bullet.png" alt="" /></button></td>
+    <td style="padding-left: 10px"><button type="button" class="bbbutton" onclick="bb_articles('simple','bl','<?php echo $area ?>')"><img style="padding: 2px" src="https://www.wow-petguide.com/images/icon_bb_bullet.png" alt="" /></button></td>
 
-    <td style="padding-left: 10px"><button type="button" class="bbbutton" onclick="bb_articles('simple','center','<? echo $area ?>')"><img style="padding: 2px" src="https://www.wow-petguide.com/images/icon_bb_center.png" alt="" /></button></td>
-    <td><button type="button" class="bbbutton" onclick="bb_articles('simple','right','<? echo $area ?>')"><img style="padding: 2px" src="https://www.wow-petguide.com/images/icon_bb_right.png" alt="" /></button></td>
+    <td style="padding-left: 10px"><button type="button" class="bbbutton" onclick="bb_articles('simple','center','<?php echo $area ?>')"><img style="padding: 2px" src="https://www.wow-petguide.com/images/icon_bb_center.png" alt="" /></button></td>
+    <td><button type="button" class="bbbutton" onclick="bb_articles('simple','right','<?php echo $area ?>')"><img style="padding: 2px" src="https://www.wow-petguide.com/images/icon_bb_right.png" alt="" /></button></td>
 
-    <td style="padding-left: 10px"><button type="button" class="bbbutton" onclick="bb_articles('simple','qt','<? echo $area ?>')"><img style="padding: 1px" src="https://www.wow-petguide.com/images/icon_bb_quote.png" alt="" /></button></td>
-    <td><button type="button" class="bbbutton" onclick="bb_articles('simple','bluepost','<? echo $area ?>')" style="background-color: #92d2fa"><img style="padding: 1px" src="https://www.wow-petguide.com/images/icon_bb_quote.png" alt="" /></button></td>
-    <td><button type="button" class="bbbutton" onclick="bb_articles('simple','code','<? echo $area ?>')">code</button></td>
+    <td style="padding-left: 10px"><button type="button" class="bbbutton" onclick="bb_articles('simple','qt','<?php echo $area ?>')"><img style="padding: 1px" src="https://www.wow-petguide.com/images/icon_bb_quote.png" alt="" /></button></td>
+    <td><button type="button" class="bbbutton" onclick="bb_articles('simple','bluepost','<?php echo $area ?>')" style="background-color: #92d2fa"><img style="padding: 1px" src="https://www.wow-petguide.com/images/icon_bb_quote.png" alt="" /></button></td>
+    <td><button type="button" class="bbbutton" onclick="bb_articles('simple','code','<?php echo $area ?>')">code</button></td>
 
-    <td style="padding-left: 10px"><button type="button" class="bbbutton" onclick="bb_articles('single','hr','<? echo $area ?>')"><img style="padding: 1px" src="https://www.wow-petguide.com/images/icon_bb_hr.png" alt="" /></button></td>
-<? }
+    <td style="padding-left: 10px"><button type="button" class="bbbutton" onclick="bb_articles('single','hr','<?php echo $area ?>')"><img style="padding: 1px" src="https://www.wow-petguide.com/images/icon_bb_hr.png" alt="" /></button></td>
+<?php }
 
 function bboptions_url($area) { ?>
     <td>
@@ -506,7 +681,7 @@ function bboptions_url($area) { ?>
                     <tr>
                         <td style="text-align: right; padding-right: 5px"><p class="blogeven">Shown name:</p></td>
                         <td><input class="petselect" style="width: 280px" type="text" id="bb_url_name"></td>
-                        <td rowspan="2" style="text-align: right; padding-left: 5px"><button onclick="bb_articles('url', '','<? echo $area ?>');" class="bnetlogin">Add</button></td>
+                        <td rowspan="2" style="text-align: right; padding-left: 5px"><button onclick="bb_articles('url', '','<?php echo $area ?>');" class="bnetlogin">Add</button></td>
                     </tr>
                     <tr>
                         <td style="text-align: right; padding-right: 5px"><p class="blogeven">URL:</p></td>
@@ -527,7 +702,7 @@ function bboptions_url($area) { ?>
             });
         </script>
     </td>
-<? }
+<?php }
 
 function bboptions_pet($area) {
     global $dbcon; ?>
@@ -546,12 +721,13 @@ function bboptions_pet($area) {
                                     <?
                                     $allpetsdb = mysqli_query($dbcon, "SELECT * FROM PetsUser WHERE RematchID  > 20 ORDER BY Name") or die(mysqli_error($dbcon));
                                     while ($thispet = mysqli_fetch_object($allpetsdb)) {
-                                        echo '<option value="'.$thispet->PetID.':'.$thispet->Name.'">'.$thispet->Name.'</option>';
+                                        $name_string = str_replace('"','&quot;',$thispet->Name);
+                                        echo '<option value="'.$thispet->PetID.':'.$name_string.'">'.$thispet->Name.'</option>';
                                     }
                                     ?>
                             </select>
                         </td>
-                        <td style="text-align: right; padding-left: 5px"><button onclick="bb_articles('pet', '','<? echo $area ?>');" class="bnetlogin">Add</button>
+                        <td style="text-align: right; padding-left: 5px"><button onclick="bb_articles('pet', '','<?php echo $area ?>');" class="bnetlogin">Add</button>
                         </td>
                     </tr>
                 </table>
@@ -572,13 +748,13 @@ function bboptions_pet($area) {
             $(".chosen-select_pet").chosen({width: 300});
         </script>
     </td>
-<? }
+<?php }
 
 function bboptions_ability($area) {
     global $dbcon; ?>
     <td>
         <span class="add_skill_tt" data-tooltip-content="#bb_add_skill" style="cursor: help;">
-            <button type="button" class="bbbutton">Skill</button>
+            <button type="button" class="bbbutton">Ability</button>
         </span>
 
         <div style="display: none;">
@@ -589,14 +765,15 @@ function bboptions_ability($area) {
                             <select width="230" data-placeholder="" name="bb_skill" id="bb_skill_dd" class="chosen-select_skill">
                                 <option value=""></option>
                                     <?
-                                    $allskillsdb = mysqli_query($dbcon, "SELECT * FROM Spells Where PetSpell = '1' ORDER BY en_US") or die(mysqli_error($dbcon));
-                                    while ($thisskill = mysqli_fetch_object($allskillsdb)) {
-                                        echo '<option value="'.$thisskill->SpellID.':'.$thisskill->en_US.'">'.$thisskill->en_US.'</option>';
+                                    $all_abilities = get_all_abilities();
+                                    foreach ($all_abilities as $ability) {
+                                        $name_string = str_replace('"','&quot;',$ability['ENName']);
+                                        echo '<option value="'.$ability['id'].':'.$name_string.'">'.$ability['ENName'].'</option>';
                                     }
                                     ?>
                             </select>
                         </td>
-                        <td style="text-align: right; padding-left: 5px"><button onclick="bb_articles('skill', '','<? echo $area ?>');" class="bnetlogin">Add</button>
+                        <td style="text-align: right; padding-left: 5px"><button onclick="bb_articles('skill', '','<?php echo $area ?>');" class="bnetlogin">Add</button>
                         </td>
                     </tr>
                 </table>
@@ -618,7 +795,7 @@ function bboptions_ability($area) {
             $(".chosen-select_skill").chosen({width: 300});
         </script>
     </td>
-<? }
+<?php }
 
 function bboptions_image($area) {
     global $dbcon, $user ?>
@@ -744,7 +921,7 @@ function bboptions_image($area) {
 
                     function adm_pullgallery(i) {
                         $('#gallerycontainer').empty();
-                        $('#gallerycontainer').load('classes/ajax/adm_pullimages.php?g='+i+'&u=<? echo $user->id ?>&del=<? echo $user->ComSecret ?>&p=e');
+                        $('#gallerycontainer').load('classes/ajax/adm_pullimages.php?g='+i+'&u=<?php echo $user->id ?>&del=<?php echo $user->ComSecret ?>&p=e');
                     }
 
                     $(".chosen-select_image").chosen().change(function(event){
@@ -757,7 +934,7 @@ function bboptions_image($area) {
                         adm_pullgallery(u);
                     }
                     $( document ).on( "click", ".galimg", function() {
-                        bb_articles('img', this.dataset.imgid,'<? echo $area ?>');
+                        bb_articles('img', this.dataset.imgid,'<?php echo $area ?>');
                     });
                 </script>
                 </table>
@@ -777,7 +954,7 @@ function bboptions_image($area) {
             $(".chosen-select_image").chosen({width: 400});
         </script>
     </td>
-<? }
+<?php }
 
 function bboptions_user($area) {
     global $user, $dbcon ?>
@@ -799,7 +976,7 @@ function bboptions_user($area) {
                                 $("#username").chosen({width: 325});
                             </script>
                         </td>
-                        <td style="text-align: right; padding-left: 5px"><button onclick="bb_articles('username', '','<? echo $area ?>');" class="bnetlogin">Add</button>
+                        <td style="text-align: right; padding-left: 5px"><button onclick="bb_articles('username', '','<?php echo $area ?>');" class="bnetlogin">Add</button>
                         </td>
                     </tr>
                 </table>
@@ -827,7 +1004,7 @@ function bboptions_user($area) {
                 var searchterm = $('.chosen-search-input').val();
                 clearTimeout(x_timer);
                 x_timer = setTimeout(function(){
-                    $(".no-results").text("<? echo _("PM_searching") ?>");
+                    $(".no-results").text("<?php echo __("Searching...") ?>");
                     if (searchterm.length >= '2') {
                         clearTimeout(x_timer);
                         x_timer = setTimeout(function(){
@@ -836,14 +1013,14 @@ function bboptions_user($area) {
                             xmlhttp.onreadystatechange = function() {
                                 if (this.readyState == 4 && this.status == 200) {
                                     if (this.responseText == "[]") {
-                                        $(".no-results").text("<? echo _("PM_ErrNoUser") ?>");
+                                        $(".no-results").text("<?php echo __("No user found") ?>");
                                     }
                                     else {
                                         var data = this.responseText;
                                         data = JSON.parse(data);
 
                                         $.each(data, function (idx, obj) {
-                                            $("#username").append('<option value="' + obj.id + '">' + obj.text + '</option>');
+                                            $("#username").append('<option value="' + obj.id + ':' + obj.text + '">' + obj.text + '</option>');
                                         });
                                         $("#username").trigger("chosen:updated");
 
@@ -852,7 +1029,7 @@ function bboptions_user($area) {
                                     }
                                 }
                             };
-                            xmlhttp.open("GET", "classes/ajax/ac_writemessage.php?q=" + encodeURIComponent(searchterm) + "&e=f&u=<? echo $user->id ?>", true);
+                            xmlhttp.open("GET", "classes/ajax/ac_writemessage.php?q=" + encodeURIComponent(searchterm) + "&e=f&u=<?php echo $user->id ?>", true);
                             xmlhttp.send();
                         }, 1000);
                     }
@@ -860,11 +1037,11 @@ function bboptions_user($area) {
                         clearTimeout(x_timer);
                         x_timer = setTimeout(function(){
                             $("#username").empty();
-                            $(".no-results").text("<? echo _("PM_ErrTooShort") ?>");
+                            $(".no-results").text("<?php echo __("Please enter 2 or more characters") ?>");
                         }, 300);
                     }
                 }, 200);
             });
         </script>
     </td>
-<? }
+<?php }

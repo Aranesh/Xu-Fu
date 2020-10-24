@@ -22,7 +22,7 @@ $submitbreeds = $_POST['submitbreeds'];
     <img src="images/blank.png" width="50" height="1" alt="" />
 </td>
 <td>
-    <img class="ut_icon" width="84" height="84" <? echo $usericon ?>>
+    <img class="ut_icon" width="84" height="84" <?php echo $usericon ?>>
 </td>
 
 <td>
@@ -66,7 +66,7 @@ $submitbreeds = $_POST['submitbreeds'];
 <td>
 <table style="width: 85%;" class="profile">
 
-    <? print_admin_menu('strategies'); ?>
+    <?php print_admin_menu('strategies'); ?>
 
     <tr style="background: #bcbcbc; border: 1px solid #bcbcbc;">
         <td class="profile">
@@ -132,7 +132,7 @@ $submitbreeds = $_POST['submitbreeds'];
                 $strats[$stratcounter]['Pet1'] = $thisstrat->PetID1;
                 $strats[$stratcounter]['Pet2'] = $thisstrat->PetID2;
                 $strats[$stratcounter]['Pet3'] = $thisstrat->PetID3;
-
+                
                 if ($thisstrat->Username != "") {
                     $strats[$stratcounter]['Userlink'] = '<span class="username tooltipstered" rel="'.$thisstrat->User.'" value="'.$user->id.'"><a class="comlinkdark" href="?user='.$thisstrat->User.'" target="_blank">'.$thisstrat->Username.'</a></span>';
                 }
@@ -179,6 +179,9 @@ $submitbreeds = $_POST['submitbreeds'];
                 $strats[$stratcounter]['NewComsIDs'] = $thisstrat->NewComsIDs;
                 $strats[$stratcounter]['Published'] = $thisstrat->Published ? "Yes" : "No";
                 $strats[$stratcounter]['PublishedNr'] = $thisstrat->Published;
+                
+                $strats[$stratcounter]['Deleted'] = $thisstrat->Deleted ? "Yes" : "No";
+                $strats[$stratcounter]['DeletedNr'] = $thisstrat->Deleted;
                 $stratcounter++;
             }
 
@@ -191,13 +194,14 @@ $submitbreeds = $_POST['submitbreeds'];
                     <th align="center" class="petlistheaderfirst table-sortable:numeric" width="40"><p class="table-sortable-black">ID</th>
                     <th align="left" class="petlistheaderfirst table-sortable:alphabetic" width="150"><p class="table-sortable-black" style="margin-left: 15px;">Link to fight</p></th>
                     <th align="left" class="petlistheaderfirst table-sortable:alphabetic" width="100"><center><p class="table-sortable-black">Published</p></center></th>
+                    <th align="left" class="petlistheaderfirst table-sortable:alphabetic" width="100"><center><p class="table-sortable-black">Deleted</p></center></th>
                     <th class="petlistheaderfirst"></th>
                     <th align="left" class="petlistheaderfirst"><p class="table-sortable-black" style="margin-left: 15px;">Pets</p></th>
                     <th align="left" class="petlistheaderfirst table-sortable:alphabetic"><p class="table-sortable-black" style="margin-left: 15px;">Tags</p></th>
                     <th align="left" class="petlistheaderfirst table-sortable:alphabetic"><p class="table-sortable-black" style="margin-left: 15px;">Creator</p></th>
-                    <? /* Favourites ?> <th align="center" class="petlistheaderfirst table-sortable:numeric" width="100"><p class="table-sortable-black">Favs</th> <? */ ?>
+                    <?php /* Favourites ?> <th align="center" class="petlistheaderfirst table-sortable:numeric" width="100"><p class="table-sortable-black">Favs</th> <?php */ ?>
                     <th align="center" class="petlistheaderfirst table-sortable:numeric" width="100"><p class="table-sortable-black">Int. Notes</th>
-                    <? /*
+                    <?php /*
                     <th align="center" class="petlistheaderfirst table-sortable:numeric"><p class="table-sortable-black">Rating</th>
                     <th align="center" class="petlistheaderfirst table-sortable:numeric"><p class="table-sortable-black">Attempts</th>
                     <th align="center" class="petlistheaderfirst table-sortable:numeric"><p class="table-sortable-black">Views</th>
@@ -214,7 +218,14 @@ $submitbreeds = $_POST['submitbreeds'];
                     </th>
                     <th align="center" class="petlistheadersecond">
                         <select class="petselect" style="width:100px;" id="published_filter" onchange="Table.filter(this,this)">
-                            <option class="petselect" value=""><? echo _("ColTableAll") ?></option>
+                            <option class="petselect" value=""><?php echo __("All") ?></option>
+                            <option class="petselect" value="Yes">Yes</option>
+                            <option class="petselect" value="No">No</option>
+                        </select>
+                    </th>
+                    <th align="center" class="petlistheadersecond">
+                        <select class="petselect" style="width:100px;" id="deleted_filter" onchange="Table.filter(this,this)">
+                            <option class="petselect" value=""><?php echo __("All") ?></option>
                             <option class="petselect" value="Yes">Yes</option>
                             <option class="petselect" value="No">No</option>
                         </select>
@@ -227,10 +238,10 @@ $submitbreeds = $_POST['submitbreeds'];
                     <th align="left" class="petlistheadersecond" width="150">
                             <input class="petselect" name="filter" size="25" id="creator_filter" onkeyup="Table.filter(this,this)">
                     </th>
-                    <? /* Favourites ?>
+                    <?php /* Favourites ?>
                     <th align="center" style="padding-left: 8px" class="petlistheadersecond">
                         <select class="petselect" style="width:100px;" id="favs_filter" onchange="Table.filter(this,this)">
-                            <option class="petselect" value=""><? echo _("ColTableAll") ?></option>
+                            <option class="petselect" value=""><?php echo __("All") ?></option>
                             <option class="petselect" value="0">0</option>
                             <option class="petselect" value="function(val){return parseFloat(val)>0;}">> 0</option>
                             <option class="petselect" value="function(val){return parseFloat(val)>10;}">> 10</option>
@@ -239,11 +250,11 @@ $submitbreeds = $_POST['submitbreeds'];
                             <option class="petselect" value="function(val){return parseFloat(val)>100;}">> 100</option>
                         </select>
                     </th>
-                    <? */ ?>
+                    <?php */ ?>
 
                     <th align="center" style="padding-left: 8px" class="petlistheadersecond">
                         <select class="petselect" style="width:100px;" id="notes_filter" onchange="Table.filter(this,this)">
-                            <option class="petselect" value=""><? echo _("ColTableAll") ?></option>
+                            <option class="petselect" value=""><?php echo __("All") ?></option>
                             <option class="petselect" value="0">0</option>
                             <option class="petselect" value="function(val){return parseFloat(val)>0;}">> 0</option>
                         </select>
@@ -261,15 +272,20 @@ $submitbreeds = $_POST['submitbreeds'];
                 if ($value['PublishedNr'] == "1") {
                     $rowclass = "mystratslistrow";
                 }
+                if ($value['DeletedNr'] == "1") {
+                    $rowclass = "mystratslistrowdeleted";
+                }
+                
                 ?>
 
-                <tr class="<? echo $rowclass ?>">
-                    <td class="<? echo $rowclass ?>"><center><a class="comlinkdark" href="<? echo $value['Fightlink'] ?>" target="_blank"><? echo $value['id'] ?></a></td>
-                    <td class="<? echo $rowclass ?>" style="padding-left: 10px"><p class="blogodd"><? echo $value['Fightname'] ?></td>
-                    <td class="<? echo $rowclass ?>"><center><p class="blogodd"><? echo $value['Published'] ?></td>
+                <tr class="<?php echo $rowclass ?>">
+                    <td class="<?php echo $rowclass ?>"><center><a class="comlinkdark" href="<?php echo $value['Fightlink'] ?>" target="_blank"><?php echo $value['id'] ?></a></td>
+                    <td class="<?php echo $rowclass ?>" style="padding-left: 10px"><p class="blogodd"><?php echo $value['Fightname'] ?></td>
+                    <td class="<?php echo $rowclass ?>"><center><p class="blogodd"><?php echo $value['Published'] ?></td>
+                    <td class="<?php echo $rowclass ?>"><center><p class="blogodd"><?php echo $value['Deleted'] ?></td>
 
 
-                    <td class="<? echo $rowclass ?>" style="min-width: 100px;"><p class="blogodd"><?
+                    <td class="<?php echo $rowclass ?>" style="min-width: 100px;"><p class="blogodd"><?
                     $i = "1";
                     while ($i < "4") {
                         switch ($i) {
@@ -285,55 +301,55 @@ $submitbreeds = $_POST['submitbreeds'];
                         }
 
                         if ($fetchpet == "0") {  // Level Pet ?>
-                            <img class="rating_tt" data-tooltip-content="#atooltip_<? echo $i ?>_<? echo $key ?>" style="width: 24px; height: 24px; cursor: help" src="https://www.wow-petguide.com/images/pets/resize50/level.png">
+                            <img class="rating_tt" data-tooltip-content="#atooltip_<?php echo $i ?>_<?php echo $key ?>" style="width: 24px; height: 24px; cursor: help" src="https://www.wow-petguide.com/images/pets/resize50/level.png">
                             <div style="display:none">
-                                <span id="atooltip_<? echo $i ?>_<? echo $key ?>">Level Pet</span>
+                                <span id="atooltip_<?php echo $i ?>_<?php echo $key ?>">Level Pet</span>
                             </div>
-                        <? }
+                        <?php }
                         if ($fetchpet == "1") {  // Any Pet ?>
-                            <img class="rating_tt" data-tooltip-content="#atooltip_<? echo $i ?>_<? echo $key ?>" style="width: 24px; height: 24px; cursor: help" src="https://www.wow-petguide.com/images/pets/resize50/any.png">
+                            <img class="rating_tt" data-tooltip-content="#atooltip_<?php echo $i ?>_<?php echo $key ?>" style="width: 24px; height: 24px; cursor: help" src="https://www.wow-petguide.com/images/pets/resize50/any.png">
                             <div style="display:none">
-                                <span id="atooltip_<? echo $i ?>_<? echo $key ?>">Any Pet</span>
+                                <span id="atooltip_<?php echo $i ?>_<?php echo $key ?>">Any Pet</span>
                             </div>
-                        <? }
+                        <?php }
                         if ($fetchpet > "10" && $fetchpet <= "20") { // Family pets
                             switch ($fetchpet) {
                                 case "11":
-                                   $famname = _("PetCardPrefixAny")." "._("PetCardSuffixHumanoid");
+                                   $famname = __("Any")." ".__("Humanoid");
                                 break;
                                 case "12":
-                                   $famname = _("PetCardPrefixAny")." "._("PetCardSuffixMagic");
+                                   $famname = __("Any")." ".__("Magic");
                                 break;
                                 case "13":
-                                   $famname = _("PetCardPrefixAny")." "._("PetCardSuffixElemental");
+                                   $famname = __("Any")." ".__("Elemental");
                                 break;
                                 case "14":
-                                   $famname = _("PetCardPrefixAny")." "._("PetCardSuffixUndead");
+                                   $famname = __("Any")." ".__("Undead");
                                 break;
                                 case "15":
-                                   $famname = _("PetCardPrefixAny")." "._("PetCardSuffixMech");
+                                   $famname = __("Any")." ".__("Mech");
                                 break;
                                 case "16":
-                                   $famname = _("PetCardPrefixAny")." "._("PetCardSuffixFlyer");
+                                   $famname = __("Any")." ".__("Flyer");
                                 break;
                                 case "17":
-                                   $famname = _("PetCardPrefixAny")." "._("PetCardSuffixCritter");
+                                   $famname = __("Any")." ".__("Critter");
                                 break;
                                 case "18":
-                                   $famname = _("PetCardPrefixAny")." "._("PetCardSuffixAquatic");
+                                   $famname = __("Any")." ".__("Aquatic");
                                 break;
                                 case "19":
-                                   $famname = _("PetCardPrefixAny")." "._("PetCardSuffixBeast");
+                                   $famname = __("Any")." ".__("Beast");
                                 break;
                                 case "20":
-                                   $famname = _("PetCardPrefixAny")." "._("PetCardSuffixDragonkin");
+                                   $famname = __("Any")." ".__("Dragon");
                                 break;
                              } ?>
-                            <img class="rating_tt" data-tooltip-content="#atooltip_<? echo $i ?>_<? echo $key ?>" style="width: 24px; height: 24px; cursor: help" src="https://www.wow-petguide.com/images/pets/resize50/<? echo $fetchpet ?>.png">
+                            <img class="rating_tt" data-tooltip-content="#atooltip_<?php echo $i ?>_<?php echo $key ?>" style="width: 24px; height: 24px; cursor: help" src="https://www.wow-petguide.com/images/pets/resize50/<?php echo $fetchpet ?>.png">
                             <div style="display:none">
-                                <span id="atooltip_<? echo $i ?>_<? echo $key ?>"><? echo $famname ?></span>
+                                <span id="atooltip_<?php echo $i ?>_<?php echo $key ?>"><?php echo $famname ?></span>
                             </div>
-                            <? }
+                            <?php }
                             if ($fetchpet > "20") {
                                 if (file_exists('images/pets/resize50/'.$all_pets[$fetchpet]['PetID'].'.png')) {
                                     $peticon = 'https://www.wow-petguide.com/images/pets/resize50/'.$all_pets[$fetchpet]['PetID'].'.png';
@@ -341,9 +357,9 @@ $submitbreeds = $_POST['submitbreeds'];
                                 else {
                                     $peticon = 'https://www.wow-petguide.com/images/pets/resize50/unknown.png';
                                 } ?>
-                                <a href="http://<? echo $GLOBALS['wowhdomain'] ?>.wowhead.com/npc=<? echo $all_pets[$fetchpet]['PetID'] ?>" target="_blank"><img style="width: 24px; height: 24px" src="<? echo $peticon ?>"></a>
+                                <a href="http://<?php echo $GLOBALS['wowhdomain'] ?>.wowhead.com/npc=<?php echo $all_pets[$fetchpet]['PetID'] ?>" target="_blank"><img style="width: 24px; height: 24px" src="<?php echo $peticon ?>"></a>
 
-                            <? }
+                            <?php }
                         $i++;
                     }
                       ?>
@@ -351,7 +367,7 @@ $submitbreeds = $_POST['submitbreeds'];
 
                     </td>
 
-                    <td class="<? echo $rowclass ?>" style="min-width: 100px;"><p class="blogodd" style="font-size: 14px"><?
+                    <td class="<?php echo $rowclass ?>" style="min-width: 100px;"><p class="blogodd" style="font-size: 14px"><?
                     $i = "1";
                     while ($i < "4") {
                         switch ($i) {
@@ -374,34 +390,34 @@ $submitbreeds = $_POST['submitbreeds'];
                         if ($fetchpet > "10" && $fetchpet <= "20") { // Family pets
                             switch ($fetchpet) {
                                 case "11":
-                                   echo _("PetCardPrefixAny")." "._("PetCardSuffixHumanoid");
+                                   echo __("Any")." ".__("Humanoid");
                                 break;
                                 case "12":
-                                   echo _("PetCardPrefixAny")." "._("PetCardSuffixMagic");
+                                   echo __("Any")." ".__("Magic");
                                 break;
                                 case "13":
-                                   echo _("PetCardPrefixAny")." "._("PetCardSuffixElemental");
+                                   echo __("Any")." ".__("Elemental");
                                 break;
                                 case "14":
-                                   echo _("PetCardPrefixAny")." "._("PetCardSuffixUndead");
+                                   echo __("Any")." ".__("Undead");
                                 break;
                                 case "15":
-                                   echo _("PetCardPrefixAny")." "._("PetCardSuffixMech");
+                                   echo __("Any")." ".__("Mech");
                                 break;
                                 case "16":
-                                   echo _("PetCardPrefixAny")." "._("PetCardSuffixFlyer");
+                                   echo __("Any")." ".__("Flyer");
                                 break;
                                 case "17":
-                                   echo _("PetCardPrefixAny")." "._("PetCardSuffixCritter");
+                                   echo __("Any")." ".__("Critter");
                                 break;
                                 case "18":
-                                   echo _("PetCardPrefixAny")." "._("PetCardSuffixAquatic");
+                                   echo __("Any")." ".__("Aquatic");
                                 break;
                                 case "19":
-                                   echo _("PetCardPrefixAny")." "._("PetCardSuffixBeast");
+                                   echo __("Any")." ".__("Beast");
                                 break;
                                 case "20":
-                                   echo _("PetCardPrefixAny")." "._("PetCardSuffixDragonkin");
+                                   echo __("Any")." ".__("Dragon");
                                 break;
                              }
                         }
@@ -417,40 +433,40 @@ $submitbreeds = $_POST['submitbreeds'];
                     </td>
 
 
-                    <td class="<? echo $rowclass ?>"><p class="blogodd"  style="font-size: 14px"><? echo $value['Tags'] ?></td>
-                    <td class="<? echo $rowclass ?>" style="min-width: 100px;"><p class="blogodd" style="padding-left: 10px"><? echo $value['Userlink'] ?></td>
-                    <? /* Favourites ?> <td class="<? echo $rowclass ?>"><center><p class="blogodd"><? echo $value['Favs'] ?></center></td> <? */ ?>
-                    <td class="<? echo $rowclass ?>"><center><p class="blogodd"><? echo $value['Comments'] ?></center></td> 
-                    <? /*
-                    <td style="width: 1%; text-align: left; padding-left: 20px"><p class="blogodd"><? echo $value['RatingAverage] ?> (<? echo $value['Ratings'] ?>)</td>
+                    <td class="<?php echo $rowclass ?>"><p class="blogodd"  style="font-size: 14px"><?php echo $value['Tags'] ?></td>
+                    <td class="<?php echo $rowclass ?>" style="min-width: 100px;"><p class="blogodd" style="padding-left: 10px"><?php echo $value['Userlink'] ?></td>
+                    <?php /* Favourites ?> <td class="<?php echo $rowclass ?>"><center><p class="blogodd"><?php echo $value['Favs'] ?></center></td> <?php */ ?>
+                    <td class="<?php echo $rowclass ?>"><center><p class="blogodd"><?php echo $value['Comments'] ?></center></td> 
+                    <?php /*
+                    <td style="width: 1%; text-align: left; padding-left: 20px"><p class="blogodd"><?php echo $value['RatingAverage] ?> (<?php echo $value['Ratings'] ?>)</td>
 
-                    <td class="<? echo $rowclass ?>"><center>
-                        <? if ($value['Attempts'] == "0") {
+                    <td class="<?php echo $rowclass ?>"><center>
+                        <?php if ($value['Attempts'] == "0") {
                             echo '<p class="blogodd">0</p>';
                         }
                         else { ?>
-                        <div class="rating_tt" data-tooltip-content="#att_tooltip_content_<? echo $key ?>" style="cursor: help"><p class="blogodd"><? echo $value['Attempts']; ?></p></div>
+                        <div class="rating_tt" data-tooltip-content="#att_tooltip_content_<?php echo $key ?>" style="cursor: help"><p class="blogodd"><?php echo $value['Attempts']; ?></p></div>
                         <div style="display:none">
-                            <span id="att_tooltip_content_<? echo $key ?>">
+                            <span id="att_tooltip_content_<?php echo $key ?>">
                                 The below attempts on this strategy have been recorded by other battlers:<br><br>
 
                                 <table style="margin-left: 20px">
                                     <tr>
                                         <td><p class="blogeven" style="font-size: 14px">Successful:</td>
-                                        <td style="padding-left: 18px"><p class="blogeven" style="font-size: 14px"><? echo $value['GAttempts']; ?></td>
+                                        <td style="padding-left: 18px"><p class="blogeven" style="font-size: 14px"><?php echo $value['GAttempts']; ?></td>
                                     </tr>
                                     <tr>
                                         <td><p class="blogeven" style="font-size: 14px">Unsuccessful:</td>
-                                        <td style="padding-left: 18px"><p class="blogeven" style="font-size: 14px"><? echo $value['BAttempts']; ?></td>
+                                        <td style="padding-left: 18px"><p class="blogeven" style="font-size: 14px"><?php echo $value['BAttempts']; ?></td>
                                     </tr>
                                 </table>
                                 <br>
                                 A more detailed breakdown will be available at a later time.
                             </span>
                         </div>
-                        <? } ?>
+                        <?php } ?>
                     </td>
-                    <td class="<? echo $rowclass ?>"><center><p class="blogodd"><? echo $value['Views'] ?></td>
+                    <td class="<?php echo $rowclass ?>"><center><p class="blogodd"><?php echo $value['Views'] ?></td>
                     */ ?>
             </tr>
             <?php

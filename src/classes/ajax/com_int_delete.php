@@ -31,6 +31,13 @@ if (mysqli_num_rows($commentdb) > "0")  {
                 mysqli_query($dbcon, "UPDATE Comments SET `Deleted` = '1' WHERE id = '$commentid'") OR die(mysqli_error($dbcon));
                 mysqli_query($dbcon, "UPDATE Comments SET `NewActivity` = '0' WHERE id = '$commentid'") OR die(mysqli_error($dbcon));
                 mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$userid', '$user_ip_adress', '1', 'Internal Comment Deleted by Curator', '$commentid')") OR die(mysqli_error($dbcon));
+                $sortingid = $comment->SortingID;
+                $remain_commentdb = mysqli_query($dbcon, "SELECT * FROM Comments WHERE Category = 3 AND Deleted = 0 AND SortingID = '$sortingid'");
+                if (mysqli_num_rows($remain_commentdb) == 0) {
+                    $updatetags = array();
+                    $updatetags[29] = 0;
+                    update_tags($sortingid, $updatetags);
+                }
                 echo "OK";
                 mysqli_close($dbcon);
                 die;

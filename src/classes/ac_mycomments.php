@@ -153,7 +153,7 @@ sort($arr_days);
 
 if ($comsnew) {
     mysqli_query($dbcon, "UPDATE Comments SET `NewActivity` = '0' WHERE User = '$user->id'");
-    echo '<script>$.growl.notice({ message: "'._("CM_NewReplies").'", duration: "7000", size: "large", location: "tc" });</script>';
+    echo '<script>$.growl.notice({ message: "'.__("Some of your comments got replies from other pet battlers!<br>They are highlighted in green. A click on the link brings you to the respective thread.").'", duration: "7000", size: "large", location: "tc" });</script>';
 }
 
 
@@ -180,14 +180,14 @@ if ($comsnew) {
     <img src="images/blank.png" width="50" height="1" alt="" />
 </td>
 <td>
-    <img class="ut_icon" width="84" height="84" <? echo $usericon ?>>
+    <img class="ut_icon" width="84" height="84" <?php echo $usericon ?>>
 </td>
 
 <td>
     <img src="images/blank.png" width="50" height="1" alt="" />
 </td>
 
-<td width="100%"><h class="megatitle"><? echo _("CM_PageTitle") ?></h></td>
+<td width="100%"><h class="megatitle"><?php echo __("My Comments") ?></h></td>
 <td><img src="images/main_bg02_2.png"></td>
 </tr>
 </table>
@@ -226,7 +226,7 @@ if ($comsnew) {
             if (!$coms) {
                 ?>
                 <div class="msg_nomsgs" id="nomsgsboxout">
-                    <? echo _("CM_NoComs") ?>
+                    <?php echo __("You have not written any comments so far. Go forth and tell your tale with pride! :-)") ?>
                 </div><br><br>
                 <?
             }
@@ -237,13 +237,13 @@ if ($comsnew) {
 
                 <tr>
                     <th align="center" class="petlistheaderfirst table-sortable:numeric" width="40"></th>
-                    <th align="left" class="petlistheaderfirst table-sortable:alphabetic" width="150"><p class="table-sortable-black" style="margin-left: 15px;"><? echo _("CM_TblLinks") ?></p></th>
-                    <th align="left" class="petlistheaderfirst table-sortable:alphabetic" width="100%"><p class="table-sortable-black" style="margin-left: 15px;"><? echo _("CM_TblYouWrt") ?></p></th>
-                    <th align="center" class="petlistheaderfirst table-sortable:numeric"><p class="table-sortable-black"><? echo _("CM_TblResponses") ?></th>
-                    <th align="center" class="petlistheaderfirst table-sortable:numeric"><p class="table-sortable-black"><? echo _("CM_TblVotes") ?></th>
-                    <th align="center" class="petlistheaderfirst table-sortable:numeric"><p class="table-sortable-black"><? echo _("CM_TblYear") ?></th>
-                    <th align="center" class="petlistheaderfirst table-sortable:numeric"><p class="table-sortable-black"><? echo _("CM_TblMonth") ?></th>
-                    <th align="center" class="petlistheaderfirst table-sortable:numeric"><p class="table-sortable-black"><? echo _("CM_TblDay") ?></th>
+                    <th align="left" class="petlistheaderfirst table-sortable:alphabetic" width="150"><p class="table-sortable-black" style="margin-left: 15px;"><?php echo __("Link to thread") ?></p></th>
+                    <th align="left" class="petlistheaderfirst table-sortable:alphabetic" width="100%"><p class="table-sortable-black" style="margin-left: 15px;"><?php echo __("You wrote") ?></p></th>
+                    <th align="center" class="petlistheaderfirst table-sortable:numeric"><p class="table-sortable-black"><?php echo __("Responses") ?></th>
+                    <th align="center" class="petlistheaderfirst table-sortable:numeric"><p class="table-sortable-black"><?php echo __("Votes") ?></th>
+                    <th align="center" class="petlistheaderfirst table-sortable:numeric"><p class="table-sortable-black"><?php echo __("Year") ?></th>
+                    <th align="center" class="petlistheaderfirst table-sortable:numeric"><p class="table-sortable-black"><?php echo __("Month") ?></th>
+                    <th align="center" class="petlistheaderfirst table-sortable:numeric"><p class="table-sortable-black"><?php echo __("Day") ?></th>
                 </tr>
 
                 <tr>
@@ -259,7 +259,7 @@ if ($comsnew) {
 
                     <th align="center" class="petlistheadersecond">
                             <select class="petselect" style="width:100px;" id="respfilter" onchange="Table.filter(this,this)">
-                                <option class="petselect" value=""><? echo _("ColTableAll") ?></option>
+                                <option class="petselect" value=""><?php echo __("All") ?></option>
                                 <option class="petselect" value="0">0</option>
                                 <option class="petselect" value="function(val){return parseFloat(val)>0;}">> 0</option>
                                 <option class="petselect" value="function(val){return parseFloat(val)>10;}">> 10</option>
@@ -268,7 +268,7 @@ if ($comsnew) {
 
                     <th align="center" class="petlistheadersecond">
                             <select class="petselect" id="votefilter" onchange="Table.filter(this,this)">
-                                <option class="petselect" value=""><? echo _("ColTableAll") ?></option>
+                                <option class="petselect" value=""><?php echo __("All") ?></option>
                                 <option class="petselect" value="1">1</option>
                                 <option class="petselect" value="function(val){return parseFloat(val)>1;}">> 1</option>
                                 <option class="petselect" value="function(val){return parseFloat(val)>50;}">> 50</option>
@@ -278,7 +278,7 @@ if ($comsnew) {
 
                     <th align="center" class="petlistheadersecond">
                             <select class="petselect" id="yearfilter" onchange="Table.filter(this,this)">
-                                    <option class="petselect" value=""><? echo _("ColTableAll") ?></option>
+                                    <option class="petselect" value=""><?php echo __("All") ?></option>
                                     <?
                                     foreach ($arr_years as $yearvalue) {
                                         echo '<option class="petselect" value="'.$yearvalue.'">'.$yearvalue.'</option>';
@@ -289,7 +289,7 @@ if ($comsnew) {
 
                     <th align="center" class="petlistheadersecond">
                             <select class="petselect" id="monthfilter" onchange="Table.filter(this,this)">
-                                    <option class="petselect" value=""><? echo _("ColTableAll") ?></option>
+                                    <option class="petselect" value=""><?php echo __("All") ?></option>
                                     <?
                                     foreach ($arr_months as $monthvalue) {
                                         echo '<option class="petselect" value="'.$monthvalue.'">'.$monthvalue.'</option>';
@@ -299,7 +299,7 @@ if ($comsnew) {
                     </th>
                     <th align="center" class="petlistheadersecond">
                             <select class="petselect" id="dayfilter" onchange="Table.filter(this,this)">
-                                    <option class="petselect" value=""><? echo _("ColTableAll") ?></option>
+                                    <option class="petselect" value=""><?php echo __("All") ?></option>
                                     <?
                                     foreach ($arr_days as $dayvalue) {
                                         echo '<option class="petselect" value="'.$dayvalue.'">'.$dayvalue.'</option>';
@@ -324,35 +324,35 @@ if ($comsnew) {
                     echo 'style="background-color: #9ae0af" ';
             }
             ?>>
-                    <td class="petlist"><center><p class="<? echo $coms[$key]['color'] ?> blogodd"><? echo $key+1 ?>.</td>
+                    <td class="petlist"><center><p class="<?php echo $coms[$key]['color'] ?> blogodd"><?php echo $key+1 ?>.</td>
 
-                    <td class="petlist"><a class="comlinkdark" href="?Comment=<? echo $coms[$key]['id'] ?>" target="_blank"><? echo $coms[$key]['category'] ?></a></td>
+                    <td class="petlist"><a class="comlinkdark" href="?Comment=<?php echo $coms[$key]['id'] ?>" target="_blank"><?php echo $coms[$key]['category'] ?></a></td>
 
-                    <td class="petlist"><? if ($coms[$key]['long'] == "true") {
-                        ?><span class="tt_<? echo $coms[$key]['id'] ?>" data-tooltip-content="#ttc_<? echo $coms[$key]['id'] ?>"><p class="blogodd <? echo $coms[$key]['color'] ?>"><? echo $coms[$key]['excerpt'] ?></span>
+                    <td class="petlist"><?php if ($coms[$key]['long'] == "true") {
+                        ?><span class="tt_<?php echo $coms[$key]['id'] ?>" data-tooltip-content="#ttc_<?php echo $coms[$key]['id'] ?>"><p class="blogodd <?php echo $coms[$key]['color'] ?>"><?php echo $coms[$key]['excerpt'] ?></span>
                         <div style="display:none">
-                            <span id="ttc_<? echo $coms[$key]['id'] ?>">
-                                <? echo $coms[$key]['fulltext'] ?>
+                            <span id="ttc_<?php echo $coms[$key]['id'] ?>">
+                                <?php echo $coms[$key]['fulltext'] ?>
                             </span>
                         </div>
                         <?
                     }
-                    else { ?><p class="<? echo $coms[$key]['color'] ?> blogodd"><? echo $coms[$key]['excerpt']; } ?></td>
+                    else { ?><p class="<?php echo $coms[$key]['color'] ?> blogodd"><?php echo $coms[$key]['excerpt']; } ?></td>
 
-                    <td align="center" class="petlist"><p class="<? echo $coms[$key]['color'] ?> blogodd"><? echo $coms[$key]['responses'] ?></td>
+                    <td align="center" class="petlist"><p class="<?php echo $coms[$key]['color'] ?> blogodd"><?php echo $coms[$key]['responses'] ?></td>
 
-                    <td align="center" class="petlist" style="padding-left: 12px;"><p class="<? echo $coms[$key]['color'] ?> blogodd"><? echo $coms[$key]['votes'] ?></td>
+                    <td align="center" class="petlist" style="padding-left: 12px;"><p class="<?php echo $coms[$key]['color'] ?> blogodd"><?php echo $coms[$key]['votes'] ?></td>
 
-                    <td align="center" class="petlist"><p class="<? echo $coms[$key]['color'] ?> blogodd"><? echo $coms[$key]['year'] ?></td>
+                    <td align="center" class="petlist"><p class="<?php echo $coms[$key]['color'] ?> blogodd"><?php echo $coms[$key]['year'] ?></td>
 
-                    <td align="center" class="petlist"><p class="<? echo $coms[$key]['color'] ?> blogodd"><? echo $coms[$key]['month'] ?></td>
+                    <td align="center" class="petlist"><p class="<?php echo $coms[$key]['color'] ?> blogodd"><?php echo $coms[$key]['month'] ?></td>
 
-                    <td align="center" class="petlist"><p class="<? echo $coms[$key]['color'] ?> blogodd"><? echo $coms[$key]['day'] ?></td>
+                    <td align="center" class="petlist"><p class="<?php echo $coms[$key]['color'] ?> blogodd"><?php echo $coms[$key]['day'] ?></td>
             </tr>
 
-            <? if ($coms[$key]['long'] == "true") { ?>
+            <?php if ($coms[$key]['long'] == "true") { ?>
             <script>
-                $('.tt_<? echo $coms[$key]['id'] ?>').tooltipster({
+                $('.tt_<?php echo $coms[$key]['id'] ?>').tooltipster({
                     contentCloning: true,
                     theme: 'tooltipster-smallnote',
                     updateAnimation: 'null',
@@ -360,7 +360,7 @@ if ($comsnew) {
                     maxWidth: 650
                  });
             </script>
-            <? } ?>
+            <?php } ?>
 
 
             <?php
@@ -374,7 +374,7 @@ if ($comsnew) {
                             <td colspan="2" align="right" class="table-page:previous" style="cursor:pointer;padding-top: 5px;"><a class="wowhead" style="text-decoration: none;">&lt; &lt; </a></td>
                             <td colspan="1" align="center"><div style="white-space:nowrap;padding-top: 5px;"><p class="blogodd"><span id="t1page"></span> / <span id="t1pages"></span></div></td>
                             <td colspan="2" align="left" class="table-page:next" style="cursor:pointer;padding-top: 5px;"><a class="wowhead" style="text-decoration: none;"> &gt; &gt;</td>
-                            <td colspan="3" align="right"><div style="white-space:nowrap; margin-right:10px;padding-top: 5px;"><a class="wowhead" style="text-decoration: none; cursor:pointer" onclick="filter_reset()"><? echo _("ColTableReset") ?></a></div></td>
+                            <td colspan="3" align="right"><div style="white-space:nowrap; margin-right:10px;padding-top: 5px;"><a class="wowhead" style="text-decoration: none; cursor:pointer" onclick="filter_reset()"><?php echo __("Reset Filters") ?></a></div></td>
                     </tr>
             </tfoot>
         </table>
@@ -398,7 +398,7 @@ if ($comsnew) {
             }
         </script>
 
-        <? } ?>
+        <?php } ?>
 
 
 

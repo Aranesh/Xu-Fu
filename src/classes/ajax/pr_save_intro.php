@@ -5,6 +5,7 @@ include("../functions.php");
 $userid = $_REQUEST["userid"];
 $comsecret = $_REQUEST["delimiter"];
 $field_content = $_REQUEST["field_content"];
+$field_content = remove_emojis($field_content);
 $field_content = mysqli_real_escape_string($dbcon, $field_content);
 $field_content = trim($field_content);
 $field_content = preg_replace('#<br\s*/?>#i', "\n", $field_content);

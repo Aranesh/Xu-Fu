@@ -43,7 +43,9 @@ while ($thisstrat = mysqli_fetch_object($stratdb)) {
     $comments_count = $thisstrat->__comment_count;
     $ratings_count = $thisstrat->__rating_count;
     $ratings_average = $thisstrat->__rating_average;
-
+    
+    $strats[$stratcounter]['Deleted'] = $thisstrat->Deleted;
+    
     $strats[$stratcounter]['id'] = $thisstrat->id;
     $strats[$stratcounter]['Pet1'] = $thisstrat->PetID1;
     $strats[$stratcounter]['Pet2'] = $thisstrat->PetID2;
@@ -87,6 +89,23 @@ while ($thisstrat = mysqli_fetch_object($stratdb)) {
     $strats[$stratcounter]['NewComsIDs'] = $thisstrat->NewComsIDs;
     $strats[$stratcounter]['Published'] = $thisstrat->Published ? "Yes" : "<b>No</b>";
     $strats[$stratcounter]['PublishedNr'] = $thisstrat->Published;
+    
+    // SHADOWLANDS tag display
+		$sl_caution_db = mysqli_query($dbcon, "SELECT * FROM Strategy_x_Tags WHERE Strategy = '$thisstrat->id' AND Tag = 30");
+		$sl_problem_db = mysqli_query($dbcon, "SELECT * FROM Strategy_x_Tags WHERE Strategy = '$thisstrat->id' AND Tag = 28");
+        $strats[$stratcounter]['SL'] = "1-Green";
+        $strats[$stratcounter]['sl-color'] = "green";
+        if (mysqli_num_rows($sl_caution_db) > "0") {
+        $strats[$stratcounter]['SL'] = "2-Yellow";
+        $strats[$stratcounter]['sl-color'] = "yellow";
+        }
+        if (mysqli_num_rows($sl_problem_db) > "0") {
+            $strats[$stratcounter]['SL'] = "3-Red";
+            $strats[$stratcounter]['sl-color'] = "red";
+        }
+    // SHADOWLANDS tag display end
+    
+    
     $stratcounter++; 
 }
 
@@ -112,14 +131,14 @@ sortBy('NewComs', $strats, 'desc');
     <img src="images/blank.png" width="50" height="1" alt="" />
 </td>
 <td>
-    <img class="ut_icon" width="84" height="84" <? echo $usericon ?>>
+    <img class="ut_icon" width="84" height="84" <?php echo $usericon ?>>
 </td>
 
 <td>
     <img src="images/blank.png" width="50" height="1" alt="" />
 </td>
 
-<td width="100%"><h class="megatitle">My Strategies</h></td>
+<td width="100%"><h class="megatitle"><?php echo __('My Strategies'); ?></h></td>
 <td><img src="images/main_bg02_2.png"></td>
 </tr>
 </table>
@@ -131,7 +150,56 @@ sortBy('NewComs', $strats, 'desc');
 <div class="remodal-bg leftmenu">
     <?
     print_profile_menu('strategies');
-    ?>
+    
+    if ($stratcoms->Total > 0) { ?>
+        <center>
+            <div class="profile">
+                <form class="form-style-even" style="display: inline">
+                    <input type="hidden" name="command" value="markall">
+                    <input data-remodal-target="modal_edit_delete" type="submit" style="margin: 5 0 5 20;" value="<?php echo __("Mark all as read") ?>">
+                </form>
+
+                <div class="remodal remodalstratedit remodaldelete" data-remodal-id="modal_edit_delete">
+                    <table style="width: 400px" class="profile">
+                        <tr class="profile">
+                            <th colspan="2" style="width: 100%" class="profile">
+                                <table>
+                                    <tr>
+                                        <td><img src="images/icon_report.png" style="padding-right: 5px"></td>
+                                        <td><p class="blogodd"><span style="white-space: nowrap;"><b><?php echo __("Mark all as read") ?></span></td>
+                                    </tr>
+                                </table>
+                            </th>
+                        </tr>
+            
+                        <tr class="profile">
+                            <td class="collectionbordertwo" colspan="2" style="font-family: MuseoSans-500; font-size: 14px">
+                                <div id="del_part1">
+                                    <center><br><b>Are you sure?</b><br><br>
+                                    <form class="form-style-even" style="display: inline" action="index.php?page=strategies" method="post">
+                                        <input type="hidden" name="command" value="markall">
+                                        <input type="submit" style="margin: 0 10 5 0;" value="<?php echo __("Yes") ?>">
+                                    </form>
+                                    
+                                    <input data-remodal-action="close" type="submit" class="comdelete" value="<?php echo __("Cancel"); ?>">
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            
+                <script>
+                var options = {
+                    hashTracking: false
+                };
+                $('[data-remodal-id=modal_edit_delete]').remodal(options);
+                </script>
+            </div>   
+        </center>
+    <?php } ?>
+    
+    
+    
 </div>
 
 <div class="blogentryfirst">
@@ -154,13 +222,13 @@ sortBy('NewComs', $strats, 'desc');
     <tr class="profile">
         <th class="profile">
 
-    <?        
+    <?php        
     
             if (!$strats) {
                 ?>
                 <div class="msg_nomsgs" id="nomsgsboxout" style="min-height: 50px">
-                    You have not created any strategies, yet. It's easy, give it a try if you want to share one!<br>
-                    And if you are unsure, have a look at <a href="?m=StratCreationGuide" class="wowhead">Xu-Fu's Strategy Creation Guide</a><br><br>
+                    <?php echo __("You have not created any strategies, yet. It's easy, give it a try if you want to share one!"); ?><br>
+                    <?php echo __("If you are unsure, have a look at our Strategy Creation Guide which you can find under Guides at the top."); ?><br><br>
                 </div><br><br>
                 <?
             }
@@ -171,7 +239,7 @@ sortBy('NewComs', $strats, 'desc');
 
                 <tr>
                     <th></th>
-                    <th align="left" class="petlistheaderfirst table-sortable:alphabetic" width="150"><p class="table-sortable-black" style="margin-left: 15px;">Link to fight</p></th>
+                    <th align="left" class="petlistheaderfirst table-sortable:alphabetic" width="150"><p class="table-sortable-black" style="margin-left: 15px;"><?php echo __("Link to fight"); ?></p></th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -181,6 +249,10 @@ sortBy('NewComs', $strats, 'desc');
                     <th></th>
                     <th></th>
                     <th></th>
+                    <th></th>
+                    <?php // SHADOWLANDS ?>
+                    <th></th>
+                    <?php // SHADOWLANDS END ?>
                 </tr>
 
                 <tr>
@@ -190,47 +262,46 @@ sortBy('NewComs', $strats, 'desc');
                             <input class="petselect" name="filter" size="25" id="catfilter" onkeyup="Table.filter(this,this)">
                     </th>
 
-                    <th align="left" class="petlistheadersecond table-sortable:alphabetic"><p class="table-sortable-black" style="margin-left: 15px;">Published</p></th>
-                    <th align="left" class="petlistheadersecond"><p class="table-sortable-black" style="margin-left: 15px;">Pets</p></th>
-                    <th align="center" class="petlistheadersecond table-sortable:numeric"><p class="table-sortable-black">Favourites</th>
-                    <th align="center" colspan="2" class="petlistheadersecond table-sortable:numeric"><p class="table-sortable-black">Rating</th>
-                    <th align="center" class="petlistheadersecond table-sortable:alphabetic"><p class="table-sortable-black">TDScript</th>
-                    <th align="center" class="petlistheadersecond table-sortable:numeric"><p class="table-sortable-black">Attempts</th>
-                    <th align="center" class="petlistheadersecond table-sortable:numeric"><p class="table-sortable-black">Views</th>
-                    <th align="center" class="petlistheadersecond table-sortable:numeric"><p class="table-sortable-black">Comments</th>
-                    <th align="center" class="petlistheadersecond table-sortable:numeric"><p class="table-sortable-black">New</th>
+                    <th align="left" class="petlistheadersecond table-sortable:alphabetic"><p class="table-sortable-black" style="margin-left: 15px;"><?php echo __("Published"); ?></p></th>
+                    <th align="left" class="petlistheadersecond"><p class="table-sortable-black" style="margin-left: 15px;"><?php echo __("Pets"); ?></p></th>
+                    <th align="center" class="petlistheadersecond table-sortable:numeric"><p class="table-sortable-black"><?php echo __("Favorites"); ?></th>
+                    <th align="center" colspan="2" class="petlistheadersecond table-sortable:numeric"><p class="table-sortable-black"><?php echo __("Rating"); ?></th>
+                    <th align="center" class="petlistheadersecond table-sortable:alphabetic"><p class="table-sortable-black"><?php echo __("TDScript"); ?></th>
+                    <th align="center" class="petlistheadersecond table-sortable:numeric"><p class="table-sortable-black"><?php echo __("Attempts"); ?></th>
+                    <th align="center" class="petlistheadersecond table-sortable:numeric"><p class="table-sortable-black"><?php echo __("Views"); ?></th>
+                    <th align="center" class="petlistheadersecond table-sortable:numeric"><p class="table-sortable-black"><?php echo __("Comments"); ?></th>
+                    <th align="center" class="petlistheadersecond table-sortable:numeric"><p class="table-sortable-black"><?php echo __("New"); ?></th>
+                    
+                    <?php // SHADOWLANDS ?>
+                        <th align="center" class="petlistheadersecond table-sortable:alphabetic"><p class="table-sortable-black"><?php echo __("Shadowlands"); ?></th>
+                    <?php // SHADOWLANDS END ?>
+                    
+                    
                 </tr>
             </thead>
             <tbody>
 
             <?php
             foreach($strats as $key => $value) {
-
+                $rowclass = "mystratslistrow";
                 if ($value['PublishedNr'] == "0") {
-                    $rowclass = "mystratslistrowunpub";
+                    $rowclass = "mystratslistrow orange";
                 }
-                if ($value['PublishedNr'] == "1") {
-                    $rowclass = "mystratslistrow";
+                if ($value['Deleted'] == 1) {
+                    $rowclass = "mystratslistrow red";
                 }
-                if ($value['NewComs'] == "0") {
-                    $rowclassnew = $rowclass;
-                } 
-                if ($value['NewComs'] > "0") {
-                    $rowclassnew = "mystratslistnew";
-                }            
-                
-                
+                if ($value['Deleted'] == 0 OR $userrights['EditStrats'] == "yes") {
                 ?>
                 
 
-                <tr class="<? echo $rowclass ?>">
-                    <td class="<? echo $rowclass ?>"><center><p class="blogodd"><? echo $value['id'] ?></td>
+                <tr class="<?php echo $rowclass ?>">
+                    <td class="centered"><p class="blogodd"><?php echo $value['id'] ?></td>
 
-                    <td class="<? echo $rowclass ?>" style="padding-left: 10px"><a class="comlinkdark" href="<? echo $value['Fightlink'] ?>" target="_blank"><? echo $value['Fightname'] ?></a></td>
+                    <td style="padding-left: 10px"><a class="comlinkdark" href="<?php echo $value['Fightlink'] ?>" target="_blank"><?php echo $value['Fightname'] ?></a></td>
                     
-                    <td class="<? echo $rowclass ?>" style="padding-left: 10px"><center><p class="blogodd"><? echo $value['Published'] ?></td>
+                    <td style="padding-left: 10px" class="centered"><p class="blogodd"><?php echo $value['Published'] ?></td>
                     
-                    <td class="<? echo $rowclass ?>" style="min-width: 100px;"><center><p class="blogodd">
+                    <td style="min-width: 100px;" class="centered"><p class="blogodd">
                     
                     <?
                     $i = "1";
@@ -248,55 +319,55 @@ sortBy('NewComs', $strats, 'desc');
                         }
 
                         if ($fetchpet == "0") {  // Level Pet ?>
-                            <img class="rating_tt" data-tooltip-content="#atooltip_<? echo $i ?>_<? echo $key ?>" style="width: 24px; height: 24px; cursor: help" src="https://www.wow-petguide.com/images/pets/resize50/level.png">
+                            <img class="rating_tt" data-tooltip-content="#atooltip_<?php echo $i ?>_<?php echo $key ?>" style="width: 24px; height: 24px; cursor: help" src="https://www.wow-petguide.com/images/pets/resize50/level.png">
                             <div style="display:none">
-                                <span id="atooltip_<? echo $i ?>_<? echo $key ?>">Level Pet</span>
+                                <span id="atooltip_<?php echo $i ?>_<?php echo $key ?>"><?php echo __("Level Pet"); ?></span>
                             </div> 
-                        <? }
+                        <?php }
                         if ($fetchpet == "1") {  // Any Pet ?>
-                            <img class="rating_tt" data-tooltip-content="#atooltip_<? echo $i ?>_<? echo $key ?>" style="width: 24px; height: 24px; cursor: help" src="https://www.wow-petguide.com/images/pets/resize50/any.png">
+                            <img class="rating_tt" data-tooltip-content="#atooltip_<?php echo $i ?>_<?php echo $key ?>" style="width: 24px; height: 24px; cursor: help" src="https://www.wow-petguide.com/images/pets/resize50/any.png">
                             <div style="display:none">
-                                <span id="atooltip_<? echo $i ?>_<? echo $key ?>">Any Pet</span>
+                                <span id="atooltip_<?php echo $i ?>_<?php echo $key ?>"><?php echo __("Any Pet"); ?></span>
                             </div>                             
-                        <? }
+                        <?php }
                         if ($fetchpet > "10" && $fetchpet <= "20") { // Family pets
                             switch ($fetchpet) { 
                                 case "11":
-                                   $famname = _("PetCardPrefixAny")." "._("PetCardSuffixHumanoid");
+                                   $famname = __("Any")." ".__("Humanoid");
                                 break;      
                                 case "12":
-                                   $famname = _("PetCardPrefixAny")." "._("PetCardSuffixMagic");
+                                   $famname = __("Any")." ".__("Magic");
                                 break;
                                 case "13":
-                                   $famname = _("PetCardPrefixAny")." "._("PetCardSuffixElemental");
+                                   $famname = __("Any")." ".__("Elemental");
                                 break;      
                                 case "14":
-                                   $famname = _("PetCardPrefixAny")." "._("PetCardSuffixUndead");
+                                   $famname = __("Any")." ".__("Undead");
                                 break;   
                                 case "15":
-                                   $famname = _("PetCardPrefixAny")." "._("PetCardSuffixMech");
+                                   $famname = __("Any")." ".__("Mech");
                                 break;      
                                 case "16":
-                                   $famname = _("PetCardPrefixAny")." "._("PetCardSuffixFlyer");
+                                   $famname = __("Any")." ".__("Flyer");
                                 break;
                                 case "17":
-                                   $famname = _("PetCardPrefixAny")." "._("PetCardSuffixCritter");
+                                   $famname = __("Any")." ".__("Critter");
                                 break;      
                                 case "18":
-                                   $famname = _("PetCardPrefixAny")." "._("PetCardSuffixAquatic");
+                                   $famname = __("Any")." ".__("Aquatic");
                                 break;   
                                 case "19":
-                                   $famname = _("PetCardPrefixAny")." "._("PetCardSuffixBeast");
+                                   $famname = __("Any")." ".__("Beast");
                                 break;      
                                 case "20":
-                                   $famname = _("PetCardPrefixAny")." "._("PetCardSuffixDragonkin");
+                                   $famname = __("Any")." ".__("Dragon");
                                 break;  
                              } ?>
-                            <img class="rating_tt" data-tooltip-content="#atooltip_<? echo $i ?>_<? echo $key ?>" style="width: 24px; height: 24px; cursor: help" src="https://www.wow-petguide.com/images/pets/resize50/<? echo $fetchpet ?>.png">
+                            <img class="rating_tt" data-tooltip-content="#atooltip_<?php echo $i ?>_<?php echo $key ?>" style="width: 24px; height: 24px; cursor: help" src="https://www.wow-petguide.com/images/pets/resize50/<?php echo $fetchpet ?>.png">
                             <div style="display:none">
-                                <span id="atooltip_<? echo $i ?>_<? echo $key ?>"><? echo $famname ?></span>
+                                <span id="atooltip_<?php echo $i ?>_<?php echo $key ?>"><?php echo $famname ?></span>
                             </div>                               
-                            <? }
+                            <?php }
                             if ($fetchpet > "20") { 
                                 if (file_exists('images/pets/resize50/'.$all_pets[$fetchpet]['PetID'].'.png')) {
                                     $peticon = 'https://www.wow-petguide.com/images/pets/resize50/'.$all_pets[$fetchpet]['PetID'].'.png';
@@ -304,85 +375,85 @@ sortBy('NewComs', $strats, 'desc');
                                 else {
                                     $peticon = 'https://www.wow-petguide.com/images/pets/resize50/unknown.png';
                                 } ?>                    
-                                <a href="http://<? echo $GLOBALS['wowhdomain'] ?>.wowhead.com/npc=<? echo $all_pets[$fetchpet]['PetID'] ?>" target="_blank"><img style="width: 24px; height: 24px" src="<? echo $peticon ?>"></a>
+                                <a href="http://<?php echo $GLOBALS['wowhdomain'] ?>.wowhead.com/npc=<?php echo $all_pets[$fetchpet]['PetID'] ?>" target="_blank"><img style="width: 24px; height: 24px" src="<?php echo $peticon ?>"></a>
 
-                            <? }
+                            <?php }
                         $i++;
                     }
                         ?>
                                 
 
                     </td>
-                    <td class="<? echo $rowclass ?>">
+                    <td>
                     <div>
-                        <div style="float: left; margin: 0 5 0 25"><p class="blogodd"><? echo $value['Favs'] ?></div>
+                        <div style="float: left; margin: 0 5 0 25"><p class="blogodd"><?php echo $value['Favs'] ?></div>
                         <div style="float: left"><img src="https://www.wow-petguide.com/images/icon_strats_fav.png"></div>
                     </div>
                     </td>
-                    <td style="width: 1%; text-align: left; padding-left: 20px"><p class="blogodd"><? echo $value['RatingAverage'] ?></td>
-                    <td><center>
-                        <div class="strat_star_<? echo $value['StratClass'] ?> rating_tt" data-tooltip-content="#atooltip_content_<? echo $key ?>" style="width:100px; height:20px; display:block; cursor: help"></div>
+                    <td style="width: 1%; padding-left: 20px"><p class="blogodd"><?php echo $value['RatingAverage'] ?></td>
+                    <td class="centered">
+                        <div class="strat_star_<?php echo $value['StratClass'] ?> rating_tt" data-tooltip-content="#atooltip_content_<?php echo $key ?>" style="width:100px; height:20px; display:block; cursor: help"></div>
                         <div style="display:none">
-                            <span id="atooltip_content_<? echo $key ?>"><? echo $value['Ratings'] ?> battler(s) voted on this strategy.</span>
+                            <span id="atooltip_content_<?php echo $key ?>"><?php echo $value['Ratings'] ?> <?php echo __("battler(s) voted on this strategy."); ?></span>
                         </div>       
 			        </td>
-                    <td style="width: 1%; text-align: left; padding-left: 20px"><p class="blogodd"><?
+                    <td style="width: 1%; padding-left: 20px" <? if ($value['td'] == "0") echo 'class="yellow"';?>><p class="blogodd"><?
                         if ($value['td'] == "0") {
-                            echo "No";
+                            echo __("No");
                         }
                         else {
-                            echo "Yes";
+                            echo __("Yes");
                         }
                         ?></td>
-                    <td class="<? echo $rowclass ?>"><center>
-                        <? if ($value['Attempts'] == "0") {
+                    <td class="centered">
+                        <?php if ($value['Attempts'] == "0") {
                             echo '<p class="blogodd">0</p>';
                         }
                         else { ?>
-                        <div class="rating_tt" data-tooltip-content="#att_tooltip_content_<? echo $key ?>" style="cursor: help"><p class="blogodd"><? echo $value['Attempts']; ?></p></div>
+                        <div class="rating_tt" data-tooltip-content="#att_tooltip_content_<?php echo $key ?>" style="cursor: help"><p class="blogodd"><?php echo $value['Attempts']; ?></p></div>
                         <div style="display:none">
-                            <span id="att_tooltip_content_<? echo $key ?>">
-                                The below attempts on this strategy have been recorded by other battlers:<br><br>
+                            <span id="att_tooltip_content_<?php echo $key ?>">
+                                <?php echo __("The below attempts on this strategy have been recorded by other battlers:"); ?><br><br>
                                 
                                 <table style="margin-left: 20px">
                                     <tr>
                                         <td><p class="blogeven" style="font-size: 14px">Successful:</td>
-                                        <td style="padding-left: 18px"><p class="blogeven" style="font-size: 14px"><? echo $value['GAttempts']; ?></td>
+                                        <td style="padding-left: 18px"><p class="blogeven" style="font-size: 14px"><?php echo $value['GAttempts']; ?></td>
                                     </tr>
                                     <tr>
                                         <td><p class="blogeven" style="font-size: 14px">Unsuccessful:</td>
-                                        <td style="padding-left: 18px"><p class="blogeven" style="font-size: 14px"><? echo $value['BAttempts']; ?></td>
+                                        <td style="padding-left: 18px"><p class="blogeven" style="font-size: 14px"><?php echo $value['BAttempts']; ?></td>
                                     </tr>                                   
                                 </table>
                                 <br>
-                                A more detailed breakdown will be available at a later time.
+                                <?php echo __("A more detailed breakdown will be available at a later time."); ?>
                             </span>
                         </div>                       
-                        <? } ?>
+                        <?php } ?>
                     </td>
-                    <td class="<? echo $rowclass ?>"><center><p class="blogodd"><? echo $value['Views'] ?></td>
-                    <td class="<? echo $rowclass ?>"><center><p class="blogodd">
-                        <div class="rating_tt" data-tooltip-content="#coms_tooltip_content_<? echo $key ?>" style="cursor: help"><p class="blogodd"><? echo $value['Comments']; ?></p></div>
+                    <td class="centered"><p class="blogodd"><?php echo $value['Views'] ?></td>
+                    <td class="centered"><p class="blogodd">
+                        <div class="rating_tt" data-tooltip-content="#coms_tooltip_content_<?php echo $key ?>" style="cursor: help"><p class="blogodd"><?php echo $value['Comments']; ?></p></div>
                         <div style="display:none">
-                            <span id="coms_tooltip_content_<? echo $key ?>">
-                                This number shows all comments, including those written for different language versions of the page. You can change the displayed language in your account settings.
+                            <span id="coms_tooltip_content_<?php echo $key ?>">
+                                <?php echo __("This number shows all comments, including those written for different language versions of the page. You can change the displayed language in your account settings."); ?>
                             </span>
                         </div>                    
                     </td>
-                    <td class="<? echo $rowclassnew ?>"><center><?
+                    <td class="centered<?php if ($value['NewComs'] > "0") echo ' green'; ?>"><?
                         if ($value['NewComs'] > "0") { ?>
-                            <div class="newcoms_tt" data-tooltip-content="#newcoms_tooltip_content_<? echo $key ?>" style="cursor: help"><p class="blogodd"><b><? echo $value['NewComs']; ?></p></div>
+                            <div class="newcoms_tt" data-tooltip-content="#newcoms_tooltip_content_<?php echo $key ?>" style="cursor: help"><p class="blogodd"><b><?php echo $value['NewComs']; ?></p></div>
                             <div style="display:none">
-                                <span id="newcoms_tooltip_content_<? echo $key ?>">
-                                Since your last visit to this strategy, other battlers left comments. You can jump to them directly using these quick links:
+                                <span id="newcoms_tooltip_content_<?php echo $key ?>">
+                                    <?php echo __("Since your last visit to this strategy, other battlers left comments. You can jump to them directly using these quick links:"); ?>
                                 <br><br>
                                 <table class="tooltip">
                                     <tr>
-                                        <th class="tooltip">Date written</th>
-                                        <th class="tooltip">Language</th>
-                                        <th class="tooltip">Link</th>
+                                        <th class="tooltip"><?php echo __("Date written"); ?></th>
+                                        <th class="tooltip"><?php echo __("Language"); ?></th>
+                                        <th class="tooltip"><?php echo __("Link"); ?></th>
                                     </tr>
-                                <? if ($value['NewComsIDs'] != "") {
+                                <?php if ($value['NewComsIDs'] != "") {
                                     $newcoms = explode(";",$value['NewComsIDs']);
                                     
                                     foreach ($newcoms as $comkey => $comvalue) {
@@ -392,32 +463,37 @@ sortBy('NewComs', $strats, 'desc');
                                         ?>
                                         <tr>
                                             <td class="tooltip">
-                                                <span name="time"><? echo $comsplits[1]; ?></span>
+                                                <span name="time"><?php echo $comsplits[1]; ?></span>
                                             </td>
                                             <td class="tooltip">
-                                                <center><? echo strtoupper($comsplits[2]); ?> </center>
+                                                <center><?php echo strtoupper($comsplits[2]); ?> </center>
                                             </td>
                                             <td class="tooltip">
-                                                <a target="_blank" href="?Comment=<? echo $comsplits[0]; ?>" class="tooltip">Open</a> 
+                                                <a target="_blank" href="?Comment=<?php echo $comsplits[0]; ?>" class="tooltip"><?php echo __("Open"); ?></a> 
                                             </td>                                              
                                         </tr>
                                         
                                        
-                                    <? }
+                                    <?php }
                                 } ?>
                                 </table>
                                 </span>
                             </div>
-                        <? }
+                        <?php }
                         else {
                             echo '<p class="blogodd">'.$value['NewComs'];
                         } ?>
                         </td>
-
+                    
+                    <?php // SHADOWLANDS ?>
+                    <td class="centered <?php echo $value['sl-color']; ?>"><p class="blogodd"><?php echo $value['SL'] ?></td>
+                    <?php // SHADOWLANDS End ?>
+                    
             </tr>
 
 
             <?php
+                }
             }
 
             ?>
@@ -433,7 +509,7 @@ sortBy('NewComs', $strats, 'desc');
         </table>
 
 
-        <? } ?>
+        <?php } ?>
 
 
 

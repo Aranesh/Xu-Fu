@@ -38,14 +38,14 @@ require_once ('Database.php');
                                 <thead>
         
                                     <tr>
-                                        <th align="left" class="petlistheaderfirst table-sortable:alphabetic" width="300"><p class="table-sortable-black" style="margin-left: 15px;"><? echo _("PetTableName") ?></p></th>
-                                        <th align="center" class="petlistheaderfirst table-sortable:numeric"><p class="table-sortable-black"><? echo _("ColChartLevel") ?></th>
-                                        <th align="center" class="petlistheaderfirst table-sortable:alphabetic"><p class="table-sortable-black"><? echo _("ColChartQuality") ?></th>
-                                        <th align="center" class="petlistheaderfirst table-sortable:alphabetic"><p class="table-sortable-black"><? echo _("ColChartBreed") ?></th>
-                                        <th align="left" class="petlistheaderfirst table-sortable:alphabetic"><p class="table-sortable-black" style="margin-left: 25px;"><? echo _("ColChartFamily") ?></th>
-                                        <th align="center" class="petlistheaderfirst table-sortable:alphabetic"><p class="table-sortable-black"><? echo _("ColTableChartDupes") ?></th>
-                                        <th align="center" class="petlistheaderfirst table-sortable:alphabetic"><p class="table-sortable-black"><? echo _("ColChartTrade") ?></th>
-                                        <th align="center" class="petlistheaderfirst table-sortable:alphabetic"><p class="table-sortable-black"><? echo _("ColChartCollected") ?></th>
+                                        <th align="left" class="petlistheaderfirst table-sortable:alphabetic" width="300"><p class="table-sortable-black" style="margin-left: 15px;"><?php echo __("Name") ?></p></th>
+                                        <th align="center" class="petlistheaderfirst table-sortable:numeric"><p class="table-sortable-black"><?php echo __("Level") ?></th>
+                                        <th align="center" class="petlistheaderfirst table-sortable:alphabetic"><p class="table-sortable-black"><?php echo __("Quality") ?></th>
+                                        <th align="center" class="petlistheaderfirst table-sortable:alphabetic"><p class="table-sortable-black"><?php echo __("Breed") ?></th>
+                                        <th align="left" class="petlistheaderfirst table-sortable:alphabetic"><p class="table-sortable-black" style="margin-left: 25px;"><?php echo __("Families") ?></th>
+                                        <th align="center" class="petlistheaderfirst table-sortable:alphabetic"><p class="table-sortable-black"><?php echo __("Duplicates") ?></th>
+                                        <th align="center" class="petlistheaderfirst table-sortable:alphabetic"><p class="table-sortable-black"><?php echo __("Tradable") ?></th>
+                                        <th align="center" class="petlistheaderfirst table-sortable:alphabetic"><p class="table-sortable-black"><?php echo __("Collected") ?></th>
                                 </tr>
         
                                     <tr>
@@ -55,7 +55,7 @@ require_once ('Database.php');
         
                                         <th align="center" class="petlistheadersecond">
                                             <select class="petselect" style="width:100px;" id="levelfilter" onchange="Table.filter(this,this)">
-                                                <option class="petselect" value=""><? echo _("ColTableAll") ?></option>
+                                                <option class="petselect" value=""><?php echo __("All") ?></option>
                                                 <option class="petselect" value="25">25</option>
                                                 <option class="petselect" value="function(val){return parseFloat(val)<25;}">< 25</option>
                                                 <option class="petselect" value="function(val){return parseFloat(val)<20;}">< 20</option>
@@ -70,18 +70,18 @@ require_once ('Database.php');
         
                                         <th align="center" class="petlistheadersecond">
                                             <select class="petselect" style="width:100px;" id="qualityfilter" onchange="Table.filter(this,this)">
-                                                <option class="petselect" value=""><? echo _("ColTableAll") ?></option>
-                                                <option class="petselect" value="<? echo _("QualityRare") ?>"><? echo _("QualityRare") ?></option>
-                                                <option class="petselect" value="<? echo _("QualityUncommon") ?>"><? echo _("QualityUncommon") ?></option>
-                                                <option class="petselect" value="<? echo _("QualityCommon") ?>"><? echo _("QualityCommon") ?></option>
-                                                <option class="petselect" value="<? echo _("QualityPoor") ?>"><? echo _("QualityPoor") ?></option>
+                                                <option class="petselect" value=""><?php echo __("All") ?></option>
+                                                <option class="petselect" value="<?php echo __("Rare") ?>"><?php echo __("Rare") ?></option>
+                                                <option class="petselect" value="<?php echo __("Uncommon") ?>"><?php echo __("Uncommon") ?></option>
+                                                <option class="petselect" value="<?php echo __("Common") ?>"><?php echo __("Common") ?></option>
+                                                <option class="petselect" value="<?php echo __("Poor") ?>"><?php echo __("Poor") ?></option>
                                                 <option class="petselect" value="-">-</option>
                                             </select>
                                         </th>
         
                                         <th align="center" class="petlistheadersecond">
                                             <select class="petselect" style="width:70px;" id="breedfilter" onchange="Table.filter(this,this)">
-                                                <option class="petselect" value=""><? echo _("ColTableAll") ?></option>
+                                                <option class="petselect" value=""><?php echo __("All") ?></option>
                                                 <option class="petselect" value="PP">PP</option>
                                                 <option class="petselect" value="SS">SS</option>
                                                 <option class="petselect" value="HH">HH</option>
@@ -98,41 +98,41 @@ require_once ('Database.php');
         
                                         <th align="center" class="petlistheadersecond">
                                             <select class="petselect" style="width:150px;" id="familiesfilter" onchange="Table.filter(this,this)">
-                                                <option class="petselect" value=""><? echo _("ColTableAll") ?></option>
-                                                <option class="petselect" value="<? echo _("PetFamiliesHumanoid") ?>"><? echo _("PetFamiliesHumanoid") ?></option>
-                                                <option class="petselect" value="<? echo _("PetFamiliesDragonkin") ?>"><? echo _("PetFamiliesDragonkin") ?></option>
-                                                <option class="petselect" value="<? echo _("PetFamiliesFlying") ?>"><? echo _("PetFamiliesFlying") ?></option>
-                                                <option class="petselect" value="<? echo _("PetFamiliesUndead") ?>"><? echo _("PetFamiliesUndead") ?></option>
-                                                <option class="petselect" value="<? echo _("PetFamiliesCritter") ?>"><? echo _("PetFamiliesCritter") ?></option>
-                                                <option class="petselect" value="<? echo _("PetFamiliesMagic") ?>"><? echo _("PetFamiliesMagic") ?></option>
-                                                <option class="petselect" value="<? echo _("PetFamiliesElemental") ?>"><? echo _("PetFamiliesElemental") ?></option>
-                                                <option class="petselect" value="<? echo _("PetFamiliesBeast") ?>"><? echo _("PetFamiliesBeast") ?></option>
-                                                <option class="petselect" value="<? echo _("PetFamiliesAquatic") ?>"><? echo _("PetFamiliesAquatic") ?></option>
-                                                <option class="petselect" value="<? echo _("PetFamiliesMechanical") ?>"><? echo _("PetFamiliesMechanical") ?></option>
+                                                <option class="petselect" value=""><?php echo __("All") ?></option>
+                                                <option class="petselect" value="<?php echo __("Humanoid") ?>"><?php echo __("Humanoid") ?></option>
+                                                <option class="petselect" value="<?php echo __("Dragonkin") ?>"><?php echo __("Dragonkin") ?></option>
+                                                <option class="petselect" value="<?php echo __("Flying") ?>"><?php echo __("Flying") ?></option>
+                                                <option class="petselect" value="<?php echo __("Undead") ?>"><?php echo __("Undead") ?></option>
+                                                <option class="petselect" value="<?php echo __("Critter") ?>"><?php echo __("Critter") ?></option>
+                                                <option class="petselect" value="<?php echo __("Magic") ?>"><?php echo __("Magic") ?></option>
+                                                <option class="petselect" value="<?php echo __("Elemental") ?>"><?php echo __("Elemental") ?></option>
+                                                <option class="petselect" value="<?php echo __("Beast") ?>"><?php echo __("Beast") ?></option>
+                                                <option class="petselect" value="<?php echo __("Aquatic") ?>"><?php echo __("Aquatic") ?></option>
+                                                <option class="petselect" value="<?php echo __("Mechanical") ?>"><?php echo __("Mechanical") ?></option>
                                             </select>
                                         </th>
                                         <th align="center" class="petlistheadersecond">
                                             <select class="petselect" style="width:90px;" id="uniquefilter" onchange="Table.filter(this,this)">
-                                                <option class="petselect" value=""><? echo _("ColTableAll") ?></option>
-                                                <option class="petselect" value="function(val){return parseFloat(val)>0;}"><? echo _("FormComButtonYes"); ?></option>
-                                                <option class="petselect" value="<? echo _("FormComButtonNo"); ?>"><? echo _("FormComButtonNo"); ?></option>
+                                                <option class="petselect" value=""><?php echo __("All") ?></option>
+                                                <option class="petselect" value="function(val){return parseFloat(val)>0;}"><?php echo __("Yes"); ?></option>
+                                                <option class="petselect" value="<?php echo __("No"); ?>"><?php echo __("No"); ?></option>
                                                 <option class="petselect" value=2>2</option>
                                                 <option class="petselect" value="3">3</option>
                                             </select>
                                         </th>
                                         <th align="center" class="petlistheadersecond">
                                             <select class="petselect" style="width:90px;" id="tradeablefilter" onchange="Table.filter(this,this)">
-                                                <option class="petselect" value=""><? echo _("ColTableAll") ?></option>
-                                                <option class="petselect" value="<? echo _("FormComButtonYes"); ?>"><? echo _("FormComButtonYes"); ?></option>
-                                                <option class="petselect" value="<? echo _("FormComButtonNo"); ?>"><? echo _("FormComButtonNo"); ?></option>
+                                                <option class="petselect" value=""><?php echo __("All") ?></option>
+                                                <option class="petselect" value="<?php echo __("Yes"); ?>"><?php echo __("Yes"); ?></option>
+                                                <option class="petselect" value="<?php echo __("No"); ?>"><?php echo __("No"); ?></option>
                                                 <option class="petselect" value="N/A">N/A</option>
                                             </select>
                                         </th>
                                         <th align="center" class="petlistheadersecond">
                                             <select class="petselect" style="width:90px;" id="collectedfilter" onchange="Table.filter(this,this);">
-                                                <option class="petselect" value=""><? echo _("ColTableAll") ?></option>
-                                                <option selected class="petselect" value="<? echo _("FormComButtonYes"); ?>"><? echo _("FormComButtonYes"); ?></option>
-                                                <option class="petselect" value="<? echo _("FormComButtonNo"); ?>"><? echo _("FormComButtonNo"); ?></option>
+                                                <option class="petselect" value=""><?php echo __("All") ?></option>
+                                                <option selected class="petselect" value="<?php echo __("Yes"); ?>"><?php echo __("Yes"); ?></option>
+                                                <option class="petselect" value="<?php echo __("No"); ?>"><?php echo __("No"); ?></option>
                                             </select>
                                         </th>
                                     </tr>
@@ -146,30 +146,30 @@ require_once ('Database.php');
                                     if ($pet['Duplicate'] == TRUE && $pet['InDB'] == TRUE) echo 'style="background-color: #ccca92" ';
                                     if ($pet['InDB'] == FALSE) echo 'style="background-color: #ff6363" ';
                                     ?>>
-                                        <td class="petlist" align="left" style="padding-left: 12px;"><div style="white-space:nowrap"><a class="petlist" href="http://<? echo $GLOBALS['wowhdomain'] ?>.wowhead.com/npc=<? echo $pet['PetID'] ?>" target="_blank"><? echo $pet['Name'] ?></a></div></td>
+                                        <td class="petlist" align="left" style="padding-left: 12px;"><div style="white-space:nowrap"><a class="petlist" href="http://<?php echo $GLOBALS['wowhdomain'] ?>.wowhead.com/npc=<?php echo $pet['PetID'] ?>" target="_blank"><?php echo $pet['Name'] ?></a></div></td>
                                         <td align="center" class="petlist"><p class="blogodd"><?
                                             if ($pet['Level'] == 0) echo "-";
                                             else echo $pet['Level']; ?></td>
                                         <td align="center" class="petlist"><p><?
-                                            if ($pet['Quality'] == 3) { echo '<font color="#0058a5">'._("QualityRare"); }
-                                            if ($pet['Quality'] == 2) { echo '<font color="#147e09">'._("QualityUncommon"); }
-                                            if ($pet['Quality'] == 1) { echo '<font color="#ffffff">'._("QualityCommon"); }
-                                            if ($pet['Quality'] == 0) { echo '<font color="#4d4d4d">'._("QualityPoor"); }
+                                            if ($pet['Quality'] == 3) { echo '<font color="#0058a5">'.__("Rare"); }
+                                            if ($pet['Quality'] == 2) { echo '<font color="#147e09">'.__("Uncommon"); }
+                                            if ($pet['Quality'] == 1) { echo '<font color="#ffffff">'.__("Common"); }
+                                            if ($pet['Quality'] == 0) { echo '<font color="#4d4d4d">'.__("Poor"); }
                                             if ($pet['Quality'] == 22) { echo '<font color="#000000">-'; } ?></td>
-                                        <td align="center" class="petlist"><p class="blogodd"><? echo $pet['Breed'] ?></td>
-                                        <td align="left" class="petlist" style="padding-left: 12px;"><p class="blogodd"><? echo $pet['Family'] ?></td>
+                                        <td align="center" class="petlist"><p class="blogodd"><?php echo $pet['Breed'] ?></td>
+                                        <td align="left" class="petlist" style="padding-left: 12px;"><p class="blogodd"><?php echo $pet['Family'] ?></td>
                                         <td align="center" class="petlist"><p class="blogodd"><?
                                             if ($pet['Duplicate'] == TRUE) echo $pet['Dupecount'];
-                                            else echo _("FormComButtonNo"); ?></td>
+                                            else echo __("No"); ?></td>
                                         <td align="center" class="petlist"><p class="blogodd"><?
-                                            if ($pet['Cageable'] == "1") echo _("FormComButtonYes");
-                                            else if ($pet['Cageable'] == "2") echo _("FormComButtonNo");
+                                            if ($pet['Cageable'] == "1") echo __("Yes");
+                                            else if ($pet['Cageable'] == "2") echo __("No");
                                             else if ($pet['Cageable'] == "0") echo "N/A"; ?></td>
                                         <td align="center" class="petlist"><p class="blogodd"><?
-                                            if ($pet['Collected'] == TRUE) echo _("FormComButtonYes");
-                                            else echo _("FormComButtonNo"); ?></td>
+                                            if ($pet['Collected'] == TRUE) echo __("Yes");
+                                            else echo __("No"); ?></td>
                                     </tr>
-                                <? } ?>
+                                <?php } ?>
         
                                 </tbody>
                                 <tfoot>
@@ -177,7 +177,7 @@ require_once ('Database.php');
                                         <td colspan="3" align="right" class="table-page:previous" style="cursor:pointer;"><a class="wowhead" style="text-decoration: none;">&lt; &lt; </a></td>
                                         <td colspan="2" align="center"><div style="white-space:nowrap"><p class="blogodd"><span id="t1page"></span> / <span id="t1pages"></span></div></td>
                                         <td colspan="2" align="left" class="table-page:next" style="cursor:pointer;"><a class="wowhead" style="text-decoration: none;"> &gt; &gt;</td>
-                                        <td align="right"><div style="white-space:nowrap; margin-right:10px;"><a class="wowhead" style="text-decoration: none; cursor: pointer" onclick="filter_reset()"><? echo _("ColTableReset") ?></a></div></td>
+                                        <td align="right"><div style="white-space:nowrap; margin-right:10px;"><a class="wowhead" style="text-decoration: none; cursor: pointer" onclick="filter_reset()"><?php echo __("Reset Filters") ?></a></div></td>
                                     </tr>
                                 </tfoot>
                               </table>
@@ -196,10 +196,10 @@ require_once ('Database.php');
             <tr>
                 <td style="width: 15px;"></td>
                 <td style="width: 18px; background-color: #d8a0a0"> </td>
-                <td><p class="blogodd"><? echo _("ColChartMissing") ?></td>
+                <td><p class="blogodd"><?php echo __("Missing") ?></td>
                 <td style="width: 15px;"></td>
                 <td style="width: 18px; background-color: #ccca92"> </td>
-                <td><p class="blogodd"><? echo _("ColTableChartDupes") ?></td>
+                <td><p class="blogodd"><?php echo __("Duplicates") ?></td>
             </tr>
         </table>
     </div>
@@ -219,6 +219,4 @@ require_once ('Database.php');
     // print_comments_outer("0",$mainselector,"medium");
     ?>  
 </div>
-<? die;
-
-
+<?php die;

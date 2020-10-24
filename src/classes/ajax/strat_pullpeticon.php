@@ -62,8 +62,8 @@ if ($pet > "1") {
  }
  
  ?>
- <a href="http://<? echo $wowhdomain ?>.wowhead.com/npc=<? echo $pet->PetID ?>" target="_blank">
-     <img style="vertical-align:middle; width: 25px; height: 25px" src="<? echo $petimage ?>">
+ <a href="http://<?php echo $wowhdomain ?>.wowhead.com/npc=<?php echo $pet->PetID ?>" target="_blank">
+     <img style="vertical-align:middle; width: 25px; height: 25px" src="<?php echo $petimage ?>">
  </a>
  <?
 }

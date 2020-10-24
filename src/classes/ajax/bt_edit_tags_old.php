@@ -36,7 +36,19 @@ if ($failed != "1") {
 
 if ($user && $user->ComSecret == $comsecret && $failed != "1") {
     $ticked_tags = explode(",", $ticked);
-    $all_tags = get_all_tags();
+
+    $all_tags_db = mysqli_query($dbcon, "SELECT * FROM StrategyTags");
+    while ($this_tag = $all_tags_db->fetch_object())
+    {
+      $all_tags[$this_tag->id]['ID'] = $this_tag->id;
+      $all_tags[$this_tag->id]['Slug'] = $this_tag->Slug;
+      $all_tags[$this_tag->id]['Access'] = $this_tag->Access;
+      $all_tags[$this_tag->id]['Visible'] = $this_tag->Visible;
+      $all_tags[$this_tag->id]['Color'] = $this_tag->Color;
+      $all_tags[$this_tag->id]['DefaultPrio'] = $this_tag->DefaultPrio;
+      $all_tags[$this_tag->id]['Active'] = 0;
+    }
+    
     $userrights = format_userrights($user->Rights);
 
     // User is the creator of the strat but has no other access rights
@@ -71,12 +83,11 @@ if ($user && $user->ComSecret == $comsecret && $failed != "1") {
     
     if ($failed == "no") {
         if ($updatetags[22] == 1) {
-            $updatetags[21] = 0;
-            echo "V";
-        }
-        if ($updatetags[22] == 0) {
-            $updatetags[21] = 1;
-            echo "U";
+            $unchecked_db = mysqli_query($dbcon, "SELECT * FROM Strategy_x_Tags WHERE Strategy = $strat->id AND Tag = 21");
+            if (mysqli_num_rows($unchecked_db) > 0) {
+                echo "V";
+                $updatetags[21] = 0;
+            }
         }
         update_tags($strat->id, $updatetags);
         echo "OK";

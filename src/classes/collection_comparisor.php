@@ -72,7 +72,7 @@ if (preg_match("/^[1234567890]*$/is", $user_2) && $user_2) {
     <table width="100%" border="0" margin="0" cellpadding="0" cellspacing="0">
         <tr>
             <td><img src="https://www.wow-petguide.com/images/main_bg02_1.png"></td>
-            <td width="100%"><h class="megatitle"><? echo _("Collection Comparator") ?></font></td>
+            <td width="100%"><h class="megatitle"><?php echo __("Collection Comparator") ?></font></td>
             <td><img src="images/main_bg02_2.png"></td>
         </tr>
     </table>
@@ -89,8 +89,8 @@ if (preg_match("/^[1234567890]*$/is", $user_2) && $user_2) {
 
 // Intro sentence on blank character selection
 if (!$command) {
-    //echo _("With this tool you can compare two pet collections against each other.")."<br><br>";
-    // echo _("This tool is under development! It might not work properly at times.")."<br><br>";
+    //echo __("With this tool you can compare two pet collections against each other.")."<br><br>";
+    // echo __("This tool is under development! It might not work properly at times.")."<br><br>";
 }
 
 // Loading screen
@@ -100,13 +100,13 @@ if ($command) { ?>
             <tr class="profile">
                 <td class="profile">
                     <p class="blogodd">
-                    <center><img src="images/loading.gif"><br><br><i><? echo _("FormSelectLoadText") ?></i><br></center>
+                    <center><img src="images/loading.gif"><br><br><i><?php echo __("Fetching pets...") ?></i><br></center>
                     <br><br>
                 </td>
             </tr>
         </table>
     </div>
-<? }
+<?php }
 
 // Char details submitted
 if ($command == "test_import") {
@@ -118,7 +118,7 @@ if ($command == "test_import") {
         if ($getcol[0] == "error")
         {
             $char1_error = true;
-            $char1_errmsg = _("Your collection could not be loaded. Please reimport it through your collection tab");
+            $char1_errmsg = __("Your collection could not be loaded. Please reimport it through your collection tab");
         }
         else if ($getcol[0] == "success")
         {
@@ -141,14 +141,14 @@ if ($command == "test_import") {
         }
         if (!preg_match("/^[1234567890]*$/is", $col1_user) OR !$col1_user) {
             $char1_error = true;
-            $char1_errmsg = _("User collection could not be loaded, please try again.");
+            $char1_errmsg = __("User collection could not be loaded, please try again.");
             $col1_user = '';
         }
         else {
             $col1_user_db = mysqli_query($dbcon, "SELECT * FROM Users WHERE id = '$col1_user' LIMIT 1");
             if (mysqli_num_rows($col1_user_db) < "1") {
                 $char1_error = true;
-                $char1_errmsg = _("User collection could not be loaded, please try again.");
+                $char1_errmsg = __("User collection could not be loaded, please try again.");
                 $col1_user = '';
             }
             else {
@@ -158,7 +158,7 @@ if ($command == "test_import") {
                 if ($getcol[0] == "error")
                 {
                     $char1_error = true;
-                    $char1_errmsg = _("User collection could not be loaded, please try again.");
+                    $char1_errmsg = __("User collection could not be loaded, please try again.");
                 }
                 else if ($getcol[0] == "success")
                 {
@@ -191,13 +191,13 @@ if ($command == "test_import") {
         // Error handling
         if ($petdata_source_1 == "error" OR $chardata_summary_source_1 == "error" OR $chardata_avatar_source_1 == "error") {
             $char1_error = true;
-            $char1_errmsg = _("Character details could not be imported.");
+            $char1_errmsg = __("Character details could not be imported.");
         }
         if ($char1_error != true) {
             $petdata_1 = prepare_collection($petdata_source_1);
             if ($petdata_1 == "empty") {
                 $char1_error = true;
-                $char1_errmsg = _("The data import worked but returned 0 pets. Either the account does not have any pets or there was an error on Blizzards side.");
+                $char1_errmsg = __("The data import worked but returned 0 pets. Either the account does not have any pets or there was an error on Blizzards side.");
             }
         }
     }
@@ -213,7 +213,7 @@ if ($command == "test_import") {
         if ($getcol[0] == "error")
         {
             $char2_error = true;
-            $char2_errmsg = _("Your collection could not be loaded. Please reimport it through your collection tab");
+            $char2_errmsg = __("Your collection could not be loaded. Please reimport it through your collection tab");
         }
         else if ($getcol[0] == "success")
         {
@@ -236,14 +236,14 @@ if ($command == "test_import") {
         }
         if (!preg_match("/^[1234567890]*$/is", $col2_user) OR !$col2_user) {
             $char2_error = true;
-            $char2_errmsg = _("User collection could not be loaded, please try again.");
+            $char2_errmsg = __("User collection could not be loaded, please try again.");
             $col2_user = '';
         }
         else {
             $col2_user_db = mysqli_query($dbcon, "SELECT * FROM Users WHERE id = '$col2_user' LIMIT 1");
             if (mysqli_num_rows($col2_user_db) < "1") {
                 $char2_error = true;
-                $char2_errmsg = _("User collection could not be loaded, please try again.");
+                $char2_errmsg = __("User collection could not be loaded, please try again.");
                 $col2_user = '';
             }
             else {
@@ -253,7 +253,7 @@ if ($command == "test_import") {
                 if ($getcol[0] == "error")
                 {
                     $char2_error = true;
-                    $char2_errmsg = _("User collection could not be loaded, please try again.");
+                    $char2_errmsg = __("User collection could not be loaded, please try again.");
                 }
                 else if ($getcol[0] == "success")
                 {
@@ -284,14 +284,14 @@ if ($command == "test_import") {
         
         if ($petdata_source_2 == "error" OR $chardata_summary_source_2 == "error" OR $chardata_avatar_source_2 == "error") {
             $char2_error = true;
-            $char2_errmsg = _("Character details could not be imported.");
+            $char2_errmsg = __("Character details could not be imported.");
         }
 
         if ($char2_error != true) {
             $petdata_2 = prepare_collection($petdata_source_2);
             if ($petdata_2 == "empty") {
                 $char2_error = true;
-                $char2_errmsg = _("The data import worked but returned 0 pets. Either the account does not have any pets or there was an error on Blizzards side.");
+                $char2_errmsg = __("The data import worked but returned 0 pets. Either the account does not have any pets or there was an error on Blizzards side.");
             }
         }   
     } 
@@ -325,8 +325,8 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
 
     <form action="index.php?m=Compare" method="post">
     <input type="hidden" name="command" value="test_import">
-    <input type="hidden" id="col1_type_switch" name="col1_type_switch" value="<? echo $col1_active; ?>">
-    <input type="hidden" id="col2_type_switch" name="col2_type_switch" value="<? echo $col2_active; ?>">
+    <input type="hidden" id="col1_type_switch" name="col1_type_switch" value="<?php echo $col1_active; ?>">
+    <input type="hidden" id="col2_type_switch" name="col2_type_switch" value="<?php echo $col2_active; ?>">
     
     <div id="charform" style="margin: 0 auto; max-width: 600px; display: table">
         <div class="form_block" style="min-width: 238px; float: left<?
@@ -334,16 +334,16 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
         if ($char1_error != true && $char2_error == true) echo '; border: 5px solid #4aa838';
         ?>">
             <div style="width: 100%; padding: 0 0 5 5">
-                <? if ($collection) { ?>
-                <button id="col1_own" type="button" tabindex="1" class="lb_region_switch <? if ($col1_active == "own") echo "lb_region_switch_active"; ?>" onclick="event.preventDefault(); col_switch('1', 'own')">Own</button>
-                <? } ?>
-                <button id="col1_user" type="button" tabindex="2" class="lb_region_switch <? if ($col1_active == "user") echo "lb_region_switch_active"; ?>" onclick="event.preventDefault(); col_switch('1', 'user')">User</button>
-                <button id="col1_manual" type="button" tabindex="4" class="lb_region_switch <? if ($col1_active == "manual") echo "lb_region_switch_active"; ?>" onclick="event.preventDefault(); col_switch('1', 'manual')">Manual Character</button>
+                <?php if ($collection) { ?>
+                <button id="col1_own" type="button" tabindex="1" class="lb_region_switch <?php if ($col1_active == "own") echo "lb_region_switch_active"; ?>" onclick="event.preventDefault(); col_switch('1', 'own')">Own</button>
+                <?php } ?>
+                <button id="col1_user" type="button" tabindex="2" class="lb_region_switch <?php if ($col1_active == "user") echo "lb_region_switch_active"; ?>" onclick="event.preventDefault(); col_switch('1', 'user')">User</button>
+                <button id="col1_manual" type="button" tabindex="4" class="lb_region_switch <?php if ($col1_active == "manual") echo "lb_region_switch_active"; ?>" onclick="event.preventDefault(); col_switch('1', 'manual')">Manual Character</button>
             </div>
             
-            <? if ($collection) { ?>
-            <div id="input_col1_own" <? if ($col1_active != "own") echo 'style="display:none"'; ?>>
-                <? if (!$bnetuser OR $user->UseWoWForCol == 1) {
+            <?php if ($collection) { ?>
+            <div id="input_col1_own" <?php if ($col1_active != "own") echo 'style="display:none"'; ?>>
+                <?php if (!$bnetuser OR $user->UseWoWForCol == 1) {
                     $charstring = $user->CharName.' '.$user->CharRealmFull.'-'.strtoupper($user->CharRegion);
                 }
                 if ($bnetuser AND $user->UseWoWForCol != 1) {
@@ -354,27 +354,27 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
                     $charstring = $bnetuser->CharName.' '.$show_realm.'-'.strtoupper($bnetuser->Region);
                 } ?>
                 <div style="margin-left: 5px; font-size: 16px; line-height: 24px">
-                    <? echo $charstring; ?><br>
-                    <b>Pets</b>: <? echo count($collection); ?>
+                    <?php echo $charstring; ?><br>
+                    <b>Pets</b>: <?php echo count($collection); ?>
                 </div>
 
-                <? if ($col1_active == "own" && $char1_error == TRUE) { ?>
+                <?php if ($col1_active == "own" && $char1_error == TRUE) { ?>
                     <div style="max-width: 230; margin: 5 0 0 5; font-size: 14px; color: #831010; font-weight: bold">
-                        <? echo $char1_errmsg; ?>
+                        <?php echo $char1_errmsg; ?>
                     </div>
-                <? } ?>
+                <?php } ?>
             </div>
-            <? } ?>
+            <?php } ?>
 
-            <div id="input_col1_user" tabindex="3" <? if ($col1_active != "user") echo 'style="display:none"'; ?>>
+            <div id="input_col1_user" tabindex="3" <?php if ($col1_active != "user") echo 'style="display:none"'; ?>>
                 <table>
                     <tr>
                         <td>
-                            <select data-placeholder="Enter Username" id="username_1" name="col1_user" class="chosen-select_username_one test" <? if ($col1_active == "user") echo 'required'; ?>>
+                            <select data-placeholder="Enter Username" id="username_1" name="col1_user" class="chosen-select_username_one test" <?php if ($col1_active == "user") echo 'required'; ?>>
                                 <option value=""></option>
-                                <? if ($col1_user) { ?>
-                                    <option value="<? echo $col1_user->id ?>" selected><? echo $col1_user->Name ?></option>
-                                <? } ?>
+                                <?php if ($col1_user) { ?>
+                                    <option value="<?php echo $col1_user->id ?>" selected><?php echo $col1_user->Name ?></option>
+                                <?php } ?>
                              </select>
 
                             <script type = "text/javascript">
@@ -383,13 +383,13 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
                         </td>
                     </tr>
                     
-                <? if ($col1_active == "user" && $char1_error == TRUE) { ?>
+                <?php if ($col1_active == "user" && $char1_error == TRUE) { ?>
                     <tr>
                         <td style="max-width: 230; font-size: 14px; color: #831010; font-weight: bold">
-                            <? echo $char1_errmsg; ?>
+                            <?php echo $char1_errmsg; ?>
                         </td>
                     </tr>
-                <? } ?>
+                <?php } ?>
                     
                 </table>
                 
@@ -399,7 +399,7 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
                         var searchterm = $('#username_1_chosen').find('.chosen-search-input').val();
                         clearTimeout(x_timer);
                         x_timer = setTimeout(function(){
-                            $(".no-results").text("<? echo _("PM_searching") ?>");
+                            $(".no-results").text("<?php echo __("Searching...") ?>");
                             if (searchterm.length >= '2') {
                                 clearTimeout(x_timer);
                                 x_timer = setTimeout(function(){
@@ -408,7 +408,7 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
                                     xmlhttp.onreadystatechange = function() {
                                         if (this.readyState == 4 && this.status == 200) {
                                             if (this.responseText == "[]") {
-                                                $(".no-results").text("<? echo _("No user with a collection found") ?>");
+                                                $(".no-results").text("<?php echo __("No user with a collection found") ?>");
                                             }
                                             else {
                                                 var data = this.responseText;
@@ -429,7 +429,7 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
                                 clearTimeout(x_timer);
                                 x_timer = setTimeout(function(){
                                     $("#username_1").empty();
-                                    $(".no-results").text("<? echo _("PM_ErrTooShort") ?>");
+                                    $(".no-results").text("<?php echo __("Please enter 2 or more characters") ?>");
                                 }, 300);
                             }
                         }, 200);
@@ -437,14 +437,14 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
                 </script>
             </div>
 
-            <div id="input_col1_manual" <? if ($col1_active != "manual") echo 'style="display:none"'; ?>>
+            <div id="input_col1_manual" <?php if ($col1_active != "manual") echo 'style="display:none"'; ?>>
                 <table>
                     <tr>
                         <td>
-                            <select tabindex="6" width="230" data-placeholder="<? echo _("Realm") ?>" name="realm_1" id="realm_select_1" class="chosen-select" <? if ($col1_active == "manual") echo 'required'; ?>>
+                            <select tabindex="6" width="230" data-placeholder="<?php echo __("Realm") ?>" name="realm_1" id="realm_select_1" class="chosen-select" <?php if ($col1_active == "manual") echo 'required'; ?>>
                                 <option value=""></option>
-                                    <optgroup label="<? echo _("FormSelectRealmUS") ?>">
-                                        <? foreach($realmsus as $key => $value) {
+                                    <optgroup label="<?php echo __("United States") ?>">
+                                        <?php foreach($realmsus as $key => $value) {
                                             $thisrealm = explode("|",$value);
                                             if ($splits_1[0]."|".$splits_1[1] == "us|".$thisrealm[0]) {
                                                 echo '<option selected value="us|'.$thisrealm[0].'">'.$thisrealm[1].'</option>';
@@ -455,7 +455,7 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
                                         }
                                         ?>
                                     </optgroup>
-                                    <optgroup label="<? echo _("FormSelectRealmEU") ?>">
+                                    <optgroup label="<?php echo __("Europe") ?>">
                                         <?
                                         foreach($realmseu as $key => $value) {
                                             $thisrealm = explode("|",$value);
@@ -468,7 +468,7 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
                                         }
                                         ?>
                                     </optgroup>
-                                    <optgroup label="<? echo _("FormSelectRealmKR") ?>">
+                                    <optgroup label="<?php echo __("Korea") ?>">
                                         <?
                                         foreach($realmskr as $key => $value) {
                                             $thisrealm = explode("|",$value);
@@ -481,7 +481,7 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
                                         }
                                         ?>
                                     </optgroup>
-                                    <optgroup label="<? echo _("FormSelectRealmTW") ?>">
+                                    <optgroup label="<?php echo __("Taiwan") ?>">
                                         <?
                                         foreach($realmstw as $key => $value) {
                                             $thisrealm = explode("|",$value);
@@ -499,16 +499,16 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
                     </tr>
                     <tr>
                         <td>
-                            <input value="<? echo ucfirst(htmlentities($name_1, ENT_QUOTES, "UTF-8")); ?>" class="petselect" name="charname_1" id="char_input_1"  tabindex="7" placeholder="<? echo _("FormSelectCharName") ?>" style="width: 230px;" width="230" <? if ($col1_active == "manual") echo 'required'; ?>>
+                            <input value="<?php echo ucfirst(htmlentities($name_1, ENT_QUOTES, "UTF-8")); ?>" class="petselect" name="charname_1" id="char_input_1"  tabindex="7" placeholder="<?php echo __("Character name") ?>" style="width: 230px;" width="230" <?php if ($col1_active == "manual") echo 'required'; ?>>
                         </td>
                     </tr>
-                    <? if ($col1_active == "manual" && $char1_error == TRUE) { ?>
+                    <?php if ($col1_active == "manual" && $char1_error == TRUE) { ?>
                     <tr>
                         <td style="max-width: 230; font-size: 14px; color: #831010; font-weight: bold">
-                            <? echo $char1_errmsg; ?>
+                            <?php echo $char1_errmsg; ?>
                         </td>
                     </tr>
-                    <? } ?>
+                    <?php } ?>
                 </table>
             </div>
         </div>
@@ -529,16 +529,16 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
         if ($char2_error != true && $char1_error == true) echo '; border: 5px solid #4aa838';
         ?>">
             <div style="width: 100%; padding: 0 0 5 5">
-                <? if ($collection) { ?>
-                <button id="col2_own" type="button" tabindex="10" class="lb_region_switch <? if ($col2_active == "own") echo "lb_region_switch_active"; ?>" onclick="event.preventDefault(); col_switch('2', 'own')">Own</button>
-                <? } ?>
-                <button id="col2_user" type="button" tabindex="11" class="lb_region_switch <? if ($col2_active == "user") echo "lb_region_switch_active"; ?>" onclick="event.preventDefault(); col_switch('2', 'user')">User</button>
-                <button id="col2_manual" type="button" tabindex="12" class="lb_region_switch <? if ($col2_active == "manual") echo "lb_region_switch_active"; ?>" onclick="event.preventDefault(); col_switch('2', 'manual')">Manual Character</button>
+                <?php if ($collection) { ?>
+                <button id="col2_own" type="button" tabindex="10" class="lb_region_switch <?php if ($col2_active == "own") echo "lb_region_switch_active"; ?>" onclick="event.preventDefault(); col_switch('2', 'own')">Own</button>
+                <?php } ?>
+                <button id="col2_user" type="button" tabindex="11" class="lb_region_switch <?php if ($col2_active == "user") echo "lb_region_switch_active"; ?>" onclick="event.preventDefault(); col_switch('2', 'user')">User</button>
+                <button id="col2_manual" type="button" tabindex="12" class="lb_region_switch <?php if ($col2_active == "manual") echo "lb_region_switch_active"; ?>" onclick="event.preventDefault(); col_switch('2', 'manual')">Manual Character</button>
             </div>
             
-            <? if ($collection) { ?>
-            <div id="input_col2_own" <? if ($col2_active != "own") echo 'style="display:none"'; ?>>
-                <? if (!$bnetuser OR $user->UseWoWForCol == 1) {
+            <?php if ($collection) { ?>
+            <div id="input_col2_own" <?php if ($col2_active != "own") echo 'style="display:none"'; ?>>
+                <?php if (!$bnetuser OR $user->UseWoWForCol == 1) {
                     $charstring = $user->CharName.' '.$user->CharRealmFull.'-'.strtoupper($user->CharRegion);
                 }
                 if ($bnetuser AND $user->UseWoWForCol != 1) {
@@ -549,27 +549,27 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
                     $charstring = $bnetuser->CharName.' '.$show_realm.'-'.strtoupper($bnetuser->Region);
                 } ?>
                 <div style="margin-left: 5px; font-size: 16px; line-height: 24px">
-                    <? echo $charstring; ?><br>
-                    <b>Pets</b>: <? echo count($collection); ?>
+                    <?php echo $charstring; ?><br>
+                    <b>Pets</b>: <?php echo count($collection); ?>
                 </div>
 
-                <? if ($col2_active == "own" && $char2_error == TRUE) { ?>
+                <?php if ($col2_active == "own" && $char2_error == TRUE) { ?>
                     <div style="max-width: 230; margin: 5 0 0 5; font-size: 14px; color: #831010; font-weight: bold">
-                        <? echo $char2_errmsg; ?>
+                        <?php echo $char2_errmsg; ?>
                     </div>
-                <? } ?>
+                <?php } ?>
             </div>
-            <? } ?>
+            <?php } ?>
 
-            <div id="input_col2_user" <? if ($col2_active != "user") echo 'style="display:none"'; ?>>
+            <div id="input_col2_user" <?php if ($col2_active != "user") echo 'style="display:none"'; ?>>
                 <table>
                     <tr>
                         <td>
-                            <select data-placeholder="Enter Username" id="username_2" tabindex="13" name="col2_user" class="chosen-select_username_one" <? if ($col2_active == "user") echo 'required'; ?>>
+                            <select data-placeholder="Enter Username" id="username_2" tabindex="13" name="col2_user" class="chosen-select_username_one" <?php if ($col2_active == "user") echo 'required'; ?>>
                                 <option value=""></option>
-                                <? if ($col2_user) { ?>
-                                    <option value="<? echo $col2_user->id ?>" selected><? echo $col2_user->Name ?></option>
-                                <? } ?>
+                                <?php if ($col2_user) { ?>
+                                    <option value="<?php echo $col2_user->id ?>" selected><?php echo $col2_user->Name ?></option>
+                                <?php } ?>
                              </select>
 
                             <script type = "text/javascript">
@@ -578,13 +578,13 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
                         </td>
                     </tr>
                     
-                <? if ($col2_active == "user" && $char2_error == TRUE) { ?>
+                <?php if ($col2_active == "user" && $char2_error == TRUE) { ?>
                     <tr>
                         <td style="max-width: 230; font-size: 14px; color: #831010; font-weight: bold">
-                            <? echo $char2_errmsg; ?>
+                            <?php echo $char2_errmsg; ?>
                         </td>
                     </tr>
-                <? } ?>
+                <?php } ?>
                     
                 </table>
                 
@@ -594,7 +594,7 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
                         var searchterm = $('#username_2_chosen').find('.chosen-search-input').val();
                         clearTimeout(x_timer);
                         x_timer = setTimeout(function(){
-                            $(".no-results").text("<? echo _("PM_searching") ?>");
+                            $(".no-results").text("<?php echo __("Searching...") ?>");
                             if (searchterm.length >= '2') {
                                 clearTimeout(x_timer);
                                 x_timer = setTimeout(function(){
@@ -603,7 +603,7 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
                                     xmlhttp.onreadystatechange = function() {
                                         if (this.readyState == 4 && this.status == 200) {
                                             if (this.responseText == "[]") {
-                                                $(".no-results").text("<? echo _("No user with a collection found") ?>");
+                                                $(".no-results").text("<?php echo __("No user with a collection found") ?>");
                                             }
                                             else {
                                                 var data = this.responseText;
@@ -624,7 +624,7 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
                                 clearTimeout(x_timer);
                                 x_timer = setTimeout(function(){
                                     $("#username_2").empty();
-                                    $(".no-results").text("<? echo _("PM_ErrTooShort") ?>");
+                                    $(".no-results").text("<?php echo __("Please enter 2 or more characters") ?>");
                                 }, 300);
                             }
                         }, 200);
@@ -632,14 +632,14 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
                 </script>
             </div>
 
-            <div id="input_col2_manual" <? if ($col2_active != "manual") echo 'style="display:none"'; ?>>
+            <div id="input_col2_manual" <?php if ($col2_active != "manual") echo 'style="display:none"'; ?>>
                 <table>
                     <tr>
                         <td>
-                            <select width="230" data-placeholder="<? echo _("Realm") ?>" name="realm_2" id="realm_select_2" class="chosen-select" tabindex="8" <? if ($col2_active == "manual") echo 'required'; ?>>
+                            <select width="230" data-placeholder="<?php echo __("Realm") ?>" name="realm_2" id="realm_select_2" class="chosen-select" tabindex="8" <?php if ($col2_active == "manual") echo 'required'; ?>>
                                 <option value=""></option>
-                                    <optgroup label="<? echo _("FormSelectRealmUS") ?>">
-                                        <? foreach($realmsus as $key => $value) {
+                                    <optgroup label="<?php echo __("United States") ?>">
+                                        <?php foreach($realmsus as $key => $value) {
                                             $thisrealm = explode("|",$value);
                                             if ($splits_2[0]."|".$splits_2[1] == "us|".$thisrealm[0]) {
                                                 echo '<option selected value="us|'.$thisrealm[0].'">'.$thisrealm[1].'</option>';
@@ -650,7 +650,7 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
                                         }
                                         ?>
                                     </optgroup>
-                                    <optgroup label="<? echo _("FormSelectRealmEU") ?>">
+                                    <optgroup label="<?php echo __("Europe") ?>">
                                         <?
                                         foreach($realmseu as $key => $value) {
                                             $thisrealm = explode("|",$value);
@@ -663,7 +663,7 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
                                         }
                                         ?>
                                     </optgroup>
-                                    <optgroup label="<? echo _("FormSelectRealmKR") ?>">
+                                    <optgroup label="<?php echo __("Korea") ?>">
                                         <?
                                         foreach($realmskr as $key => $value) {
                                             $thisrealm = explode("|",$value);
@@ -676,7 +676,7 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
                                         }
                                         ?>
                                     </optgroup>
-                                    <optgroup label="<? echo _("FormSelectRealmTW") ?>">
+                                    <optgroup label="<?php echo __("Taiwan") ?>">
                                         <?
                                         foreach($realmstw as $key => $value) {
                                             $thisrealm = explode("|",$value);
@@ -694,16 +694,16 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
                     </tr>
                     <tr>
                         <td>
-                            <input value="<? echo ucfirst(htmlentities($name_2, ENT_QUOTES, "UTF-8")); ?>" class="petselect" name="charname_2" id="char_input_2"  tabindex="9" placeholder="<? echo _("FormSelectCharName") ?>" style="width: 230px;" width="230" <? if ($col2_active == "manual") echo 'required'; ?>>
+                            <input value="<?php echo ucfirst(htmlentities($name_2, ENT_QUOTES, "UTF-8")); ?>" class="petselect" name="charname_2" id="char_input_2"  tabindex="9" placeholder="<?php echo __("Character name") ?>" style="width: 230px;" width="230" <?php if ($col2_active == "manual") echo 'required'; ?>>
                         </td>
                     </tr>
-                    <? if ($col2_active == "manual" && $char2_error == TRUE) { ?>
+                    <?php if ($col2_active == "manual" && $char2_error == TRUE) { ?>
                     <tr>
                         <td style="max-width: 230; font-size: 14px; color: #831010; font-weight: bold">
-                            <? echo $char2_errmsg; ?>
+                            <?php echo $char2_errmsg; ?>
                         </td>
                     </tr>
-                    <? } ?>
+                    <?php } ?>
                 </table>
             </div>
         </div>
@@ -714,7 +714,7 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
 
  
         <div style="display: table; width: 100%">
-            <center><button style="margin-top: 20px" type="submit" tabindex="14" class="bnetlogin"><? echo _("Compare Collections") ?></button></center>
+            <center><button style="margin-top: 20px" type="submit" tabindex="14" class="bnetlogin"><?php echo __("Compare Collections") ?></button></center>
         </div>
     
         </form>
@@ -751,7 +751,7 @@ if ($char1_error == true OR $char2_error == true OR !$command) {
         document.getElementById('loading').style.display='none';
         document.getElementById('charform').style.display='table';
     </script>
-<? }
+<?php }
 
 
 
@@ -831,23 +831,23 @@ if ($char1_error != true AND $char2_error != true AND $command == "output_compar
                     <table style="width: 100%" cellspacing="0" cellpadding="0" class="profile">
                         <tr class="profile">
                             <td class="profile" width="30" style="background-color: #aabad3; padding: 4 0 2 5">
-                                <? if ($col1_active == 'own' OR $col1_active == 'user') { ?>
-                                    <span class="username" style="text-decoration: none" rel="<? echo $col1_user->id ?>" value="<? echo $user->id ?>">
-                                        <img width="84" height="84" <? echo $col1_avatar ?>>
+                                <?php if ($col1_active == 'own' OR $col1_active == 'user') { ?>
+                                    <span class="username" style="text-decoration: none" rel="<?php echo $col1_user->id ?>" value="<?php echo $user->id ?>">
+                                        <img width="84" height="84" <?php echo $col1_avatar ?>>
                                     </span>
-                                <? }
+                                <?php }
                                 if ($col1_active == 'manual') { ?>
-                                    <a target="_blank" href="https://worldofwarcraft.com/en-us/character/<? echo $region_1 ?>/<? echo $realm_1 ?>/<? echo $name_1 ?>">
-                                        <img width="84" height="84" src="<? echo $chardata_avatar_1['avatar_url'] ?>">
+                                    <a target="_blank" href="https://worldofwarcraft.com/en-us/character/<?php echo $region_1 ?>/<?php echo $realm_1 ?>/<?php echo $name_1 ?>">
+                                        <img width="84" height="84" src="<?php echo $chardata_avatar_1['avatar_url'] ?>">
                                     </a>
-                                <? } ?>
+                                <?php } ?>
                             </td>
                             <td style="align:left; padding-left:15px; width:450px; background-color: #aabad3">
-                                <? if ($col1_active == 'own' OR $col1_active == 'user') { ?>
-                                    <span class="username" style="text-decoration: none" rel="<? echo $col1_user->id ?>" value="<? echo $user->id ?>">
-                                        <a href="?user=<? echo $col1_user->id ?>" style="font-size: 20px; font-family: MuseoSans-500,Roboto;" class="creatorlink"><? echo $col1_user->Name ?> - <? echo $col1_region ?></a>
+                                <?php if ($col1_active == 'own' OR $col1_active == 'user') { ?>
+                                    <span class="username" style="text-decoration: none" rel="<?php echo $col1_user->id ?>" value="<?php echo $user->id ?>">
+                                        <a href="?user=<?php echo $col1_user->id ?>" style="font-size: 20px; font-family: MuseoSans-500,Roboto;" class="creatorlink"><?php echo $col1_user->Name ?> - <?php echo $col1_region ?></a>
                                     </span>
-                                <? }
+                                <?php }
                                 if ($col1_active == 'manual') {
                                     echo '<h3 class="collection">'.$chardata_avatar_1['character']['name'].' - '.$chardata_summary_1['realm']['name'].'-'.strtoupper($region_1).'<br>';
                                     echo 'Level '.$chardata_summary_1['level'].' '.lookup_char_race($chardata_summary_1['race']['id']).' '.lookup_char_class($chardata_summary_1['character_class']['id']).'</h3>';
@@ -859,11 +859,11 @@ if ($char1_error != true AND $char2_error != true AND $command == "output_compar
                             </td>
 
                             <td style="text-align:right; padding-right:15px; width:450px; background-color: #aec3a7">
-                                <? if ($col2_active == 'own' OR $col2_active == 'user') { ?>
-                                    <span class="username" style="text-decoration: none" rel="<? echo $col2_user->id ?>" value="<? echo $user->id ?>">
-                                        <a href="?user=<? echo $col2_user->id ?>" style="font-size: 20px; font-family: MuseoSans-500,Roboto;" class="creatorlink"><? echo $col2_user->Name ?> - <? echo $col2_region ?></a>
+                                <?php if ($col2_active == 'own' OR $col2_active == 'user') { ?>
+                                    <span class="username" style="text-decoration: none" rel="<?php echo $col2_user->id ?>" value="<?php echo $user->id ?>">
+                                        <a href="?user=<?php echo $col2_user->id ?>" style="font-size: 20px; font-family: MuseoSans-500,Roboto;" class="creatorlink"><?php echo $col2_user->Name ?> - <?php echo $col2_region ?></a>
                                     </span>
-                                <? }
+                                <?php }
                                 if ($col2_active == 'manual') {
                                     echo '<h3 class="collection">'.$chardata_avatar_2['character']['name'].' - '.$chardata_summary_2['realm']['name'].'-'.strtoupper($region_2).'<br>';
                                     echo 'Level '.$chardata_summary_2['level'].' '.lookup_char_race($chardata_summary_2['race']['id']).' '.lookup_char_class($chardata_summary_2['character_class']['id']).'</h3>';
@@ -871,16 +871,16 @@ if ($char1_error != true AND $char2_error != true AND $command == "output_compar
                             </td>
                             
                             <td class="profile" width="30" style="background-color: #aec3a7; padding: 4 5 2 0">
-                                <? if ($col2_active == 'own' OR $col2_active == 'user') { ?>
-                                    <span class="username" style="text-decoration: none" rel="<? echo $col2_user->id ?>" value="<? echo $user->id ?>">
-                                        <img width="84" height="84" <? echo $col2_avatar ?>>
+                                <?php if ($col2_active == 'own' OR $col2_active == 'user') { ?>
+                                    <span class="username" style="text-decoration: none" rel="<?php echo $col2_user->id ?>" value="<?php echo $user->id ?>">
+                                        <img width="84" height="84" <?php echo $col2_avatar ?>>
                                     </span>
-                                <? }
+                                <?php }
                                 if ($col2_active == 'manual') { ?>
-                                    <a target="_blank" href="https://worldofwarcraft.com/en-us/character/<? echo $region_2 ?>/<? echo $realm_2 ?>/<? echo $name_2 ?>">
-                                        <img width="84" height="84" src="<? echo $chardata_avatar_2['avatar_url'] ?>">
+                                    <a target="_blank" href="https://worldofwarcraft.com/en-us/character/<?php echo $region_2 ?>/<?php echo $realm_2 ?>/<?php echo $name_2 ?>">
+                                        <img width="84" height="84" src="<?php echo $chardata_avatar_2['avatar_url'] ?>">
                                     </a>
-                                <? } ?>
+                                <?php } ?>
                             </td>
                         </tr>
                     </table>
@@ -934,7 +934,7 @@ if ($char1_error != true AND $char2_error != true AND $command == "output_compar
         <script>
             document.getElementById('loading').style.display='none';
             document.getElementById('collection').style.display='block';
-            <? // URL changer
+            <?php // URL changer
             if ($col1_active == 'user' OR $col1_active == 'own') {
                 $url_part1 = '&user_1='.$col1_user->id;
             }
@@ -947,7 +947,7 @@ if ($char1_error != true AND $char2_error != true AND $command == "output_compar
             if ($col2_active == 'manual') {
                 $url_part2 = '&region_2='.$region_2.'&realm_2='.$realm_2.'&name_2='.$name_2;
             } ?>
-           window.history.replaceState("object or string", "Title", "?m=Compare<? echo $url_part1.$url_part2 ?>");
+           window.history.replaceState("object or string", "Title", "?m=Compare<?php echo $url_part1.$url_part2 ?>");
         </script>
     <?
     }
@@ -967,7 +967,3 @@ if ($char1_error != true AND $char2_error != true AND $command == "output_compar
     // ==== COMMENT SYSTEM 2.0 FOR MAIN ARTICLES HAPPENS HERE ====
     print_comments_outer("0",$mainselector,"medium");
 echo "</div>";
-
-
-
-

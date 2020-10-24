@@ -14,7 +14,7 @@ function User_icon_url ($user)
 function User_unread_strategy_comment_count ($user)
 {
   return Database_query_single
-    ('SELECT SUM(NewComs) FROM Alternatives WHERE User = ' . $user->id);
+    ('SELECT SUM(NewComs) FROM Alternatives WHERE Deleted = 0 AND User = ' . $user->id);
 }
 
 function User_unread_comment_count ($user)
@@ -97,12 +97,12 @@ function User_create ($preferred_name, $language, $region)
                  , Util_random_pet_icon_id()
                  );
 
-  $wlcmsgmsg = Localization_string ('UM_WelcContent');
+  $wlcmsgmsg = Localization_string ("Thank you for signing up with Xu-Fu's Pet Guides!<br><br>There are many new options available to you now, most of which you can find in your account area right here.<br>I suggest going to your Pet Collection first to make sure your pet library has been imported correctly. This will power a lot of the more advanced features here!<br><br>If you go to My Profile, you can select what other battlers see when clicking on your profile. Maybe leave them a little introduction about yourself? Or just turn off all areas if you prefer a bit more privacy.<br><br>You might also want to check out the Settings. There you can not only change your profile picture but also find options for your saved email, password or preferred language.<br><br>I hope you have a pleasant stay here and wish you all the best in your battles!<br><br>Yours,<br>Xu-Fu");
   $wlcmsgmsg = preg_replace('#<br\s*/?>#i', "\n", $wlcmsgmsg);
   Database_insert ( 'UserMessages', ['Sender', 'Receiver', 'Subject', 'Content', 'Type', 'Growl']
                   , 1
                   , $newuserid
-                  , Database_escape_string (Localization_string ('UM_WelcSubject'))
+                  , Database_escape_string (Localization_string ("Welcome to Xu-Fu's Pet Guides!"))
                   , Database_escape_string ($wlcmsgmsg)
                   , 1
                   , 9

@@ -7,7 +7,7 @@ $comlanguage = $_POST['comlanguage'];
 $comuserid = $_POST['comuserid'];
 
 $comcontent = $_POST['comcontent'];
-
+$comcontent = remove_emojis($comcontent);
 $antispam1 = $_POST['email'];  // prefill: verifymail
 $antispam2 = $_POST['e-mail']; // prefill: requiredfield
 $antispam3 = $_POST['mail'];   // prefill: checkverification
@@ -82,7 +82,6 @@ if (!$comuserid) {
         $comerror = "true";
         $comerrordesc = "Name is an email address";
     }
-
 }
 
 if (!$comuserid AND $comvisitorid == "0"){                                         // Anti Spambots via visitor ID, only if not logged in
@@ -118,6 +117,62 @@ if (!$comuserid AND $comvisitorid != "0") {
         $comerrordesc = "No such visitor ID in DB - perhaps tampering";
     }
 }
+
+// Anti VPN and bad proxy protection
+if (!$comuserid AND $comerror != "true") {  // ACtivate this
+    $user_agent = $_SERVER['HTTP_USER_AGENT']; 
+    $user_language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    $strictness = 1;
+    $allow_public_access_points = 'true';
+    $lighter_penalties = 'true';
+    
+    $parameters = array(
+        'user_agent' => $user_agent,
+        'user_language' => $user_language,
+        'strictness' => $strictness,
+        'allow_public_access_points' => $allow_public_access_points,
+        'lighter_penalties' => $lighter_penalties
+    );
+    
+    $formatted_parameters = http_build_query($parameters);
+
+    $url = sprintf(
+        'https://www.ipqualityscore.com/api/json/ip/%s/%s?%s', 
+        api_lookup_key,
+        $user_ip_adress, 
+        $formatted_parameters
+    );
+    
+    $timeout = 5;
+    
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $timeout);
+    
+    $json = curl_exec($curl);
+    curl_close($curl);
+    
+    // Decode the result into an array.
+    $result = json_decode($json, true);
+    
+    // Check to see if our query was successful.
+    if(isset($result['success']) && $result['success'] === true){
+        if($result['fraud_score'] >= 80 && $result['is_crawler'] === false){
+            $comerror = "true";
+            //entering data for tracking only
+            $comdeleted = "1";
+            $comclosed = "1";
+            $comclosetype = "Spam";
+            $comclosedby = "Bad IP - fraud score of ".$result['fraud_score'];
+            $sendtoast = "";
+            if (!$comicon) $comicon = 0;
+            mysqli_query($dbcon, "INSERT INTO Comments (`User`, `Category`, `SortingID`, `Language`, `Date`, `Name`, `Mail`, `Comment`, `Parent`, `Icon`, `IP`, `Deleted`, `Closed`, `CloseType`, `ClosedBy`) VALUES ('$comuserid', '$comcat', '$comsortid', '$comlanguage', '$comdate', '$comname', '$commail', '$comcontent', '$comparent', '$comicon', '$user_ip_adress', '$comdeleted', '$comclosed', '$comclosetype', '$comclosedby')") OR die(mysqli_error($dbcon));
+        }
+    }
+}
+
 
 if ($comuserid && ($comuserid != $user->id)) {
     $comerror = "true";
@@ -161,6 +216,7 @@ if (!$comuserid) {
 }
 
 if ($comerror != "true"){
+    if (!$comicon) $comicon = 0;
     mysqli_query($dbcon, "INSERT INTO Comments (`User`, `Category`, `SortingID`, `Language`, `Date`, `Name`, `Mail`, `Comment`, `Parent`, `Icon`, `IP`, `Deleted`, `Closed`, `CloseType`, `ClosedBy`) VALUES ('$comuserid', '$comcat', '$comsortid', '$comlanguage', '$comdate', '$comname', '$commail', '$comcontent', '$comparent', '$comicon', '$user_ip_adress', '$comdeleted', '$comclosed', '$comclosetype', '$comclosedby')") OR die(mysqli_error($dbcon));
     $addedid = mysqli_insert_id($dbcon);
     if ($comuserid) {

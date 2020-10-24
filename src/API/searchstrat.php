@@ -3,6 +3,8 @@ include("../data/dbconnect.php");
 $searchstring = $_GET['s'];
 
 $subtitle_results = mysqli_query($dbcon, "SELECT * FROM Sub WHERE (`Name` LIKE '%".$searchstring."%')") or die(mysqli_error($dbcon));
+echo "API not functional sorry";
+die;
 
 if (mysqli_num_rows($subtitle_results) > 0){
     $foundentry = mysqli_fetch_object($subtitle_results);

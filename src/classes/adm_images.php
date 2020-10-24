@@ -287,7 +287,7 @@ if ($action == "adm_delimage") {
     <img src="images/blank.png" width="50" height="1" alt="" />
 </td>
 <td>
-    <img class="ut_icon" width="84" height="84" <? echo $usericon ?>>
+    <img class="ut_icon" width="84" height="84" <?php echo $usericon ?>>
 </td>
 
 <td>
@@ -331,12 +331,12 @@ if ($action == "adm_delimage") {
 <td>
 <table style="width: 85%;" class="profile">
 
-    <? print_admin_menu('adm_images'); ?>
+    <?php print_admin_menu('adm_images'); ?>
 
     <tr style="background: #bcbcbc; border: 1px solid #bcbcbc;">
         <td class="profile">
             <br>
-            <? // error handling
+            <?php // error handling
             if ($finalized == "1") {
                 echo '<p class="blogodd"><b>File uploaded successfully!</b><br>';
                 echo '<br><hr class="home"><br>';
@@ -367,7 +367,7 @@ if ($action == "adm_delimage") {
             if ($action == "start_upload" && $uploadOk == "1") {
             ?>
             <p class="blogodd"><b>Step 2: Review your submission</b><br>
-            <? if ($noenlarge == "1") {
+            <?php if ($noenlarge == "1") {
                 echo "<font color='red'>Error: Images cannot be made larger than the original file. This would result in bad image quality.<br>";
                 echo "If you want to resize the image, please enter values lower than the original ones</font>";
             } ?>
@@ -375,13 +375,13 @@ if ($action == "adm_delimage") {
 
             <br>
             <center>
-                <? if ($size[0] >= "600") {
+                <?php if ($size[0] >= "600") {
                     $imgclass = "blogcenter";
                 }
                 else {
                     $imgclass = "blogeven";
                 } ?>
-            <img class="<? echo $imgclass ?>" src="<? echo $temp_save ?>" alt="" />
+            <img class="<?php echo $imgclass ?>" src="<?php echo $temp_save ?>" alt="" />
 
             <br>
 
@@ -392,10 +392,10 @@ if ($action == "adm_delimage") {
                          <p class="smallodd"><b>Current:</p>
                     </td>
                     <td>
-                        <p class="smallodd">Width:</b> <? echo $size[0]; ?></p>
+                        <p class="smallodd">Width:</b> <?php echo $size[0]; ?></p>
                     </td>
                     <td>
-                        <p class="smallodd">Height:</b> <? echo $size[1]; ?></p>
+                        <p class="smallodd">Height:</b> <?php echo $size[1]; ?></p>
                     </td>
                 </tr>
                 <tr>
@@ -421,7 +421,7 @@ if ($action == "adm_delimage") {
                         <p class="smallodd"><b>Title:
                     </td>
                     <td colspan="2" style="padding-top: 10px">
-                        <input class="petselect" style="width: 250; font-weight: normal" type="field" name="img_name" value="<? echo $newimg_title ?>">
+                        <input class="petselect" style="width: 250; font-weight: normal" type="field" name="img_name" value="<?php echo $newimg_title ?>">
                     </td>
                 </tr>
 
@@ -430,7 +430,7 @@ if ($action == "adm_delimage") {
                         <p class="smallodd"><b>Category:
                     </td>
                     <td colspan="2" style="padding-top: 10px">
-                        <p class="smallodd"><? echo $showselcat; ?> <? if ($createnewcat == "true") { echo "(will be created new)"; } ?>
+                        <p class="smallodd"><?php echo $showselcat; ?> <?php if ($createnewcat == "true") { echo "(will be created new)"; } ?>
                     </td>
                 </tr>
 
@@ -442,8 +442,8 @@ if ($action == "adm_delimage") {
                             $temp_output = $user->id."_".$tempnb;
                         } ?>
                         <input type="hidden" name="action" value="resizereview">
-                        <input type="hidden" name="file" value="<? echo $temp_output; ?>">
-                        <input type="hidden" name="selcat" value="<? echo $showselcat ?>">
+                        <input type="hidden" name="file" value="<?php echo $temp_output; ?>">
+                        <input type="hidden" name="selcat" value="<?php echo $showselcat ?>">
                         <center>
                         <input class="comedit" type="submit" name="change" value="Next Step">
                         </form>
@@ -509,7 +509,7 @@ if ($action == "adm_delimage") {
 
                 function adm_pullgallery(i) {
                     $('#gallerycontainer').empty();
-                    $('#gallerycontainer').load('classes/ajax/adm_pullimages.php?g='+i+'&u=<? echo $user->id ?>&del=<? echo $user->ComSecret ?>&p=a');
+                    $('#gallerycontainer').load('classes/ajax/adm_pullimages.php?g='+i+'&u=<?php echo $user->id ?>&del=<?php echo $user->ComSecret ?>&p=a');
                 }
 
                 $(".chosen-select").chosen().change(function(event){
@@ -628,7 +628,7 @@ if ($action == "adm_delimage") {
 
 
 
-            <? } ?>
+            <?php } ?>
         </td>
     </tr>
 

@@ -54,6 +54,7 @@ if (mysqli_num_rows($commentdb) > "0")  {
 if ($makeedit == "true"){
     $dingda = mysqli_query($dbcon, "UPDATE Comments SET `Comment` = '$comcontent' WHERE id = '$commentid'") OR die(mysqli_error($dbcon));
     $dingda = mysqli_query($dbcon, "UPDATE Comments SET `Edited` = '1' WHERE id = '$commentid'") OR die(mysqli_error($dbcon));
+    if (!$userid OR !is_int($userid)) $userid = 0;
     mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$userid', '$user_ip_adress', '1', 'Comment Edited', '$commentid')") OR die(mysqli_error($dbcon));
     echo "OK";
 }

@@ -18,28 +18,42 @@ sortBy('Name', $all_normal_pets, 'asc');
 
 // ===================== Publish or Unpublish =====================
 
-if ($userrights['EditStrats'] == "yes" OR $strat->User == $user->id) { ?>
+if (($userrights['EditStrats'] == "yes" OR $strat->User == $user->id) && $strat->Deleted == 0) { ?>
     <div class="edit_top_box">
         <div style="float: left">
-            You are the creator of this strategy
+            <?php if ($user->id == $strat->User) {
+                echo __('You are the creator of this strategy');
+            }
+            else {
+                 echo __('You can modify this strategy');
+            }
+            ?>
         </div>
         <div style="float: right">
             <div class="publishswitch">
-                <input type="checkbox" class="publishswitch-checkbox" id="setbeta" onchange="stratedit_publish('<? echo $user->id ?>','<? echo $user->ComSecret ?>','<? echo $strat->id ?>');" <? if ($strat->Published == "1" ) { echo "checked"; } ?>>
+                <input type="checkbox" class="publishswitch-checkbox" id="setbeta" onchange="stratedit_publish('<?php echo $user->id ?>','<?php echo $user->ComSecret ?>','<?php echo $strat->id ?>');" <?php if ($strat->Published == "1" ) { echo "checked"; } ?>>
                 <label class="publishswitch-label" for="setbeta">
                 <span class="publishswitch-inner"></span>
                 <span class="publishswitch-switch"></span>
                 </label>
             </div>
         </div>
-        <div id="stratedit_publ" style="float: right; margin-right: 10px; <? if ($strat->Published == "0") echo 'display: none'; ?>">
-            Strategy is published
+        <div id="stratedit_publ" style="float: right; margin-right: 10px; <?php if ($strat->Published == "0") echo 'display: none'; ?>">
+            <?php echo __('Strategy is published'); ?>
         </div>
-        <div id="stratedit_unpubl" style="float: right; padding: 0 6 0 6; margin-right: 10px; background-color: #c71717; <? if ($strat->Published == "1") echo 'display: none'; ?>">
-            This strategy is not published!
+        <div id="stratedit_unpubl" style="float: right; padding: 0 6 0 6; margin-right: 10px; background-color: #c71717; <?php if ($strat->Published == "1") echo 'display: none'; ?>">
+            <?php echo __('This strategy is not published!'); ?>
         </div>
     </div>
-<? }
+<?php }
+
+if ($userrights['EditStrats'] == "yes" && $strat->Deleted == 1) { ?>
+    <div class="edit_top_box_deleted">
+        <div style="float: left">
+            <?php echo __('This strategy is deleted! To undelete, get in touch with Aranesh'); ?>
+        </div>
+    </div>
+<?php }
 
 
 // ===================== Add new Strategy =====================
@@ -54,19 +68,19 @@ if ($user) {
     }
     ?>
 
-    <div class="edit_add_linkbox" data-remodal-target="modal_edit_add" style="top: <? echo $tabheight; ?>"></div>
-    <div class="edit_add_box_s edit_add_box_s" style="top: <? echo $tabheight; ?>"></div>
-    <div class="edit_add_box edit_add_box" style="top: <? echo $tabheight; ?>"></div>
-    <div class="edit_add_boxtext" style="top: <? echo $tabheight-5; ?>">
+    <div class="edit_add_linkbox" data-remodal-target="modal_edit_add" style="top: <?php echo $tabheight; ?>"></div>
+    <div class="edit_add_box_s edit_add_box_s" style="top: <?php echo $tabheight; ?>"></div>
+    <div class="edit_add_box edit_add_box" style="top: <?php echo $tabheight; ?>"></div>
+    <div class="edit_add_boxtext" style="top: <?php echo $tabheight-5; ?>">
         +
     </div>
 
     <div class="remodal remodalstratedit" data-remodal-id="modal_edit_add">
         <form enctype="multipart/form-data" action="index.php" method="POST">
             <input type="hidden" name="alt_edit_action" value="edit_add">
-            <input type="hidden" name="currentstrat" value="<? echo $strat->id ?>">
-            <input type="hidden" name="addmain" value="<? echo $mainselector ?>">
-            <input type="hidden" name="addsub" value="<? echo $subselector ?>">
+            <input type="hidden" name="currentstrat" value="<?php echo $strat->id ?>">
+            <input type="hidden" name="addmain" value="<?php echo $mainselector ?>">
+            <input type="hidden" name="addsub" value="<?php echo $subselector ?>">
             <table style="width: 400px" class="profile">
                 <tr class="profile">
                     <th colspan="2" style="width: 100%" class="profile">
@@ -106,12 +120,12 @@ if ($user) {
     };
     $('[data-remodal-id=modal_edit_add]').remodal(options);
     </script>
-<? }
+<?php }
 
 
 // ===================== Delete Strategy =====================
 
-if ($userrights['DeleteStrats'] == "yes" OR $strat->User == $user->id) {
+if (($userrights['DeleteStrats'] == "yes" OR $strat->User == $user->id) && $strat->Deleted != 1) {
     // Define position depending on substitutes or none
     if ($petslotinfo[1]['Subscount'] > "1" OR $petslotinfo[2]['Subscount'] > "1" OR $petslotinfo[3]['Subscount'] > "1") {
         $tabheight = "384";
@@ -121,10 +135,10 @@ if ($userrights['DeleteStrats'] == "yes" OR $strat->User == $user->id) {
     }
     ?>
 
-    <div class="edit_add_linkbox" data-remodal-target="modal_edit_delete" style="top: <? echo $tabheight; ?>"></div>
-    <div class="edit_add_box_s edit_delete_box_s" style="top: <? echo $tabheight; ?>"></div>
-    <div class="edit_add_box edit_delete_box" style="top: <? echo $tabheight; ?>"></div>
-    <div class="edit_add_boxtext" style="top: <? echo $tabheight-3; ?>">
+    <div class="edit_add_linkbox" data-remodal-target="modal_edit_delete" style="top: <?php echo $tabheight; ?>"></div>
+    <div class="edit_add_box_s edit_delete_box_s" style="top: <?php echo $tabheight; ?>"></div>
+    <div class="edit_add_box edit_delete_box" style="top: <?php echo $tabheight; ?>"></div>
+    <div class="edit_add_boxtext" style="top: <?php echo $tabheight-3; ?>">
         -
     </div>
 
@@ -135,7 +149,7 @@ if ($userrights['DeleteStrats'] == "yes" OR $strat->User == $user->id) {
                     <table>
                         <tr>
                             <td><img src="images/icon_report.png" style="padding-right: 5px"></td>
-                            <td><p class="blogodd"><span style="white-space: nowrap;"><b>Delete Strategy</span></td>
+                            <td><p class="blogodd"><span style="white-space: nowrap;"><b><?php echo __('Delete Strategy'); ?></span></td>
                         </tr>
                     </table>
                 </th>
@@ -155,7 +169,7 @@ if ($userrights['DeleteStrats'] == "yes" OR $strat->User == $user->id) {
                         <br><br>
                             <form enctype="multipart/form-data" action="index.php" method="POST">
                                 <input type="hidden" name="alt_edit_action" value="edit_delete">
-                                <input type="hidden" name="currentstrat" value="<? echo $strat->id ?>">
+                                <input type="hidden" name="currentstrat" value="<?php echo $strat->id ?>">
                                 <button type="submit" class="redlarge">Yes, delete this strategy</button>
                             </form>
                         <br>
@@ -175,7 +189,7 @@ if ($userrights['DeleteStrats'] == "yes" OR $strat->User == $user->id) {
         $('#del_part2').hide()
     });
     </script>
-<? }
+<?php }
 
 
 
@@ -191,7 +205,7 @@ if ($userrights['EditStrats'] == "yes" OR $strat->User == $user->id) { ?>
     </div>
 
     <div class="remodal remodalstratedit" data-remodal-id="modal_edit_pets">
-        <form enctype="multipart/form-data" action="index.php?Strategy=<? echo $strat->id ?>" method="POST">
+        <form enctype="multipart/form-data" action="index.php?Strategy=<?php echo $strat->id ?>" method="POST">
             <input type="hidden" name="alt_edit_action" value="edit_save_pets">
             <table style="width:780" class="profile">
                 <tr class="profile">
@@ -235,14 +249,14 @@ if ($userrights['EditStrats'] == "yes" OR $strat->User == $user->id) { ?>
                             <div id="peticon_1" style="width: 25px; float: left"></div>
                             <div style="width: 210px; float: right">
                                 <select data-placeholder="" name="edit_pet1_select" id="edit_pet1_select" class="chosen-select">
-                                    <option value="1" <? if ($strat->PetID1 == "1") echo "selected"; ?>>Any Pet</option>
-                                    <option value="0" <? if ($strat->PetID1 == "0") echo "selected"; ?>>Level Pet</option>
-                                    <? foreach ($all_special_pets as $thispet) { ?>
-                                        <option value="<? echo $thispet['PetID'] ?>" <? if ($strat->PetID1 == $thispet['PetID']) echo "selected"; ?>><? echo $thispet['Name'] ?></option>
-                                    <? }
+                                    <option value="1" <?php if ($strat->PetID1 == "1") echo "selected"; ?>>Any Pet</option>
+                                    <option value="0" <?php if ($strat->PetID1 == "0") echo "selected"; ?>>Level Pet</option>
+                                    <?php foreach ($all_special_pets as $thispet) { ?>
+                                        <option value="<?php echo $thispet['PetID'] ?>" <?php if ($strat->PetID1 == $thispet['PetID']) echo "selected"; ?>><?php echo $thispet['Name'] ?></option>
+                                    <?php }
                                     foreach ($all_normal_pets as $thispet) { ?>
-                                        <option value="<? echo $thispet['Species'] ?>" <? if ($strat->PetID1 == $thispet['Species']) echo "selected"; ?>><? echo $thispet['Name'] ?></option>
-                                    <? } ?>
+                                        <option value="<?php echo $thispet['Species'] ?>" <?php if ($strat->PetID1 == $thispet['Species']) echo "selected"; ?>><?php echo $thispet['Name'] ?></option>
+                                    <?php } ?>
                                 </select>
                             </div>
                             <div id="petdetails_1"></div>
@@ -254,14 +268,14 @@ if ($userrights['EditStrats'] == "yes" OR $strat->User == $user->id) { ?>
                             <div id="peticon_2" style="width: 25px; float: left"></div>
                             <div style="width: 210px; float: right">
                                 <select data-placeholder="" name="edit_pet2_select" id="edit_pet2_select" class="chosen-select">
-                                    <option value="1" <? if ($strat->PetID2 == "1") echo "selected"; ?>>Any Pet</option>
-                                    <option value="0" <? if ($strat->PetID2 == "0") echo "selected"; ?>>Level Pet</option>
-                                    <? foreach ($all_special_pets as $thispet) { ?>
-                                        <option value="<? echo $thispet['PetID'] ?>" <? if ($strat->PetID2 == $thispet['PetID']) echo "selected"; ?>><? echo $thispet['Name'] ?></option>
-                                    <? }
+                                    <option value="1" <?php if ($strat->PetID2 == "1") echo "selected"; ?>>Any Pet</option>
+                                    <option value="0" <?php if ($strat->PetID2 == "0") echo "selected"; ?>>Level Pet</option>
+                                    <?php foreach ($all_special_pets as $thispet) { ?>
+                                        <option value="<?php echo $thispet['PetID'] ?>" <?php if ($strat->PetID2 == $thispet['PetID']) echo "selected"; ?>><?php echo $thispet['Name'] ?></option>
+                                    <?php }
                                     foreach ($all_normal_pets as $thispet) { ?>
-                                        <option value="<? echo $thispet['Species'] ?>" <? if ($strat->PetID2 == $thispet['Species']) echo "selected"; ?>><? echo $thispet['Name'] ?></option>
-                                    <? } ?>
+                                        <option value="<?php echo $thispet['Species'] ?>" <?php if ($strat->PetID2 == $thispet['Species']) echo "selected"; ?>><?php echo $thispet['Name'] ?></option>
+                                    <?php } ?>
                                 </select>
                             </div>
                             <div id="petdetails_2"></div>
@@ -273,14 +287,14 @@ if ($userrights['EditStrats'] == "yes" OR $strat->User == $user->id) { ?>
                             <div id="peticon_3" style="width: 25px; float: left"></div>
                             <div style="width: 210px; float: right">
                                 <select data-placeholder="" name="edit_pet3_select" id="edit_pet3_select" class="chosen-select">
-                                    <option value="1" <? if ($strat->PetID3 == "1") echo "selected"; ?>>Any Pet</option>
-                                    <option value="0" <? if ($strat->PetID3 == "0") echo "selected"; ?>>Level Pet</option>
-                                    <? foreach ($all_special_pets as $thispet) { ?>
-                                        <option value="<? echo $thispet['PetID'] ?>" <? if ($strat->PetID3 == $thispet['PetID']) echo "selected"; ?>><? echo $thispet['Name'] ?></option>
-                                    <? }
+                                    <option value="1" <?php if ($strat->PetID3 == "1") echo "selected"; ?>>Any Pet</option>
+                                    <option value="0" <?php if ($strat->PetID3 == "0") echo "selected"; ?>>Level Pet</option>
+                                    <?php foreach ($all_special_pets as $thispet) { ?>
+                                        <option value="<?php echo $thispet['PetID'] ?>" <?php if ($strat->PetID3 == $thispet['PetID']) echo "selected"; ?>><?php echo $thispet['Name'] ?></option>
+                                    <?php }
                                     foreach ($all_normal_pets as $thispet) { ?>
-                                        <option value="<? echo $thispet['Species'] ?>" <? if ($strat->PetID3 == $thispet['Species']) echo "selected"; ?>><? echo $thispet['Name'] ?></option>
-                                    <? } ?>
+                                        <option value="<?php echo $thispet['Species'] ?>" <?php if ($strat->PetID3 == $thispet['Species']) echo "selected"; ?>><?php echo $thispet['Name'] ?></option>
+                                    <?php } ?>
                                 </select>
                             </div>
                             <div id="petdetails_3"></div>
@@ -293,26 +307,26 @@ if ($userrights['EditStrats'] == "yes" OR $strat->User == $user->id) { ?>
 
                             function pull_petdetails(pet, slot, def, defpet) {
                                 $('#petdetails_'+slot).empty();
-                                $('#petdetails_'+slot).load('classes/ajax/strat_pullpet.php?pet='+pet+'&defpet='+defpet+'&def='+def+'&slot='+slot+'&lng=<? echo $language ?>&strat=<? echo $strat->id ?>');
+                                $('#petdetails_'+slot).load('classes/ajax/strat_pullpet.php?pet='+pet+'&defpet='+defpet+'&def='+def+'&slot='+slot+'&lng=<?php echo $language ?>&strat=<?php echo $strat->id ?>');
                                 $('#peticon_'+slot).empty();
-                                $('#peticon_'+slot).load('classes/ajax/strat_pullpeticon.php?pet='+pet+'&slot='+slot+'&lng=<? echo $language ?>');
+                                $('#peticon_'+slot).load('classes/ajax/strat_pullpeticon.php?pet='+pet+'&slot='+slot+'&lng=<?php echo $language ?>');
                                 $('#petfamilyicon_'+slot).empty();
-                                $('#petfamilyicon_'+slot).load('classes/ajax/strat_pullpetfamily.php?pet='+pet+'&slot='+slot+'&lng=<? echo $language ?>');
+                                $('#petfamilyicon_'+slot).load('classes/ajax/strat_pullpetfamily.php?pet='+pet+'&slot='+slot+'&lng=<?php echo $language ?>');
                             }
 
                             $("#edit_pet1_select").chosen().change(function(){
                                 var pet = $('select[name=edit_pet1_select]').val();
-                                pull_petdetails(pet, '1', '1', '<? echo $strat->PetID1 ?>');
+                                pull_petdetails(pet, '1', '1', '<?php echo $strat->PetID1 ?>');
                             });
 
                             $("#edit_pet2_select").chosen().change(function(){
                                 var pet = $('select[name=edit_pet2_select]').val();
-                                pull_petdetails(pet, '2', '1', '<? echo $strat->PetID2 ?>');
+                                pull_petdetails(pet, '2', '1', '<?php echo $strat->PetID2 ?>');
                             });
 
                             $("#edit_pet3_select").chosen().change(function(){
                                 var pet = $('select[name=edit_pet3_select]').val();
-                                pull_petdetails(pet, '3', '1', '<? echo $strat->PetID3 ?>');
+                                pull_petdetails(pet, '3', '1', '<?php echo $strat->PetID3 ?>');
                             });
 
                             var u = $('select[name=edit_pet1_select]').val();
@@ -336,10 +350,10 @@ if ($userrights['EditStrats'] == "yes" OR $strat->User == $user->id) { ?>
                         <table>
                             <tr>
                                 <td style="padding-left: 12px;">
-                                    <input type="submit" class="comedit" value="<? echo _("FormComButtonSavechange"); ?>">
+                                    <input type="submit" class="comedit" value="<?php echo __("Save changes"); ?>">
                                 </td>
                                 <td style="padding-left: 15px;">
-                                    <input data-remodal-action="close" type="submit" class="comdelete" value="<? echo _("FormButtonCancel"); ?>">
+                                    <input data-remodal-action="close" type="submit" class="comdelete" value="<?php echo __("Cancel"); ?>">
                                 </td>
                             </tr>
                         </table>
@@ -356,7 +370,7 @@ if ($userrights['EditStrats'] == "yes" OR $strat->User == $user->id) { ?>
     $('[data-remodal-id=modal_edit_pets]').remodal();
     </script>
 
-<? }
+<?php }
 
 
 
@@ -376,10 +390,10 @@ if ($userrights['EditStrats'] == "yes" OR $strat->User == $user->id) {
     }
     ?>
 
-    <div class="edit_info_linkbox" data-remodal-target="modal_edit_info" style="top: <? echo $tabheight; ?>"></div>
-    <div class="edit_info_box_s edit_box_s" style="top: <? echo $tabheight; ?>"></div>
-    <div class="edit_info_box edit_box" style="top: <? echo $tabheight; ?>"></div>
-    <div class="edit_info_boxtext" style="top: <? echo $tabheight+20; ?>">
+    <div class="edit_info_linkbox" data-remodal-target="modal_edit_info" style="top: <?php echo $tabheight; ?>"></div>
+    <div class="edit_info_box_s edit_box_s" style="top: <?php echo $tabheight; ?>"></div>
+    <div class="edit_info_box edit_box" style="top: <?php echo $tabheight; ?>"></div>
+    <div class="edit_info_boxtext" style="top: <?php echo $tabheight+20; ?>">
         Info
     </div>
 
@@ -410,7 +424,7 @@ if ($userrights['EditStrats'] == "yes" OR $strat->User == $user->id) {
                     <span id="article_lng" style="display: none">en_US</span>
                     <form method="post" style="display: inline">
                     <input type="hidden" name="alt_edit_action" value="edit_save_comment">
-                    <textarea class="edit_article" id="article_ta_en_US" name="article_content_en_US" style="height: 300; width: 640; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','1000')" maxlength="1000"><? echo stripslashes(htmlentities($strat->Comment, ENT_QUOTES, "UTF-8")); ?></textarea>
+                    <textarea class="edit_article" id="article_ta_en_US" name="article_content_en_US" style="height: 300; width: 640; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','1000')" maxlength="1000"><?php echo stripslashes(htmlentities($strat->Comment, ENT_QUOTES, "UTF-8")); ?></textarea>
                 </div>
             </td>
         </tr>
@@ -422,10 +436,10 @@ if ($userrights['EditStrats'] == "yes" OR $strat->User == $user->id) {
                 <table style="width: 100%">
                     <tr>
                         <td style="padding-right: 12px; padding-left: 12px; width: 30%; text-align: left">
-                            <input type="submit" class="comsubmit" formaction="index.php?Strategy=<? echo $strategy ?>" value="Save creator comment">
+                            <input type="submit" class="comsubmit" formaction="index.php?Strategy=<?php echo $strategy ?>" value="Save creator comment">
                         </td>
                         <td width: 40%; text-align: left">
-                            <input data-remodal-action="close" type="submit" class="comdelete" value="<? echo _("FormButtonCancel"); ?>">
+                            <input data-remodal-action="close" type="submit" class="comdelete" value="<?php echo __("Cancel"); ?>">
                     </form>
                         </td>
                         <td style="width: 30%; padding-right: 12px; text-align: right">
@@ -467,7 +481,7 @@ if ($userrights['EditStrats'] == "yes" OR $userrights['EditTDScripts'] == "yes" 
     </div>
 
     <div class="remodal remodalstratedit" data-remodal-id="modal_edit_td">
-        <form enctype="multipart/form-data" action="index.php?Strategy=<? echo $strat->id ?>" method="POST">
+        <form enctype="multipart/form-data" action="index.php?Strategy=<?php echo $strat->id ?>" method="POST">
             <input type="hidden" name="save_td" value="true">
             <table width="450" class="profile">
                 <tr class="profile">
@@ -484,7 +498,7 @@ if ($userrights['EditStrats'] == "yes" OR $userrights['EditTDScripts'] == "yes" 
 
                 <tr class="profile">
                     <td class="collectionbordertwo" colspan="2">
-                        <textarea name="tdscript" class="cominputbright" onkeyup="auto_adjust_textarea_size(this);" style="height: 250px; max-height: 600px; width: 700px; overflow: auto"><? echo htmlentities($strat->tdscript, ENT_QUOTES, "UTF-8") ?></textarea>
+                        <textarea name="tdscript" class="cominputbright" onkeyup="auto_adjust_textarea_size(this);" style="height: 250px; max-height: 600px; width: 700px; overflow: auto"><?php echo htmlentities($strat->tdscript, ENT_QUOTES, "UTF-8") ?></textarea>
                     </td>
                 </tr>
 
@@ -493,10 +507,10 @@ if ($userrights['EditStrats'] == "yes" OR $userrights['EditTDScripts'] == "yes" 
                         <table>
                             <tr>
                                 <td style="padding-left: 12px;">
-                                    <input type="submit" class="comedit" value="<? echo _("FormComButtonSavechange"); ?>">
+                                    <input type="submit" class="comedit" value="<?php echo __("Save changes"); ?>">
                                 </td>
                                 <td style="padding-left: 15px;">
-                                    <input data-remodal-action="close" type="submit" class="comdelete" value="<? echo _("FormButtonCancel"); ?>">
+                                    <input data-remodal-action="close" type="submit" class="comdelete" value="<?php echo __("Cancel"); ?>">
                                 </td>
                             </tr>
                         </table>
@@ -513,7 +527,7 @@ if ($userrights['EditStrats'] == "yes" OR $userrights['EditTDScripts'] == "yes" 
 	$('[data-remodal-id=modal_edit_td]').remodal(options);
 	</script>
 
-<? }
+<?php }
 
 
 
@@ -529,105 +543,59 @@ if ($userrights['EditStrats'] == "yes" OR $userrights['EditTags'] == "yes" OR $s
     }
     ?>
 
-    <div class="edit_tags_linkbox tagsedit_tooltip" data-tooltip-content="#edit_tags_tt" style="top: <? echo $tabheight; ?>"></div>
-    <div class="edit_tags_box_s edit_box_s" style="top: <? echo $tabheight; ?>"></div>
-    <div class="edit_tags_box edit_box" style="top: <? echo $tabheight; ?>"></div>
-    <div class="edit_tags_boxtext" style="top: <? echo $tabheight-6; ?>">
+    <div class="edit_tags_linkbox tagsedit_tooltip" data-tooltip-content="#edit_tags_tt" style="top: <?php echo $tabheight; ?>"></div>
+    <div class="edit_tags_box_s edit_box_s" style="top: <?php echo $tabheight; ?>"></div>
+    <div class="edit_tags_box edit_box" style="top: <?php echo $tabheight; ?>"></div>
+    <div class="edit_tags_boxtext" style="top: <?php echo $tabheight-6; ?>">
         Tags
     </div>
-
-    <div style="display: none">
-        <span id="edit_tags_tt">
-            <table >
-                <tr>
-                    <td style="height: 350px" valign="top">
-                        <select data-placeholder="Click to select tags" multiple="" name="edit_tags" id="edit_tags_select" class="chosen-select" required>
-                           <? foreach ($used_tags as $tag_id) {
-                                if (($tag_id['Access'] == 1 && ($userrights['EditStrats'] == "yes" OR $userrights['EditTags'] == "yes" OR $strat->User == $user->id)) OR ($tag_id['Access'] == 2 && ($userrights['EditStrats'] == "yes" OR $userrights['EditTags'] == "yes"))) { ?>
-                                    <option value="tag_<? echo $tag_id['ID'] ?>" <? if ($tag_id['Active'] == 1) { echo "selected"; } ?>><? echo $tag_id['Name'] ?></option>
-                               <? }
-                            } ?>
-                        </select>
-
-                        <br><br><br>
-                        <p>
-                            Hover over each tag to see more info:</p><br>
-                            <div style="margin-top: 10px; max-width: 250px">
-                            <?
-                            foreach ($used_tags as $tag_id) {
-                                if ($tag_id['Access'] == 1 OR ($tag_id['Access'] == 2 && ($userrights['EditStrats'] == "yes" OR $userrights['EditTags'] == "yes"))
-                                    OR ($tag_id['ID'] == 21 && ($userrights['EditStrats'] == "yes" OR $userrights['EditTags'] == "yes"))) {
-
-                                    ?>
-                                        <div class="tag tag_tt" style="float: left; background-color: #<? echo $tag_id['Color']; ?>" data-tooltip-content="#tag_edit_<? echo $tag_id['Slug'] ?>_tt"><? echo $tag_id['Name'] ?></div>
-                                        <div style="display: none">
-                                            <span id="tag_edit_<? echo $tag_id['Slug'] ?>_tt"><? echo $tag_id['Description'] ?></span>
-                                        </div>
-                                     <?
+        
+       
+    <div style="display: none;">
+        <div id="edit_tags_tt" style="max-width: 350px">
+            Click on a tag to activate or deactivate:<br><br>
+                <?php 
+                $listof_tags = $used_tags;
+                sortBy('ID', $listof_tags, 'desc');
+                foreach ($used_tags as $tag_id) {
+                    if ($tag_id['Access'] == 1 OR ($tag_id['Access'] == 2 && ($userrights['EditStrats'] == "yes" OR $userrights['EditTags'] == "yes"))) { ?>
+                        <div id="tag_editing_button_<?php echo $tag_id['ID']; ?>" onclick="change_tag(<?php echo $tag_id['ID']; ?>)" class="tag tag_tt <?php if ($tag_id['Active'] == 0) echo ' inactive_tag'; ?>" style="float: left; background-color: #<?php echo $tag_id['Color']; ?>" data-tooltip-content="#tag_edit_<?php echo $tag_id['Slug'] ?>_tt"><?php echo $tag_id['Name'] ?></div>
+                        <div style="display: none">
+                            <span id="tag_edit_<?php echo $tag_id['Slug'] ?>_tt"><?php echo $tag_id['Description'] ?></span>
+                        </div>
+                    <? }
+                }
+                ?>
+                
+                <script type = "text/javascript">
+                    function change_tag(tag){
+                        var xmlhttp = new XMLHttpRequest();
+                        xmlhttp.onreadystatechange = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                                if (this.responseText == '1') {
+                                    $('#tag_'+tag).show();
+                                    $('#tag_editing_button_'+tag).removeClass('inactive_tag');
+                                    if (tag == 22) {
+                                        $('#tag_editing_button_21').addClass('inactive_tag');
+                                        $('#tag_21').hide();
+                                    }
+                                }
+                                if (this.responseText == '0') {
+                                    $('#tag_'+tag).hide();
+                                    $('#tag_editing_button_'+tag).addClass('inactive_tag');
                                 }
                             }
-                            /*
-                            if ($user->id == 2) { ?>
-                                <div class="tag" onclick="makeEnable()">blubb</div>
-
-                                <script>
-                                    function makeEnable(){
-                                        alert('adf');
-                                        document.getElementById("tagtest_fast").selected = true;
-                                        alert('adf');
-                                    }
-                                </script>
-                            <? }
-                            */
-                            ?>
-                        </div>
-
-
-                        <script type = "text/javascript">
-                             $(".chosen-select").chosen({width: 340});
-                                $('#edit_tags_select').on('input',function(){
-                                    var values = $('#edit_tags_select').val();
-                                    var xmlhttp = new XMLHttpRequest();
-                                    xmlhttp.onreadystatechange = function() {
-                                        if (this.readyState == 4 && this.status == 200) {
-                                            var data = this.responseText;
-                                            // alert(data);
-                                            if (data == "OK" || data == "VOK") {
-                                                <? foreach ($used_tags as $tag_id) {
-                                                    if ($tag_id['Access'] == 1 && $userrights['EditStrats'] != "yes" && $userrights['EditTags'] != "yes" && $strat->User == $user->id) {
-                                                    ?>
-                                                        if (jQuery.inArray('tag_<? echo $tag_id['ID'] ?>', values) == "-1") { document.getElementById("tag_<? echo $tag_id['ID'] ?>").style.display = "none"; }
-                                                        else { document.getElementById("tag_<? echo $tag_id['ID'] ?>").style.display = "block"; }
-                                                   <? }
-                                                   if ($tag_id['Access'] > 0 && ($userrights['EditStrats'] == "yes" OR $userrights['EditTags'] == "yes")) {
-                                                    ?>
-                                                        if (jQuery.inArray('tag_<? echo $tag_id['ID'] ?>', values) == "-1") { document.getElementById("tag_<? echo $tag_id['ID'] ?>").style.display = "none"; }
-                                                        else { document.getElementById("tag_<? echo $tag_id['ID'] ?>").style.display = "block"; }
-                                                   <? }
-                                                } ?>
-
-                                                if (data == "VOK") {
-                                                    document.getElementById("tag_21").style.display = "none";
-                                                }
-                                            }
-                                            else {
-                                                $.growl.error({ message: "There was a problem saving the data. Please refresh the page.", duration: "15000", size: "large", location: "tc" });
-                                            }
-                                        }
-                                    };
-                                    xmlhttp.open("GET", "classes/ajax/bt_edit_tags.php?strat=" + encodeURIComponent('<? echo $strat->id ?>')
-                                    + "&userid=" + encodeURIComponent('<? echo $user->id ?>')
-                                    + "&ticked=" + encodeURIComponent(values)
-                                    + "&delimiter=" + encodeURIComponent('<? echo $user->ComSecret ?>'), true);
-                                    xmlhttp.send();
-
-                                });
-                         </script>
-                    </td>
-                </tr>
-            </table>
-
-        </span>
+                        };
+                        xmlhttp.open("GET", "classes/ajax/bt_edit_tags.php?strat=" + encodeURIComponent('<?php echo $strat->id ?>')
+                        + "&userid=" + encodeURIComponent('<?php echo $user->id ?>')
+                        + "&tag=" + encodeURIComponent(tag)
+                        + "&delimiter=" + encodeURIComponent('<?php echo $user->ComSecret ?>'), true);
+                        xmlhttp.send();
+                    }
+                </script>
+                
+                
+        </div>
     </div>
 
     <script>
@@ -642,6 +610,4 @@ if ($userrights['EditStrats'] == "yes" OR $userrights['EditTags'] == "yes" OR $s
             });
         });
     </script>
-<? }
-
-
+<?php }

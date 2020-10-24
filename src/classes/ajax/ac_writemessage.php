@@ -14,6 +14,11 @@ while($row = $userdb->fetch_assoc()){
     if ($exclude_own == "f") {
         $json[] = ['id'=>$row['id'], 'text'=>$row['Name']];
     }
+    else if ($exclude_own == "noxu") {
+        if ($row['id'] != 1 && $row['id'] != $thisuser) {
+            $json[] = ['id'=>$row['id'], 'text'=>$row['Name']];
+        }
+    }
     else {
         if ($row['id'] != $thisuser) {
             $json[] = ['id'=>$row['id'], 'text'=>$row['Name']];

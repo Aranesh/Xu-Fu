@@ -148,9 +148,9 @@ function Database_protocol_user_activity ($user, $priority, $activity, $comment 
 }
 function Database_protocol_user_activity_with_request ($user, $priority, $activity, $comment = "")
 {
-  global $user_ip_adress, $mainselector, $subselector, $strategy;
+  global $user_ip_adress;
   Database_insert ( 'UserProtocol'
-                  , ['User', 'IP', 'Priority', 'Activity', 'Comment', 'Main', 'Sub', 'Alternative']
-                  , $user->id, $user_ip_adress, $priority, $activity, $comment, $mainselector, $subselector, $strategy
+                  , ['User', 'IP', 'Priority', 'Activity', 'Comment']
+                  , $user->id, $user_ip_adress, $priority, $activity, $comment
                   );
 }

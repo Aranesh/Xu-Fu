@@ -49,6 +49,9 @@ if ($pass == "ok" && $stratid) {
 
 if ($pass == "stillok" && $user && $user->ComSecret == $comsecret) {
     // Passed verification
+    if (!$p1substitute) $p1substitute = 0;
+    if (!$p2substitute) $p2substitute = 0;
+    if (!$p3substitute) $p3substitute = 0;
     mysqli_query($dbcon, "INSERT INTO UserAttempts (`User`, `Strategy`, `Success`, `Attempts`, `Pet1`, `Substitute1`, `Breed1`, `Level1`, `Pet2`, `Substitute2`, `Breed2`, `Level2`, `Pet3`, `Substitute3`, `Breed3`, `Level3`) VALUES ('$userid', '$stratid', '$success', '$attempts', '$p1id', '$p1substitute', '$p1breed', '$p1level', '$p2id', '$p2substitute', '$p2breed', '$p2level', '$p3id', '$p3substitute', '$p3breed', '$p3level')") OR die(mysqli_error($dbcon));
     mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$userid', '$user_ip_adress', '1', 'Fight Recorded', '$stratid')") OR die(mysqli_error($dbcon));
     echo "OK";            

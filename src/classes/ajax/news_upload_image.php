@@ -17,21 +17,21 @@ include("../../classes/functions.php");
                 <script>
                     alert('There was a problem uploading the file, please try again.');
                 </script>
-                <? die;
+                <?php die;
             }
             if ($picsizes[0] < 600 OR $picsizes[1] < 100) { ?>
                 <script>
-                    alert('The image is too small. Please make sure it is at least 600 pixels in width and 100 pixels in height to avoid blurring. \nYour image is <? echo $picsizes[0]."x".$picsizes[1] ?>.');
+                    alert('The image is too small. Please make sure it is at least 600 pixels in width and 100 pixels in height to avoid blurring. \nYour image is <?php echo $picsizes[0]."x".$picsizes[1] ?>.');
                     $('#submit_img').hide(0);
                 </script>
-                <? die;
+                <?php die;
             }
             if ($picsizes[0]/$picsizes[1] < 1.6) { ?>
                 <script>
-                    alert('Title images need landscape format. Min width of 600px and min height of 100px is acceptable with an aspect ratio larger than 1.6. \nYour image is <? echo $picsizes[0]."x".$picsizes[1] ?> and aspect ratio <? echo $picsizes[0]/$picsizes[1] ?>. \nSorry for this, but the page would look weird with portrait images.');
+                    alert('Title images need landscape format. Min width of 600px and min height of 100px is acceptable with an aspect ratio larger than 1.6. \nYour image is <?php echo $picsizes[0]."x".$picsizes[1] ?> and aspect ratio <?php echo $picsizes[0]/$picsizes[1] ?>. \nSorry for this, but the page would look weird with portrait images.');
                     $('#submit_img').hide(0);
                 </script>
-                <? die;
+                <?php die;
             }
             
             $tmp_path = "images/news/uploads/".rand(10,1000000).".".$ext;
@@ -63,9 +63,9 @@ include("../../classes/functions.php");
             <script>
                 $('#submit_img').hide(0);
                 $('#remove_img_button').show(0);
-                document.getElementById('title_image').src = "<? echo $path ?>?" + new Date().getTime();
+                document.getElementById('title_image').src = "<?php echo $path ?>?" + new Date().getTime();
             </script>
-            <? 
+            <?php 
 
         } 
         else {

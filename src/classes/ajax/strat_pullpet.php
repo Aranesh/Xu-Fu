@@ -10,14 +10,13 @@ $def = $_GET['def'];
 $defpet = $_GET['defpet'];
 
 // INIITIALIZE GETTEXT AND PULL LANGUAGE FILE
-putenv("LANG=".$language.".UTF-8");
-setlocale(LC_ALL, $language.".UTF-8");
-
-$domain = "messages";
-bindtextdomain($domain, "../../Locale");
-textdomain($domain);
+require_once ("../../thirdparty/motranslator/vendor/autoload.php");
+PhpMyAdmin\MoTranslator\Loader::loadFunctions();
+  _setlocale(LC_MESSAGES, $language);
+  _textdomain('messages');
+  _bindtextdomain('messages', __DIR__ . '/../../Locale/');
+  _bind_textdomain_codeset('messages', 'UTF-8');
 set_language_vars($language);
-
 $stratdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE id = '$strategy'");
 
 if (mysqli_num_rows($stratdb) < 1 OR !preg_match("/^[1234567890]*$/is", $petget) OR !preg_match("/^[1234567890]*$/is", $strategy) OR !preg_match("/^[1234567890]*$/is", $slot) OR !preg_match("/^[1234567890]*$/is", $def)){
@@ -32,28 +31,28 @@ else {
             $def = "0";
         }
         // Get Spells
-        $spellsdb = mysqli_query($dbcon, "SELECT * FROM Spells WHERE SpellID = '$pet->Skill1' OR SpellID = '$pet->Skill2' OR SpellID = '$pet->Skill3' OR SpellID = '$pet->Skill4' OR SpellID = '$pet->Skill5' OR SpellID = '$pet->Skill6'");
+        $spellsdb = mysqli_query($dbcon, "SELECT * FROM Pet_Abilities WHERE id = '$pet->Skill1' OR id = '$pet->Skill2' OR id = '$pet->Skill3' OR id = '$pet->Skill4' OR id = '$pet->Skill5' OR id = '$pet->Skill6'");
         while ($thisspell = mysqli_fetch_object($spellsdb)) {
-            if ($thisspell->SpellID == $pet->Skill1) {
+            if ($thisspell->id == $pet->Skill1) {
                 $i = "1";
             }
-            if ($thisspell->SpellID == $pet->Skill2) {
+            if ($thisspell->id == $pet->Skill2) {
                 $i = "2";
             }
-            if ($thisspell->SpellID == $pet->Skill3) {
+            if ($thisspell->id == $pet->Skill3) {
                 $i = "3";
             }
-            if ($thisspell->SpellID == $pet->Skill4) {
+            if ($thisspell->id == $pet->Skill4) {
                 $i = "4";
             }
-            if ($thisspell->SpellID == $pet->Skill5) {
+            if ($thisspell->id == $pet->Skill5) {
                 $i = "5";
             }
-            if ($thisspell->SpellID == $pet->Skill6) {
+            if ($thisspell->id == $pet->Skill6) {
                 $i = "6";
             }
-            $spells[$i]['SpellID'] = $thisspell->SpellID;
-            $spells[$i]['Icon'] = "https://blzmedia-a.akamaihd.net/wow/icons/36/".$thisspell->Icon.".jpg";
+            $spells[$i]['SpellID'] = $thisspell->id;
+            $spells[$i]['Icon'] = "images/pet_abilities/".$thisspell->id.".png";
             $spells[$i]['Family'] = $thisspell->Family;
             $spells[$i]['Name'] = $thisspell->${'language'};
         }
@@ -165,9 +164,9 @@ else {
     
     if ($petget > "20") { ?>
         <div style="width: 225; font-family: MuseoSans-500; font-size: 16px; padding: 6 5 12 5; margin: 5 0 5 0; background-color: #b6b6b6; float: left">
-            <b>Skills: <span id="skillshort_<? echo $slot ?>_1"><? echo $quickskill1 ?></span>
-            <span id="skillshort_<? echo $slot ?>_2"><? echo $quickskill2 ?></span>
-            <span id="skillshort_<? echo $slot ?>_3"><? echo $quickskill3 ?></span></b> <br>
+            <b>Skills: <span id="skillshort_<?php echo $slot ?>_1"><?php echo $quickskill1 ?></span>
+            <span id="skillshort_<?php echo $slot ?>_2"><?php echo $quickskill2 ?></span>
+            <span id="skillshort_<?php echo $slot ?>_3"><?php echo $quickskill3 ?></span></b> <br>
             
             
             <?
@@ -220,37 +219,37 @@ else {
                 ?> 
                 <div style="width: 35px; margin: 10 0 0 25; float: left;">
                     <div style="display: none">
-                        <select name="petskill<? echo $slot ?>_<? echo $skillcount ?>" id="petskill<? echo $slot ?>_<? echo $skillcount ?>" required>
-                            <option value="<? echo $spells[$spell1c]['SpellID']; ?>_<? echo $slot ?>_1" <? if ($chosenspell == "1") { echo "selected"; } ?>><? echo $spells[$spell1c]['Name'] ?></option>
-                            <option value="slot<? echo $slot ?>_<? echo $skillcount ?>x" <? if ($chosenspell == "0" OR $chosenspell == "") { echo "selected"; } ?>>slot<? echo $slot ?>_<? echo $skillcount ?>x</option>
-                            <option value="<? echo $spells[$spell2c]['SpellID']; ?>_<? echo $slot ?>_2" <? if ($chosenspell == "2") { echo "selected"; } ?>><? echo $spells[$spell2c]['Name'] ?></option>
+                        <select name="petskill<?php echo $slot ?>_<?php echo $skillcount ?>" id="petskill<?php echo $slot ?>_<?php echo $skillcount ?>" required>
+                            <option value="<?php echo $spells[$spell1c]['SpellID']; ?>_<?php echo $slot ?>_1" <?php if ($chosenspell == "1") { echo "selected"; } ?>><?php echo $spells[$spell1c]['Name'] ?></option>
+                            <option value="slot<?php echo $slot ?>_<?php echo $skillcount ?>x" <?php if ($chosenspell == "0" OR $chosenspell == "") { echo "selected"; } ?>>slot<?php echo $slot ?>_<?php echo $skillcount ?>x</option>
+                            <option value="<?php echo $spells[$spell2c]['SpellID']; ?>_<?php echo $slot ?>_2" <?php if ($chosenspell == "2") { echo "selected"; } ?>><?php echo $spells[$spell2c]['Name'] ?></option>
                         </select>
                     </div>
                         <div style="width: 35px";>
-                            <div id="icon_<? echo $spells[$spell1c]['SpellID'] ?>_<? echo $slot ?>_1" class="icon_noborder_<? echo $skillcount.$slot ?> spell_tt" data-tooltip-content="#pet<? echo $slot ?>_set<? echo $skillcount ?>_spell1_tt" style="float: left; margin-bottom: 3px; border:3px solid 
-                            <? if ($chosenspell == "1") { echo "#ffffff"; } else { echo "#888888"; } ?>;" onclick="select_icon_<? echo $slot ?>_<? echo $skillcount ?>('<? echo $spells[$spell1c]['SpellID'] ?>_<? echo $slot ?>_1')">
-                                <img src="<? echo $spells[$spell1c]['Icon'] ?>" style="width: 36px; height: 36px;">
+                            <div id="icon_<?php echo $spells[$spell1c]['SpellID'] ?>_<?php echo $slot ?>_1" class="icon_noborder_<?php echo $skillcount.$slot ?> spell_tt" data-tooltip-content="#pet<?php echo $slot ?>_set<?php echo $skillcount ?>_spell1_tt" style="float: left; margin-bottom: 3px; border:3px solid 
+                            <?php if ($chosenspell == "1") { echo "#ffffff"; } else { echo "#888888"; } ?>;" onclick="select_icon_<?php echo $slot ?>_<?php echo $skillcount ?>('<?php echo $spells[$spell1c]['SpellID'] ?>_<?php echo $slot ?>_1')">
+                                <img src="<?php echo $spells[$spell1c]['Icon'] ?>" style="width: 36px; height: 36px;">
                             </div>
-                            <div style="display: none"><span id="pet<? echo $slot ?>_set<? echo $skillcount ?>_spell1_tt"><? echo $spells[$spell1c]['Name'] ?></span></div>
+                            <div style="display: none"><span id="pet<?php echo $slot ?>_set<?php echo $skillcount ?>_spell1_tt"><?php echo $spells[$spell1c]['Name'] ?></span></div>
                             
-                            <div id="icon_slot<? echo $slot ?>_<? echo $skillcount ?>x" class="icon_noborder_<? echo $skillcount.$slot ?> spell_tt" data-tooltip-content="#pet<? echo $slot ?>_set<? echo $skillcount ?>_spellx_tt" style="float: left; margin-bottom: 3px; border:3px solid
-                            <? if ($chosenspell == "0") { echo "#ffffff"; } else { echo "#888888"; } ?> ;" onclick="select_icon_<? echo $slot ?>_<? echo $skillcount ?>('slot<? echo $slot ?>_<? echo $skillcount ?>x')">
+                            <div id="icon_slot<?php echo $slot ?>_<?php echo $skillcount ?>x" class="icon_noborder_<?php echo $skillcount.$slot ?> spell_tt" data-tooltip-content="#pet<?php echo $slot ?>_set<?php echo $skillcount ?>_spellx_tt" style="float: left; margin-bottom: 3px; border:3px solid
+                            <?php if ($chosenspell == "0") { echo "#ffffff"; } else { echo "#888888"; } ?> ;" onclick="select_icon_<?php echo $slot ?>_<?php echo $skillcount ?>('slot<?php echo $slot ?>_<?php echo $skillcount ?>x')">
                                 <img src="https://www.wow-petguide.com/images/bt_edit_wildcard.png" style="width: 36px; height: 36px;">
                             </div>
-                            <div style="display: none"><span id="pet<? echo $slot ?>_set<? echo $skillcount ?>_spellx_tt">Wildcard - select if skill is not used in battle.</span></div>
+                            <div style="display: none"><span id="pet<?php echo $slot ?>_set<?php echo $skillcount ?>_spellx_tt">Wildcard - select if skill is not used in battle.</span></div>
                             
-                            <div id="icon_<? echo $spells[$spell2c]['SpellID'] ?>_<? echo $slot ?>_2" class="icon_noborder_<? echo $skillcount.$slot ?> spell_tt" data-tooltip-content="#pet<? echo $slot ?>_set<? echo $skillcount ?>_spell2_tt" style="float: left; margin-bottom: 3px; border:3px solid
-                            <? if ($chosenspell == "2") { echo "#ffffff"; } else { echo "#888888"; } ?>;" onclick="select_icon_<? echo $slot ?>_<? echo $skillcount ?>('<? echo $spells[$spell2c]['SpellID'] ?>_<? echo $slot ?>_2')">
-                                <img src="<? echo $spells[$spell2c]['Icon'] ?>" style="width: 36px; height: 36px;">
+                            <div id="icon_<?php echo $spells[$spell2c]['SpellID'] ?>_<?php echo $slot ?>_2" class="icon_noborder_<?php echo $skillcount.$slot ?> spell_tt" data-tooltip-content="#pet<?php echo $slot ?>_set<?php echo $skillcount ?>_spell2_tt" style="float: left; margin-bottom: 3px; border:3px solid
+                            <?php if ($chosenspell == "2") { echo "#ffffff"; } else { echo "#888888"; } ?>;" onclick="select_icon_<?php echo $slot ?>_<?php echo $skillcount ?>('<?php echo $spells[$spell2c]['SpellID'] ?>_<?php echo $slot ?>_2')">
+                                <img src="<?php echo $spells[$spell2c]['Icon'] ?>" style="width: 36px; height: 36px;">
                             </div>
-                            <div style="display: none"><span id="pet<? echo $slot ?>_set<? echo $skillcount ?>_spell2_tt"><? echo $spells[$spell2c]['Name'] ?></span></div>
+                            <div style="display: none"><span id="pet<?php echo $slot ?>_set<?php echo $skillcount ?>_spell2_tt"><?php echo $spells[$spell2c]['Name'] ?></span></div>
                         </div>
                     <script>
-                        $("#petskill<? echo $slot ?>_<? echo $skillcount ?>").chosen();
+                        $("#petskill<?php echo $slot ?>_<?php echo $skillcount ?>").chosen();
         
-                        $("#petskill<? echo $slot ?>_<? echo $skillcount ?>").chosen().change(function(event){
-                            i = $('select[name=petskill<? echo $slot ?>_<? echo $skillcount ?>]').val();
-                            $('.icon_noborder_<? echo $skillcount.$slot ?>').css("borderColor","#888888");
+                        $("#petskill<?php echo $slot ?>_<?php echo $skillcount ?>").chosen().change(function(event){
+                            i = $('select[name=petskill<?php echo $slot ?>_<?php echo $skillcount ?>]').val();
+                            $('.icon_noborder_<?php echo $skillcount.$slot ?>').css("borderColor","#888888");
                             $('#icon_'+i).css("borderColor","#ffffff");
                             var quicks = i.split("_");
                             var q = "";
@@ -260,11 +259,11 @@ else {
                             else {
                                 q = quicks[2];
                             }
-                            document.getElementById('skillshort_<? echo $slot ?>_<? echo $skillcount ?>').innerHTML = q;
+                            document.getElementById('skillshort_<?php echo $slot ?>_<?php echo $skillcount ?>').innerHTML = q;
                         });
-                        function select_icon_<? echo $slot ?>_<? echo $skillcount ?>(i){
-                            $("#petskill<? echo $slot ?>_<? echo $skillcount ?>").val(i).change();
-                            $('#petskill<? echo $slot ?>_<? echo $skillcount ?>').trigger("chosen:updated");
+                        function select_icon_<?php echo $slot ?>_<?php echo $skillcount ?>(i){
+                            $("#petskill<?php echo $slot ?>_<?php echo $skillcount ?>").val(i).change();
+                            $('#petskill<?php echo $slot ?>_<?php echo $skillcount ?>').trigger("chosen:updated");
                         }
                         $(document).ready(function() {
                             $('.spell_tt').tooltipster({
@@ -279,7 +278,7 @@ else {
             } ?>      
         </div>
     
-    <? }
+    <?php }
     
     if ($petget <= "20") {
         if ($slot == "1") {
@@ -306,24 +305,24 @@ else {
         }
 
     ?>
-        <div style="width: 225; font-family: MuseoSans-500; font-size: 16px; padding: 6 5 12 5; margin: 5 0 5 0; background-color: #b6b6b6; float: left<? echo $hidedetails ?>">
+        <div style="width: 225; font-family: MuseoSans-500; font-size: 16px; padding: 6 5 12 5; margin: 5 0 5 0; background-color: #b6b6b6; float: left<?php echo $hidedetails ?>">
             <b>Required Level:</b><br>
             
             <div style="width: 200px; margin: 10 0 0 10; float: left;">
-                <div style="width: 20px; float: left; padding-top: 3px;"><span id="edit_level_numb_<? echo $slot ?>"><? echo $reqlevel ?></span></div>
-                <div style="width: 175px; float: left"><input type="range" min="1" max="25" name="min_level_<? echo $slot ?>" value="<? echo $reqlevel ?>" id="edit_level_slider_<? echo $slot ?>" style="width: 175px" class="alt_edit_slider"></div>
+                <div style="width: 20px; float: left; padding-top: 3px;"><span id="edit_level_numb_<?php echo $slot ?>"><?php echo $reqlevel ?></span></div>
+                <div style="width: 175px; float: left"><input type="range" min="1" max="25" name="min_level_<?php echo $slot ?>" value="<?php echo $reqlevel ?>" id="edit_level_slider_<?php echo $slot ?>" style="width: 175px" class="alt_edit_slider"></div>
             </div>
             <script>
-                var slider<? echo $slot ?> = document.getElementById("edit_level_slider_<? echo $slot ?>");
-                var output<? echo $slot ?> = document.getElementById("edit_level_numb_<? echo $slot ?>");
-                slider<? echo $slot ?>.oninput = function() {
-                     output<? echo $slot ?>.innerHTML = this.value;
+                var slider<?php echo $slot ?> = document.getElementById("edit_level_slider_<?php echo $slot ?>");
+                var output<?php echo $slot ?> = document.getElementById("edit_level_numb_<?php echo $slot ?>");
+                slider<?php echo $slot ?>.oninput = function() {
+                     output<?php echo $slot ?>.innerHTML = this.value;
                 }								
             </script>            
             
             
         </div>
-    <? } ?>
+    <?php } ?>
     
     <div style="width: 225; font-family: MuseoSans-500; font-size: 16px; padding: 6 5 12 5; margin: 5 0 5 0; background-color: #b6b6b6; float: left">
         <b>Required stats:</b><br>
@@ -366,14 +365,14 @@ else {
                     $numb = substr($reqhp, 1);
                 }
                 ?>
-                <select class="petselect" name="reqhp_cond_<? echo $slot ?>" size="1">
-                    <option value=">" <? if ($cond == ">") { echo "selected"; } ?>>></option>
-                    <option value="<" <? if ($cond == "<") { echo "selected"; } ?>><</option>
-                    <option value="=" <? if ($cond == "=") { echo "selected"; } ?>>=</option>
+                <select class="petselect" name="reqhp_cond_<?php echo $slot ?>" size="1">
+                    <option value=">" <?php if ($cond == ">") { echo "selected"; } ?>>></option>
+                    <option value="<" <?php if ($cond == "<") { echo "selected"; } ?>><</option>
+                    <option value="=" <?php if ($cond == "=") { echo "selected"; } ?>>=</option>
                 </select>
             </div>
             <div style="float: left">
-                <input type="text" maxlength="4" class="petselect" style="width: 60px" name="reqhp_numb_<? echo $slot ?>" value="<? echo $numb ?>">
+                <input type="text" maxlength="4" class="petselect" style="width: 60px" name="reqhp_numb_<?php echo $slot ?>" value="<?php echo $numb ?>">
             </div>
         </div>
         
@@ -393,14 +392,14 @@ else {
                     $numb = substr($reqsp, 1);
                 }
                 ?>
-                <select class="petselect" name="reqsp_cond_<? echo $slot ?>" size="1">
-                    <option value=">" <? if ($cond == ">") { echo "selected"; } ?>>></option>
-                    <option value="<" <? if ($cond == "<") { echo "selected"; } ?>><</option>
-                    <option value="=" <? if ($cond == "=") { echo "selected"; } ?>>=</option>
+                <select class="petselect" name="reqsp_cond_<?php echo $slot ?>" size="1">
+                    <option value=">" <?php if ($cond == ">") { echo "selected"; } ?>>></option>
+                    <option value="<" <?php if ($cond == "<") { echo "selected"; } ?>><</option>
+                    <option value="=" <?php if ($cond == "=") { echo "selected"; } ?>>=</option>
                 </select>
             </div>
             <div style="float: left">
-                <input type="text" maxlength="3" class="petselect" style="width: 60px" name="reqsp_numb_<? echo $slot ?>" value="<? echo $numb ?>">
+                <input type="text" maxlength="3" class="petselect" style="width: 60px" name="reqsp_numb_<?php echo $slot ?>" value="<?php echo $numb ?>">
             </div>
         </div>       
 
@@ -420,20 +419,20 @@ else {
                     $numb = substr($reqpw, 1);
                 }
                 ?>
-                <select class="petselect" name="reqpw_cond_<? echo $slot ?>" size="1">
-                    <option value=">" <? if ($cond == ">") { echo "selected"; } ?>>></option>
-                    <option value="<" <? if ($cond == "<") { echo "selected"; } ?>><</option>
-                    <option value="=" <? if ($cond == "=") { echo "selected"; } ?>>=</option>
+                <select class="petselect" name="reqpw_cond_<?php echo $slot ?>" size="1">
+                    <option value=">" <?php if ($cond == ">") { echo "selected"; } ?>>></option>
+                    <option value="<" <?php if ($cond == "<") { echo "selected"; } ?>><</option>
+                    <option value="=" <?php if ($cond == "=") { echo "selected"; } ?>>=</option>
                 </select>
             </div>
             <div style="float: left">
-                <input type="text" maxlength="3" class="petselect" style="width: 60px" name="reqpw_numb_<? echo $slot ?>" value="<? echo $numb ?>">
+                <input type="text" maxlength="3" class="petselect" style="width: 60px" name="reqpw_numb_<?php echo $slot ?>" value="<?php echo $numb ?>">
             </div>
         </div>          
     </div>
 
-    <? if ($petget > "20") { ?>
-        <div style="width: 225; font-family: MuseoSans-500; font-size: 16px; padding: 6 5 12 5; margin: 5 0 5 0; background-color: #b6b6b6; float: left<? echo $hidedetails ?>">
+    <?php if ($petget > "20") { ?>
+        <div style="width: 225; font-family: MuseoSans-500; font-size: 16px; padding: 6 5 12 5; margin: 5 0 5 0; background-color: #b6b6b6; float: left<?php echo $hidedetails ?>">
             <b>Breeds:</b><br>
     
             <?
@@ -484,126 +483,126 @@ else {
             <div style="float: left; width: 70px; margin: 0 8 5 0">
                 <div  style="float: left; width: 30px"><b>BB:</b></div>
                 <div class="publishswitch" style="float: left">
-                    <input type="checkbox" class="publishswitch-checkbox" name="Pet<? echo $slot ?>_BB" id="Pet<? echo $slot ?>_BB" <? echo $thisbreeds['BB']; ?>>
-                    <label class="publishswitch-label" for="Pet<? echo $slot ?>_BB">
+                    <input type="checkbox" class="publishswitch-checkbox" name="Pet<?php echo $slot ?>_BB" id="Pet<?php echo $slot ?>_BB" <?php echo $thisbreeds['BB']; ?>>
+                    <label class="publishswitch-label" for="Pet<?php echo $slot ?>_BB">
                     <span class="publishswitch-inner"></span>
                     <span class="publishswitch-switch"></span>
                     </label>
                 </div>
             </div>
-            <? }
+            <?php }
             if ($pet->PP == "1") { ?>
             <div style="float: left; width: 70px; margin: 0 8 5 0">
                 <div  style="float: left; width: 30px"><b>PP:</b></div>
                 <div class="publishswitch" style="float: left">
-                    <input type="checkbox" class="publishswitch-checkbox" name="Pet<? echo $slot ?>_PP" id="Pet<? echo $slot ?>_PP" <? echo $thisbreeds['PP']; ?>>
-                    <label class="publishswitch-label" for="Pet<? echo $slot ?>_PP">
+                    <input type="checkbox" class="publishswitch-checkbox" name="Pet<?php echo $slot ?>_PP" id="Pet<?php echo $slot ?>_PP" <?php echo $thisbreeds['PP']; ?>>
+                    <label class="publishswitch-label" for="Pet<?php echo $slot ?>_PP">
                     <span class="publishswitch-inner"></span>
                     <span class="publishswitch-switch"></span>
                     </label>
                 </div>
             </div>
-            <? }
+            <?php }
             if ($pet->SS == "1") { ?>
             <div style="float: left; width: 70px; margin: 0 8 5 0">
                 <div  style="float: left; width: 30px"><b>SS:</b></div>
                 <div class="publishswitch" style="float: left">
-                    <input type="checkbox" class="publishswitch-checkbox" name="Pet<? echo $slot ?>_SS" id="Pet<? echo $slot ?>_SS" <? echo $thisbreeds['SS']; ?>>
-                    <label class="publishswitch-label" for="Pet<? echo $slot ?>_SS">
+                    <input type="checkbox" class="publishswitch-checkbox" name="Pet<?php echo $slot ?>_SS" id="Pet<?php echo $slot ?>_SS" <?php echo $thisbreeds['SS']; ?>>
+                    <label class="publishswitch-label" for="Pet<?php echo $slot ?>_SS">
                     <span class="publishswitch-inner"></span>
                     <span class="publishswitch-switch"></span>
                     </label>
                 </div>
             </div>
-            <? }
+            <?php }
             if ($pet->HH == "1") { ?>
             <div style="float: left; width: 70px; margin: 0 8 5 0">
                 <div  style="float: left; width: 30px"><b>HH:</b></div>
                 <div class="publishswitch" style="float: left">
-                    <input type="checkbox" class="publishswitch-checkbox" name="Pet<? echo $slot ?>_HH" id="Pet<? echo $slot ?>_HH" <? echo $thisbreeds['HH']; ?>>
-                    <label class="publishswitch-label" for="Pet<? echo $slot ?>_HH">
+                    <input type="checkbox" class="publishswitch-checkbox" name="Pet<?php echo $slot ?>_HH" id="Pet<?php echo $slot ?>_HH" <?php echo $thisbreeds['HH']; ?>>
+                    <label class="publishswitch-label" for="Pet<?php echo $slot ?>_HH">
                     <span class="publishswitch-inner"></span>
                     <span class="publishswitch-switch"></span>
                     </label>
                 </div>
             </div>
-            <? }
+            <?php }
             if ($pet->HP == "1") { ?>
             <div style="float: left; width: 70px; margin: 0 8 5 0">
                 <div  style="float: left; width: 30px"><b>HP:</b></div>
                 <div class="publishswitch" style="float: left">
-                    <input type="checkbox" class="publishswitch-checkbox" name="Pet<? echo $slot ?>_HP" id="Pet<? echo $slot ?>_HP" <? echo $thisbreeds['HP']; ?>>
-                    <label class="publishswitch-label" for="Pet<? echo $slot ?>_HP">
+                    <input type="checkbox" class="publishswitch-checkbox" name="Pet<?php echo $slot ?>_HP" id="Pet<?php echo $slot ?>_HP" <?php echo $thisbreeds['HP']; ?>>
+                    <label class="publishswitch-label" for="Pet<?php echo $slot ?>_HP">
                     <span class="publishswitch-inner"></span>
                     <span class="publishswitch-switch"></span>
                     </label>
                 </div>
             </div>
-            <? }
+            <?php }
             if ($pet->PS == "1") { ?>
             <div style="float: left; width: 70px; margin: 0 8 5 0">
                 <div  style="float: left; width: 30px"><b>PS:</b></div>
                 <div class="publishswitch" style="float: left">
-                    <input type="checkbox" class="publishswitch-checkbox" name="Pet<? echo $slot ?>_PS" id="Pet<? echo $slot ?>_PS" <? echo $thisbreeds['PS']; ?>>
-                    <label class="publishswitch-label" for="Pet<? echo $slot ?>_PS">
+                    <input type="checkbox" class="publishswitch-checkbox" name="Pet<?php echo $slot ?>_PS" id="Pet<?php echo $slot ?>_PS" <?php echo $thisbreeds['PS']; ?>>
+                    <label class="publishswitch-label" for="Pet<?php echo $slot ?>_PS">
                     <span class="publishswitch-inner"></span>
                     <span class="publishswitch-switch"></span>
                     </label>
                 </div>
             </div>
-            <? }
+            <?php }
             if ($pet->HS == "1") { ?>
             <div style="float: left; width: 70px; margin: 0 8 5 0">
                 <div  style="float: left; width: 30px"><b>HS:</b></div>
                 <div class="publishswitch" style="float: left">
-                    <input type="checkbox" class="publishswitch-checkbox" name="Pet<? echo $slot ?>_HS" id="Pet<? echo $slot ?>_HS" <? echo $thisbreeds['HS']; ?>>
-                    <label class="publishswitch-label" for="Pet<? echo $slot ?>_HS">
+                    <input type="checkbox" class="publishswitch-checkbox" name="Pet<?php echo $slot ?>_HS" id="Pet<?php echo $slot ?>_HS" <?php echo $thisbreeds['HS']; ?>>
+                    <label class="publishswitch-label" for="Pet<?php echo $slot ?>_HS">
                     <span class="publishswitch-inner"></span>
                     <span class="publishswitch-switch"></span>
                     </label>
                 </div>
             </div>
-            <? }
+            <?php }
             if ($pet->PB == "1") { ?>
             <div style="float: left; width: 70px; margin: 0 8 5 0">
                 <div  style="float: left; width: 30px"><b>PB:</b></div>
                 <div class="publishswitch" style="float: left">
-                    <input type="checkbox" class="publishswitch-checkbox" name="Pet<? echo $slot ?>_PB" id="Pet<? echo $slot ?>_PB" <? echo $thisbreeds['PB']; ?>>
-                    <label class="publishswitch-label" for="Pet<? echo $slot ?>_PB">
+                    <input type="checkbox" class="publishswitch-checkbox" name="Pet<?php echo $slot ?>_PB" id="Pet<?php echo $slot ?>_PB" <?php echo $thisbreeds['PB']; ?>>
+                    <label class="publishswitch-label" for="Pet<?php echo $slot ?>_PB">
                     <span class="publishswitch-inner"></span>
                     <span class="publishswitch-switch"></span>
                     </label>
                 </div>
             </div>
-            <? }
+            <?php }
             if ($pet->SB == "1") { ?>
             <div style="float: left; width: 70px; margin: 0 8 5 0">
                 <div  style="float: left; width: 30px"><b>SB:</b></div>
                 <div class="publishswitch" style="float: left">
-                    <input type="checkbox" class="publishswitch-checkbox" name="Pet<? echo $slot ?>_SB" id="Pet<? echo $slot ?>_SB" <? echo $thisbreeds['SB']; ?>>
-                    <label class="publishswitch-label" for="Pet<? echo $slot ?>_SB">
+                    <input type="checkbox" class="publishswitch-checkbox" name="Pet<?php echo $slot ?>_SB" id="Pet<?php echo $slot ?>_SB" <?php echo $thisbreeds['SB']; ?>>
+                    <label class="publishswitch-label" for="Pet<?php echo $slot ?>_SB">
                     <span class="publishswitch-inner"></span>
                     <span class="publishswitch-switch"></span>
                     </label>
                 </div>
             </div>
-            <? }
+            <?php }
             if ($pet->HB == "1") { ?>
             <div style="float: left; width: 70px; margin: 0 8 5 0">
                 <div  style="float: left; width: 30px"><b>HB:</b></div>
                 <div class="publishswitch" style="float: left">
-                    <input type="checkbox" class="publishswitch-checkbox" name="Pet<? echo $slot ?>_HB" id="Pet<? echo $slot ?>_HB" <? echo $thisbreeds['HB']; ?>>
-                    <label class="publishswitch-label" for="Pet<? echo $slot ?>_HB">
+                    <input type="checkbox" class="publishswitch-checkbox" name="Pet<?php echo $slot ?>_HB" id="Pet<?php echo $slot ?>_HB" <?php echo $thisbreeds['HB']; ?>>
+                    <label class="publishswitch-label" for="Pet<?php echo $slot ?>_HB">
                     <span class="publishswitch-inner"></span>
                     <span class="publishswitch-switch"></span>
                     </label>
                 </div>
             </div>
-            <? }  ?>
+            <?php }  ?>
         </div>
-    <? } ?>
+    <?php } ?>
     </div>
-<? }
+<?php }
 
 
 

@@ -3,9 +3,11 @@ include("../../data/dbconnect.php");
 include("../functions.php");
 
 $lineid = $_REQUEST["lineid"];
-$language = $_REQUEST["language"];
+$lang = $_REQUEST["lang"];
 $userid = $_REQUEST["userid"];
 $comsecret = $_REQUEST["delimiter"];
+
+$language = $lang;
 
 if ($userid) {
     $userdb = mysqli_query($dbcon, "SELECT * FROM Users WHERE id = '$userid'");
@@ -29,7 +31,7 @@ if ($veri1 == "true") {
             if ($user->Language == "en_US") {
                 $petnext = "Name";
             }
-            bt_stredit_printline($lineid, $strat, $language, $user->id);
+            bt_stredit_printline($step, $strat, $language, $user->id);
             $veri2 = "true";
         }
     }

@@ -1,4 +1,4 @@
-<? // Articles 2.0
+<?php // Articles 2.0
 
 if (!$mainid) {
     $mainid = $mainentry->id;
@@ -286,12 +286,16 @@ if ($preview == "Preview") {
 if ($overrideurllng == "1") {
     $urllng = "en_US";
 }
+if (!$urllng) {
+    $urllng = $language;
+    $noforce = true;
+}
 
 
 if ($urllng == "en_US" OR $urllng == "de_DE" OR $urllng == "fr_FR" OR $urllng == "it_IT" OR $urllng == "es_ES" OR $urllng == "pl_PL" OR $urllng == "pt_BR" OR $urllng == "ru_RU" OR $urllng == "ko_KR" OR $urllng == "zh_TW") {
     $arttitleext = "Title_".$urllng;
     $artcontentext = "Content_".$urllng;
-    $forcelng = "1";
+    if ($noforce != true) $forcelng = "1";
     $selectlng = $urllng;   // Used to push editor directly to this language in case it's changed through admin panel
 }
 else {
@@ -364,47 +368,40 @@ if ($pagemode != "review" && ($userrights[$article->UserRight] == "yes" OR ($use
             \BBCode\bboptions_image('article');
             \BBCode\bboptions_user('article');
             
-            
-            // TODO - below is the old pet list button that is non-functioning now...
-            
-            if ($maintype == "0") { ?>
-
-                <td style="padding-left: 10px"><button type="button" class="bbbutton" onclick="bb_articles('single','petlist')">Pet List</button></td>
-
-            <? } ?>
+            ?>
         </tr>
     </table>
 
 
     <table width="100%" class="profile">
 
-        <? if ($article->Loca == "1") { ?>
+        <?php if ($article->Loca == "1") { ?>
         <tr class="profile">
             <th colspan="2" width="5" class="profile">
                 <table>
                     <tr>
-                        <td><button class="articleedit_lng <? if ($selectlng == "en_US") { echo "articleedit_lng_active"; } ?>" id="atbt_en_US" onclick="article_chlng('en_US')">English</button></td>
-                        <td><button class="articleedit_lng <? if ($selectlng == "de_DE") { echo "articleedit_lng_active"; } ?>" id="atbt_de_DE" onclick="article_chlng('de_DE')">German</button></td>
-                        <td><button class="articleedit_lng <? if ($selectlng == "fr_FR") { echo "articleedit_lng_active"; } ?>" id="atbt_fr_FR" onclick="article_chlng('fr_FR')">French</button></td>
-                        <td><button class="articleedit_lng <? if ($selectlng == "it_IT") { echo "articleedit_lng_active"; } ?>" id="atbt_it_IT" onclick="article_chlng('it_IT')">Italian</button></td>
-                        <td><button class="articleedit_lng <? if ($selectlng == "es_ES") { echo "articleedit_lng_active"; } ?>" id="atbt_es_ES" onclick="article_chlng('es_ES')">Spanish</button></td>
-                        <td><button class="articleedit_lng <? if ($selectlng == "pl_PL") { echo "articleedit_lng_active"; } ?>" id="atbt_pl_PL" onclick="article_chlng('pl_PL')">Polish</button></td>
-                        <td><button class="articleedit_lng <? if ($selectlng == "pt_BR") { echo "articleedit_lng_active"; } ?>" id="atbt_pt_BR" onclick="article_chlng('pt_BR')">Portuguese</button></td>
-                        <td><button class="articleedit_lng <? if ($selectlng == "ru_RU") { echo "articleedit_lng_active"; } ?>" id="atbt_ru_RU" onclick="article_chlng('ru_RU')">Russian</button></td>
-                        <td><button class="articleedit_lng <? if ($selectlng == "ko_KR") { echo "articleedit_lng_active"; } ?>" id="atbt_ko_KR" onclick="article_chlng('ko_KR')">Korean</button></td>
-                        <td><button class="articleedit_lng <? if ($selectlng == "zh_TW") { echo "articleedit_lng_active"; } ?>" id="atbt_zh_TW" onclick="article_chlng('zh_TW')">Chinese</button></td>
+                        <td><button class="articleedit_lng <?php if ($selectlng == "en_US") { echo "articleedit_lng_active"; } ?>" id="atbt_en_US" onclick="article_chlng('en_US')">English</button></td>
+                        <td><button class="articleedit_lng <?php if ($selectlng == "de_DE") { echo "articleedit_lng_active"; } ?>" id="atbt_de_DE" onclick="article_chlng('de_DE')">German</button></td>
+                        <td><button class="articleedit_lng <?php if ($selectlng == "fr_FR") { echo "articleedit_lng_active"; } ?>" id="atbt_fr_FR" onclick="article_chlng('fr_FR')">French</button></td>
+                        <td><button class="articleedit_lng <?php if ($selectlng == "it_IT") { echo "articleedit_lng_active"; } ?>" id="atbt_it_IT" onclick="article_chlng('it_IT')">Italian</button></td>
+                        <td><button class="articleedit_lng <?php if ($selectlng == "es_ES") { echo "articleedit_lng_active"; } ?>" id="atbt_es_ES" onclick="article_chlng('es_ES')">Spanish</button></td>
+                        <td><button class="articleedit_lng <?php if ($selectlng == "pl_PL") { echo "articleedit_lng_active"; } ?>" id="atbt_pl_PL" onclick="article_chlng('pl_PL')">Polish</button></td>
+                        <td><button class="articleedit_lng <?php if ($selectlng == "pt_BR") { echo "articleedit_lng_active"; } ?>" id="atbt_pt_BR" onclick="article_chlng('pt_BR')">Portuguese</button></td>
+                        <td><button class="articleedit_lng <?php if ($selectlng == "ru_RU") { echo "articleedit_lng_active"; } ?>" id="atbt_ru_RU" onclick="article_chlng('ru_RU')">Russian</button></td>
+                        <td><button class="articleedit_lng <?php if ($selectlng == "ko_KR") { echo "articleedit_lng_active"; } ?>" id="atbt_ko_KR" onclick="article_chlng('ko_KR')">Korean</button></td>
+                        <td><button class="articleedit_lng <?php if ($selectlng == "zh_TW") { echo "articleedit_lng_active"; } ?>" id="atbt_zh_TW" onclick="article_chlng('zh_TW')">Chinese</button></td>
                     </tr>
                 </table>
             </th>
         </tr>
-        <? } ?>
+        <?php } ?>
 
-        <tr class="profile" <? if ($userrights[$article->UserRight] != "yes") { echo 'style="display: none"'; } ?> >
+        <tr class="profile" <?php if ($userrights[$article->UserRight] != "yes") { echo 'style="display: none"'; } ?> >
             <td class="collectionbordertwo">
                 <form method="post" style="display: inline">
                 <input type="hidden" name="action" value="save_article">
-                <input type="hidden" id="seleclang" name="seleclang" value="<? echo $selectlng; ?>">
-                <span id="article_lng" style="display: none"><? echo $selectlng; ?></span>
+                <input type="hidden" id="seleclang" name="seleclang" value="<?php echo $selectlng; ?>">
+                <span id="article_lng" style="display: none"><?php echo $selectlng; ?></span>
                 <table>
                     <tr>
                         <td>
@@ -417,7 +414,7 @@ if ($pagemode != "review" && ($userrights[$article->UserRight] == "yes" OR ($use
                         <td>
                             <ul class="radiossmall">
                                 <li>
-                                    <input class="lightblue" type="radio" id="left" value="1" name="tocloc" <? if ($article->TOC == "1") { echo "checked"; } ?>>
+                                    <input class="lightblue" type="radio" id="left" value="1" name="tocloc" <?php if ($article->TOC == "1") { echo "checked"; } ?>>
                                     <label for="left"></label>
                                     <div class="check"></div>
                                 </li>
@@ -430,7 +427,7 @@ if ($pagemode != "review" && ($userrights[$article->UserRight] == "yes" OR ($use
                         <td>
                             <ul class="radiossmall">
                                 <li>
-                                    <input class="lightblue" type="radio" id="right" value="2" name="tocloc" <? if ($article->TOC == "2") { echo "checked"; } ?>>
+                                    <input class="lightblue" type="radio" id="right" value="2" name="tocloc" <?php if ($article->TOC == "2") { echo "checked"; } ?>>
                                     <label for="right"></label>
                                     <div class="check"></div>
                                 </li>
@@ -443,7 +440,7 @@ if ($pagemode != "review" && ($userrights[$article->UserRight] == "yes" OR ($use
                         <td style="padding-right: 10px">
                             <ul class="radiossmall">
                                 <li>
-                                    <input class="red" type="radio" id="off" value="0" name="tocloc" <? if ($article->TOC == "0") { echo "checked"; } ?>>
+                                    <input class="red" type="radio" id="off" value="0" name="tocloc" <?php if ($article->TOC == "0") { echo "checked"; } ?>>
                                     <label for="off"></label>
                                     <div class="check"></div>
                                 </li>
@@ -454,7 +451,7 @@ if ($pagemode != "review" && ($userrights[$article->UserRight] == "yes" OR ($use
                         </td>
 
                         <td style="padding: 0px 10px 0px 10px">
-                            <p class="blogodd" style="font-size: 14">Page Width: </p><input class="petselect" style="width: 70px; font-weight: normal" type="field" name="article_width" value="<? echo $article->PageWidth ?>">
+                            <p class="blogodd" style="font-size: 14">Page Width: </p><input class="petselect" style="width: 70px; font-weight: normal" type="field" name="article_width" value="<?php echo $article->PageWidth ?>">
                         </td>
 
                         <td style="width: 1px; background-color: #757575"></td>
@@ -469,7 +466,7 @@ if ($pagemode != "review" && ($userrights[$article->UserRight] == "yes" OR ($use
                         <td>
                             <ul class="radiossmall">
                                 <li>
-                                    <input class="lightblue" type="radio" id="locyes" value="1" name="loca" <? if ($article->Loca == "1") { echo "checked"; } ?>>
+                                    <input class="lightblue" type="radio" id="locyes" value="1" name="loca" <?php if ($article->Loca == "1") { echo "checked"; } ?>>
                                     <label for="locyes"></label>
                                     <div class="check"></div>
                                 </li>
@@ -482,7 +479,7 @@ if ($pagemode != "review" && ($userrights[$article->UserRight] == "yes" OR ($use
                         <td>
                             <ul class="radiossmall">
                                 <li>
-                                    <input class="red" type="radio" id="locno" value="0" name="loca" <? if ($article->Loca == "0") { echo "checked"; } ?>>
+                                    <input class="red" type="radio" id="locno" value="0" name="loca" <?php if ($article->Loca == "0") { echo "checked"; } ?>>
                                     <label for="locno"></label>
                                     <div class="check"></div>
                                 </li>
@@ -496,69 +493,69 @@ if ($pagemode != "review" && ($userrights[$article->UserRight] == "yes" OR ($use
 
         <tr class="profile">
             <td class="collectionbordertwo">
-                <div id="article_en_US" class="language_input" <? if ($selectlng != "en_US" && $article->Loca != "0") { echo 'style="display: none"'; } ?>>
-                    <? if ($userrights[$article->UserRight] == "yes") { ?>
-                        <p class="blogodd" style="font-weight: bold">Title: </p><input class="petselect" style="width: 400px" type="field" id="article_title_en_US" name="article_title_en_US" value="<? echo $title_en_US ?>">
-                        <textarea class="edit_article" id="article_ta_en_US" name="article_content_en_US" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><? echo $editarticle_en_US ?></textarea>
-                    <? } ?>
-                    <? if ($userrights[$article->UserRight] != "yes" AND $userrights['LocArticles'] == "yes") { ?>
-                        <p class="blogodd" style="font-weight: bold">Title: <b><? echo $title_en_US ?></b>
+                <div id="article_en_US" class="language_input" <?php if ($selectlng != "en_US" && $article->Loca != "0") { echo 'style="display: none"'; } ?>>
+                    <?php if ($userrights[$article->UserRight] == "yes") { ?>
+                        <p class="blogodd" style="font-weight: bold">Title: </p><input class="petselect" style="width: 400px" type="field" id="article_title_en_US" name="article_title_en_US" value="<?php echo $title_en_US ?>">
+                        <textarea class="edit_article" id="article_ta_en_US" name="article_content_en_US" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><?php echo $editarticle_en_US ?></textarea>
+                    <?php } ?>
+                    <?php if ($userrights[$article->UserRight] != "yes" AND $userrights['LocArticles'] == "yes") { ?>
+                        <p class="blogodd" style="font-weight: bold">Title: <b><?php echo $title_en_US ?></b>
                         <hr class="home">
-                        <p class="blogodd" style="font-size: 14"> <? echo $transarticle_en_US ?></p>
+                        <p class="blogodd" style="font-size: 14"> <?php echo $transarticle_en_US ?></p>
                         <div style="display: none">
-                            <input type="field" id="en_title_translator" value="<? echo $title_en_US ?>">
-                            <textarea id="en_article_translator"><? echo $editarticle_en_US ?></textarea>
+                            <input type="field" id="en_title_translator" value="<?php echo $title_en_US ?>">
+                            <textarea id="en_article_translator"><?php echo $editarticle_en_US ?></textarea>
                         </div>
-                    <? } ?>
+                    <?php } ?>
                 </div>
                 <?
                 if ($userrights[$article->UserRight] == "yes") { $importtype = "editor"; }
                 if ($userrights[$article->UserRight] != "yes" AND $userrights['LocArticles'] == "yes") { $importtype = "translator"; }
                 ?>
-                <div id="article_de_DE" class="language_input" <? if ($selectlng != "de_DE" OR $article->Loca == "0") { echo 'style="display: none"'; } ?>>
-                    <p class="blogodd" style="font-weight: bold">Title: </p><input class="petselect" style="width: 400px" type="field" id="article_title_de_DE" name="article_title_de_DE" value="<? echo $title_de_DE ?>">
-                    <button onclick="art_import_en('de_DE','<? echo $importtype ?>')" type="button" class="comsubmit" style="margin-left: 30px" >Import English Title and Content</button>
-                    <textarea class="edit_article" id="article_ta_de_DE" name="article_content_de_DE" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><? echo $editarticle_de_DE ?></textarea>
+                <div id="article_de_DE" class="language_input" <?php if ($selectlng != "de_DE" OR $article->Loca == "0") { echo 'style="display: none"'; } ?>>
+                    <p class="blogodd" style="font-weight: bold">Title: </p><input class="petselect" style="width: 400px" type="field" id="article_title_de_DE" name="article_title_de_DE" value="<?php echo $title_de_DE ?>">
+                    <button onclick="art_import_en('de_DE','<?php echo $importtype ?>')" type="button" class="comsubmit" style="margin-left: 30px" >Import English Title and Content</button>
+                    <textarea class="edit_article" id="article_ta_de_DE" name="article_content_de_DE" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><?php echo $editarticle_de_DE ?></textarea>
                 </div>
-                <div id="article_fr_FR" class="language_input" <? if ($selectlng != "fr_FR" OR $article->Loca == "0") { echo 'style="display: none"'; } ?>>
-                    <p class="blogodd" style="font-weight: bold">Title: </p><input class="petselect" style="width: 400px" type="field" id="article_title_fr_FR" name="article_title_fr_FR" value="<? echo $title_fr_FR ?>">
-                    <button onclick="art_import_en('fr_FR','<? echo $importtype ?>')" type="button" class="comsubmit" style="margin-left: 30px" >Import English Title and Content</button>
-                    <textarea class="edit_article" id="article_ta_fr_FR" name="article_content_fr_FR" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><? echo $editarticle_fr_FR ?></textarea>
+                <div id="article_fr_FR" class="language_input" <?php if ($selectlng != "fr_FR" OR $article->Loca == "0") { echo 'style="display: none"'; } ?>>
+                    <p class="blogodd" style="font-weight: bold">Title: </p><input class="petselect" style="width: 400px" type="field" id="article_title_fr_FR" name="article_title_fr_FR" value="<?php echo $title_fr_FR ?>">
+                    <button onclick="art_import_en('fr_FR','<?php echo $importtype ?>')" type="button" class="comsubmit" style="margin-left: 30px" >Import English Title and Content</button>
+                    <textarea class="edit_article" id="article_ta_fr_FR" name="article_content_fr_FR" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><?php echo $editarticle_fr_FR ?></textarea>
                 </div>
-                <div id="article_it_IT" class="language_input" <? if ($selectlng != "it_IT" OR $article->Loca == "0") { echo 'style="display: none"'; } ?>>
-                    <p class="blogodd" style="font-weight: bold">Title: </p><input class="petselect" style="width: 400px" type="field" id="article_title_it_IT" name="article_title_it_IT" value="<? echo $title_it_IT ?>">
-                    <button onclick="art_import_en('it_IT','<? echo $importtype ?>')" type="button" class="comsubmit" style="margin-left: 30px" >Import English Title and Content</button>
-                    <textarea class="edit_article" id="article_ta_it_IT" name="article_content_it_IT" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><? echo $editarticle_it_IT ?></textarea>
+                <div id="article_it_IT" class="language_input" <?php if ($selectlng != "it_IT" OR $article->Loca == "0") { echo 'style="display: none"'; } ?>>
+                    <p class="blogodd" style="font-weight: bold">Title: </p><input class="petselect" style="width: 400px" type="field" id="article_title_it_IT" name="article_title_it_IT" value="<?php echo $title_it_IT ?>">
+                    <button onclick="art_import_en('it_IT','<?php echo $importtype ?>')" type="button" class="comsubmit" style="margin-left: 30px" >Import English Title and Content</button>
+                    <textarea class="edit_article" id="article_ta_it_IT" name="article_content_it_IT" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><?php echo $editarticle_it_IT ?></textarea>
                 </div>
-                <div id="article_es_ES" class="language_input" <? if ($selectlng != "es_ES" OR $article->Loca == "0") { echo 'style="display: none"'; } ?>>
-                    <p class="blogodd" style="font-weight: bold">Title: </p><input class="petselect" style="width: 400px" type="field" id="article_title_es_ES" name="article_title_es_ES" value="<? echo $title_es_ES ?>">
-                    <button onclick="art_import_en('es_ES','<? echo $importtype ?>')" type="button" class="comsubmit" style="margin-left: 30px" >Import English Title and Content</button>
-                    <textarea class="edit_article" id="article_ta_es_ES" name="article_content_es_ES" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><? echo $editarticle_es_ES ?></textarea>
+                <div id="article_es_ES" class="language_input" <?php if ($selectlng != "es_ES" OR $article->Loca == "0") { echo 'style="display: none"'; } ?>>
+                    <p class="blogodd" style="font-weight: bold">Title: </p><input class="petselect" style="width: 400px" type="field" id="article_title_es_ES" name="article_title_es_ES" value="<?php echo $title_es_ES ?>">
+                    <button onclick="art_import_en('es_ES','<?php echo $importtype ?>')" type="button" class="comsubmit" style="margin-left: 30px" >Import English Title and Content</button>
+                    <textarea class="edit_article" id="article_ta_es_ES" name="article_content_es_ES" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><?php echo $editarticle_es_ES ?></textarea>
                 </div>
-                <div id="article_pl_PL" class="language_input" <? if ($selectlng != "pl_PL" OR $article->Loca == "0") { echo 'style="display: none"'; } ?>>
-                    <p class="blogodd" style="font-weight: bold">Title: </p><input class="petselect" style="width: 400px" type="field" id="article_title_pl_PL" name="article_title_pl_PL" value="<? echo $title_pl_PL ?>">
-                    <button onclick="art_import_en('pl_PL','<? echo $importtype ?>')" type="button" class="comsubmit" style="margin-left: 30px" >Import English Title and Content</button>
-                    <textarea class="edit_article" id="article_ta_pl_PL" name="article_content_pl_PL" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><? echo $editarticle_pl_PL ?></textarea>
+                <div id="article_pl_PL" class="language_input" <?php if ($selectlng != "pl_PL" OR $article->Loca == "0") { echo 'style="display: none"'; } ?>>
+                    <p class="blogodd" style="font-weight: bold">Title: </p><input class="petselect" style="width: 400px" type="field" id="article_title_pl_PL" name="article_title_pl_PL" value="<?php echo $title_pl_PL ?>">
+                    <button onclick="art_import_en('pl_PL','<?php echo $importtype ?>')" type="button" class="comsubmit" style="margin-left: 30px" >Import English Title and Content</button>
+                    <textarea class="edit_article" id="article_ta_pl_PL" name="article_content_pl_PL" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><?php echo $editarticle_pl_PL ?></textarea>
                 </div>
-                <div id="article_pt_BR" class="language_input" <? if ($selectlng != "pt_BR" OR $article->Loca == "0") { echo 'style="display: none"'; } ?>>
-                    <p class="blogodd" style="font-weight: bold">Title: </p><input class="petselect" style="width: 400px" type="field" id="article_title_pt_BR" name="article_title_pt_BR" value="<? echo $title_pt_BR ?>">
-                    <button onclick="art_import_en('pt_BR','<? echo $importtype ?>')" type="button" class="comsubmit" style="margin-left: 30px" >Import English Title and Content</button>
-                    <textarea class="edit_article" id="article_ta_pt_BR" name="article_content_pt_BR" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><? echo $editarticle_pt_BR ?></textarea>
+                <div id="article_pt_BR" class="language_input" <?php if ($selectlng != "pt_BR" OR $article->Loca == "0") { echo 'style="display: none"'; } ?>>
+                    <p class="blogodd" style="font-weight: bold">Title: </p><input class="petselect" style="width: 400px" type="field" id="article_title_pt_BR" name="article_title_pt_BR" value="<?php echo $title_pt_BR ?>">
+                    <button onclick="art_import_en('pt_BR','<?php echo $importtype ?>')" type="button" class="comsubmit" style="margin-left: 30px" >Import English Title and Content</button>
+                    <textarea class="edit_article" id="article_ta_pt_BR" name="article_content_pt_BR" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><?php echo $editarticle_pt_BR ?></textarea>
                 </div>
-                <div id="article_ru_RU" class="language_input" <? if ($selectlng != "ru_RU" OR $article->Loca == "0") { echo 'style="display: none"'; } ?>>
-                    <p class="blogodd" style="font-weight: bold">Title: </p><input class="petselect" style="width: 400px" type="field" id="article_title_ru_RU" name="article_title_ru_RU" value="<? echo $title_ru_RU ?>">
-                    <button onclick="art_import_en('ru_RU','<? echo $importtype ?>')" type="button" class="comsubmit" style="margin-left: 30px" >Import English Title and Content</button>
-                    <textarea class="edit_article" id="article_ta_ru_RU" name="article_content_ru_RU" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><? echo $editarticle_ru_RU ?></textarea>
+                <div id="article_ru_RU" class="language_input" <?php if ($selectlng != "ru_RU" OR $article->Loca == "0") { echo 'style="display: none"'; } ?>>
+                    <p class="blogodd" style="font-weight: bold">Title: </p><input class="petselect" style="width: 400px" type="field" id="article_title_ru_RU" name="article_title_ru_RU" value="<?php echo $title_ru_RU ?>">
+                    <button onclick="art_import_en('ru_RU','<?php echo $importtype ?>')" type="button" class="comsubmit" style="margin-left: 30px" >Import English Title and Content</button>
+                    <textarea class="edit_article" id="article_ta_ru_RU" name="article_content_ru_RU" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><?php echo $editarticle_ru_RU ?></textarea>
                 </div>
-                <div id="article_ko_KR" class="language_input" <? if ($selectlng != "ko_KR" OR $article->Loca == "0") { echo 'style="display: none"'; } ?>>
-                    <p class="blogodd" style="font-weight: bold">Title: </p><input class="petselect" style="width: 400px" type="field" id="article_title_ko_KR" name="article_title_ko_KR" value="<? echo $title_ko_KR ?>">
-                    <button onclick="art_import_en('ko_KR','<? echo $importtype ?>')" type="button" class="comsubmit" style="margin-left: 30px" >Import English Title and Content</button>
-                    <textarea class="edit_article" id="article_ta_ko_KR" name="article_content_ko_KR" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><? echo $editarticle_ko_KR ?></textarea>
+                <div id="article_ko_KR" class="language_input" <?php if ($selectlng != "ko_KR" OR $article->Loca == "0") { echo 'style="display: none"'; } ?>>
+                    <p class="blogodd" style="font-weight: bold">Title: </p><input class="petselect" style="width: 400px" type="field" id="article_title_ko_KR" name="article_title_ko_KR" value="<?php echo $title_ko_KR ?>">
+                    <button onclick="art_import_en('ko_KR','<?php echo $importtype ?>')" type="button" class="comsubmit" style="margin-left: 30px" >Import English Title and Content</button>
+                    <textarea class="edit_article" id="article_ta_ko_KR" name="article_content_ko_KR" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><?php echo $editarticle_ko_KR ?></textarea>
                 </div>
-                <div id="article_zh_TW" class="language_input" <? if ($selectlng != "zh_TW" OR $article->Loca == "0") { echo 'style="display: none"'; } ?>>
-                    <p class="blogodd" style="font-weight: bold">Title: </p><input class="petselect" style="width: 400px" type="field" id="article_title_zh_TW" name="article_title_zh_TW" value="<? echo $title_zh_TW ?>">
-                    <button onclick="art_import_en('zh_TW','<? echo $importtype ?>')" type="button" class="comsubmit" style="margin-left: 30px" >Import English Title and Content</button>
-                    <textarea class="edit_article" id="article_ta_zh_TW" name="article_content_zh_TW" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><? echo $editarticle_zh_TW ?></textarea>
+                <div id="article_zh_TW" class="language_input" <?php if ($selectlng != "zh_TW" OR $article->Loca == "0") { echo 'style="display: none"'; } ?>>
+                    <p class="blogodd" style="font-weight: bold">Title: </p><input class="petselect" style="width: 400px" type="field" id="article_title_zh_TW" name="article_title_zh_TW" value="<?php echo $title_zh_TW ?>">
+                    <button onclick="art_import_en('zh_TW','<?php echo $importtype ?>')" type="button" class="comsubmit" style="margin-left: 30px" >Import English Title and Content</button>
+                    <textarea class="edit_article" id="article_ta_zh_TW" name="article_content_zh_TW" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><?php echo $editarticle_zh_TW ?></textarea>
                 </div>
             </td>
         </tr>
@@ -569,24 +566,24 @@ if ($pagemode != "review" && ($userrights[$article->UserRight] == "yes" OR ($use
             <td class="collectionbordertwo"><center>
                 <table style="width: 100%">
                     <tr>
-                        <? if ($userrights[$article->UserRight] == "yes") { ?>
+                        <?php if ($userrights[$article->UserRight] == "yes") { ?>
                             <td>
                                 <p class="blogodd" style="white-space: nowrap">Reason for update (optional):</p>
                             </td>
                             <td >
                                 <input class="petselect" style="width: 200px; font-weight: normal; font-size: 14px" type="field" name="update_reason" maxlength="200">
                             </td>
-                        <? }
+                        <?php }
                         else {
                         echo '<td style="width:100px"></td>';
                         } ?>
 
                         <td style="padding-left: 12px; width: 80%; text-align: center">
-                            <input type="submit" class="comedit" name="showprev" style="margin-right: 15px" formaction="index.php?m=<? echo $mainselector ?>&lng=<? echo $urllng ?>" formtarget="preview_<? echo $article->Article; ?>" value="Preview">
-                            <input data-remodal-action="close" type="submit" class="comdelete" value="<? echo _("FormButtonCancel"); ?>">
+                            <input type="submit" class="comedit" name="showprev" style="margin-right: 15px" formaction="index.php?m=<?php echo $mainselector ?>&lng=<?php echo $urllng ?>" formtarget="preview_<?php echo $article->Article; ?>" value="Preview">
+                            <input data-remodal-action="close" type="submit" class="comdelete" value="<?php echo __("Cancel"); ?>">
                         </td>
                         <td style="padding-left: 15px;">
-                            <input type="submit" class="comsubmit" formaction="index.php?m=<? echo $mainselector ?>&lng=<? echo $urllng ?>" value="Save without preview">
+                            <input type="submit" class="comsubmit" formaction="index.php?m=<?php echo $mainselector ?>&lng=<?php echo $urllng ?>" value="Save without preview">
                             </form>
                             </td>
                         <td style="padding-left: 15px;">
@@ -610,13 +607,13 @@ if ($pagemode != "review" && ($userrights[$article->UserRight] == "yes" OR ($use
     });
 
     function adjust_editfield() {
-        var el = document.getElementById('article_ta_<? echo $selectlng ?>');
+        var el = document.getElementById('article_ta_<?php echo $selectlng ?>');
         var h = el.scrollHeight;
         el.style.height = h+"px";
     }
 </script>
 
-<? }
+<?php }
 
 
 
@@ -626,69 +623,69 @@ if ($pagemode == "review" && ($userrights[$article->UserRight] == "yes" OR ($use
 
 <div class="remodal_articles" data-remodal-id="article_source">
     <table width="100%" class="profile">
-        <? if ($curarticle->Loca == "1") { ?>
+        <?php if ($curarticle->Loca == "1") { ?>
         <tr class="profile">
             <th colspan="2" width="5" class="profile">
-                <span id="article_lng" style="display: none"><? echo $selectlng ?></span>
+                <span id="article_lng" style="display: none"><?php echo $selectlng ?></span>
                 <table>
                     <tr>
-                        <td><button class="articleedit_lng <? if ($selectlng == "en_US") { echo "articleedit_lng_active"; } ?>" id="atbt_en_US" onclick="article_chlng('en_US')">English</button></td>
-                        <td><button class="articleedit_lng <? if ($selectlng == "de_DE") { echo "articleedit_lng_active"; } ?>" id="atbt_de_DE" onclick="article_chlng('de_DE')">German</button></td>
-                        <td><button class="articleedit_lng <? if ($selectlng == "fr_FR") { echo "articleedit_lng_active"; } ?>" id="atbt_fr_FR" onclick="article_chlng('fr_FR')">French</button></td>
-                        <td><button class="articleedit_lng <? if ($selectlng == "it_IT") { echo "articleedit_lng_active"; } ?>" id="atbt_it_IT" onclick="article_chlng('it_IT')">Italian</button></td>
-                        <td><button class="articleedit_lng <? if ($selectlng == "es_ES") { echo "articleedit_lng_active"; } ?>" id="atbt_es_ES" onclick="article_chlng('es_ES')">Spanish</button></td>
-                        <td><button class="articleedit_lng <? if ($selectlng == "pl_PL") { echo "articleedit_lng_active"; } ?>" id="atbt_pl_PL" onclick="article_chlng('pl_PL')">Polish</button></td>
-                        <td><button class="articleedit_lng <? if ($selectlng == "pt_BR") { echo "articleedit_lng_active"; } ?>" id="atbt_pt_BR" onclick="article_chlng('pt_BR')">Portuguese</button></td>
-                        <td><button class="articleedit_lng <? if ($selectlng == "ru_RU") { echo "articleedit_lng_active"; } ?>" id="atbt_ru_RU" onclick="article_chlng('ru_RU')">Russian</button></td>
-                        <td><button class="articleedit_lng <? if ($selectlng == "ko_KR") { echo "articleedit_lng_active"; } ?>" id="atbt_ko_KR" onclick="article_chlng('ko_KR')">Korean</button></td>
-                        <td><button class="articleedit_lng <? if ($selectlng == "zh_TW") { echo "articleedit_lng_active"; } ?>" id="atbt_zh_TW" onclick="article_chlng('zh_TW')">Chinese</button></td>
+                        <td><button class="articleedit_lng <?php if ($selectlng == "en_US") { echo "articleedit_lng_active"; } ?>" id="atbt_en_US" onclick="article_chlng('en_US')">English</button></td>
+                        <td><button class="articleedit_lng <?php if ($selectlng == "de_DE") { echo "articleedit_lng_active"; } ?>" id="atbt_de_DE" onclick="article_chlng('de_DE')">German</button></td>
+                        <td><button class="articleedit_lng <?php if ($selectlng == "fr_FR") { echo "articleedit_lng_active"; } ?>" id="atbt_fr_FR" onclick="article_chlng('fr_FR')">French</button></td>
+                        <td><button class="articleedit_lng <?php if ($selectlng == "it_IT") { echo "articleedit_lng_active"; } ?>" id="atbt_it_IT" onclick="article_chlng('it_IT')">Italian</button></td>
+                        <td><button class="articleedit_lng <?php if ($selectlng == "es_ES") { echo "articleedit_lng_active"; } ?>" id="atbt_es_ES" onclick="article_chlng('es_ES')">Spanish</button></td>
+                        <td><button class="articleedit_lng <?php if ($selectlng == "pl_PL") { echo "articleedit_lng_active"; } ?>" id="atbt_pl_PL" onclick="article_chlng('pl_PL')">Polish</button></td>
+                        <td><button class="articleedit_lng <?php if ($selectlng == "pt_BR") { echo "articleedit_lng_active"; } ?>" id="atbt_pt_BR" onclick="article_chlng('pt_BR')">Portuguese</button></td>
+                        <td><button class="articleedit_lng <?php if ($selectlng == "ru_RU") { echo "articleedit_lng_active"; } ?>" id="atbt_ru_RU" onclick="article_chlng('ru_RU')">Russian</button></td>
+                        <td><button class="articleedit_lng <?php if ($selectlng == "ko_KR") { echo "articleedit_lng_active"; } ?>" id="atbt_ko_KR" onclick="article_chlng('ko_KR')">Korean</button></td>
+                        <td><button class="articleedit_lng <?php if ($selectlng == "zh_TW") { echo "articleedit_lng_active"; } ?>" id="atbt_zh_TW" onclick="article_chlng('zh_TW')">Chinese</button></td>
                     </tr>
                 </table>
             </th>
         </tr>
-        <? } ?>
+        <?php } ?>
 
         <tr class="profile">
             <td class="collectionbordertwo">
-                <div id="article_en_US" class="language_input" <? if ($selectlng != "en_US" && $curarticle->Loca != "0") { echo 'style="display: none"'; } ?>>
-                    <p class="blogodd" style="font-weight: bold"><? echo $title_en_US ?>
-                    <textarea class="edit_article" id="article_ta_en_US" name="article_content_en_US" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><? echo $editarticle_en_US ?></textarea>
+                <div id="article_en_US" class="language_input" <?php if ($selectlng != "en_US" && $curarticle->Loca != "0") { echo 'style="display: none"'; } ?>>
+                    <p class="blogodd" style="font-weight: bold"><?php echo $title_en_US ?>
+                    <textarea class="edit_article" id="article_ta_en_US" name="article_content_en_US" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><?php echo $editarticle_en_US ?></textarea>
                 </div>
-                <div id="article_de_DE" class="language_input" <? if ($selectlng != "de_DE" OR $curarticle->Loca == "0") { echo 'style="display: none"'; } ?>>
-                    <p class="blogodd" style="font-weight: bold"><? echo $title_de_DE ?>
-                    <textarea class="edit_article" id="article_ta_de_DE" name="article_content_de_DE" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><? echo $editarticle_de_DE ?></textarea>
+                <div id="article_de_DE" class="language_input" <?php if ($selectlng != "de_DE" OR $curarticle->Loca == "0") { echo 'style="display: none"'; } ?>>
+                    <p class="blogodd" style="font-weight: bold"><?php echo $title_de_DE ?>
+                    <textarea class="edit_article" id="article_ta_de_DE" name="article_content_de_DE" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><?php echo $editarticle_de_DE ?></textarea>
                 </div>
-                <div id="article_fr_FR" class="language_input" <? if ($selectlng != "fr_FR" OR $curarticle->Loca == "0") { echo 'style="display: none"'; } ?>>
-                    <p class="blogodd" style="font-weight: bold"><? echo $title_fr_FR ?>
-                    <textarea class="edit_article" id="article_ta_fr_FR" name="article_content_fr_FR" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><? echo $editarticle_fr_FR ?></textarea>
+                <div id="article_fr_FR" class="language_input" <?php if ($selectlng != "fr_FR" OR $curarticle->Loca == "0") { echo 'style="display: none"'; } ?>>
+                    <p class="blogodd" style="font-weight: bold"><?php echo $title_fr_FR ?>
+                    <textarea class="edit_article" id="article_ta_fr_FR" name="article_content_fr_FR" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><?php echo $editarticle_fr_FR ?></textarea>
                 </div>
-                <div id="article_it_IT" class="language_input" <? if ($selectlng != "it_IT" OR $curarticle->Loca == "0") { echo 'style="display: none"'; } ?>>
-                    <p class="blogodd" style="font-weight: bold"><? echo $title_it_IT ?>
-                    <textarea class="edit_article" id="article_ta_it_IT" name="article_content_it_IT" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><? echo $editarticle_it_IT ?></textarea>
+                <div id="article_it_IT" class="language_input" <?php if ($selectlng != "it_IT" OR $curarticle->Loca == "0") { echo 'style="display: none"'; } ?>>
+                    <p class="blogodd" style="font-weight: bold"><?php echo $title_it_IT ?>
+                    <textarea class="edit_article" id="article_ta_it_IT" name="article_content_it_IT" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><?php echo $editarticle_it_IT ?></textarea>
                 </div>
-                <div id="article_es_ES" class="language_input" <? if ($selectlng != "es_ES" OR $curarticle->Loca == "0") { echo 'style="display: none"'; } ?>>
-                    <p class="blogodd" style="font-weight: bold"><? echo $title_es_ES ?>
-                    <textarea class="edit_article" id="article_ta_es_ES" name="article_content_es_ES" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><? echo $editarticle_es_ES ?></textarea>
+                <div id="article_es_ES" class="language_input" <?php if ($selectlng != "es_ES" OR $curarticle->Loca == "0") { echo 'style="display: none"'; } ?>>
+                    <p class="blogodd" style="font-weight: bold"><?php echo $title_es_ES ?>
+                    <textarea class="edit_article" id="article_ta_es_ES" name="article_content_es_ES" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><?php echo $editarticle_es_ES ?></textarea>
                 </div>
-                <div id="article_pl_PL" class="language_input" <? if ($selectlng != "pl_PL" OR $curarticle->Loca == "0") { echo 'style="display: none"'; } ?>>
-                    <p class="blogodd" style="font-weight: bold"><? echo $title_pl_PL ?>
-                    <textarea class="edit_article" id="article_ta_pl_PL" name="article_content_pl_PL" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><? echo $editarticle_pl_PL ?></textarea>
+                <div id="article_pl_PL" class="language_input" <?php if ($selectlng != "pl_PL" OR $curarticle->Loca == "0") { echo 'style="display: none"'; } ?>>
+                    <p class="blogodd" style="font-weight: bold"><?php echo $title_pl_PL ?>
+                    <textarea class="edit_article" id="article_ta_pl_PL" name="article_content_pl_PL" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><?php echo $editarticle_pl_PL ?></textarea>
                 </div>
-                <div id="article_pt_BR" class="language_input" <? if ($selectlng != "pt_BR" OR $curarticle->Loca == "0") { echo 'style="display: none"'; } ?>>
-                    <p class="blogodd" style="font-weight: bold"><? echo $title_pt_BR ?>
-                    <textarea class="edit_article" id="article_ta_pt_BR" name="article_content_pt_BR" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><? echo $editarticle_pt_BR ?></textarea>
+                <div id="article_pt_BR" class="language_input" <?php if ($selectlng != "pt_BR" OR $curarticle->Loca == "0") { echo 'style="display: none"'; } ?>>
+                    <p class="blogodd" style="font-weight: bold"><?php echo $title_pt_BR ?>
+                    <textarea class="edit_article" id="article_ta_pt_BR" name="article_content_pt_BR" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><?php echo $editarticle_pt_BR ?></textarea>
                 </div>
-                <div id="article_ru_RU" class="language_input" <? if ($selectlng != "ru_RU" OR $curarticle->Loca == "0") { echo 'style="display: none"'; } ?>>
-                    <p class="blogodd" style="font-weight: bold"><? echo $title_ru_RU ?>
-                    <textarea class="edit_article" id="article_ta_ru_RU" name="article_content_ru_RU" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><? echo $editarticle_ru_RU ?></textarea>
+                <div id="article_ru_RU" class="language_input" <?php if ($selectlng != "ru_RU" OR $curarticle->Loca == "0") { echo 'style="display: none"'; } ?>>
+                    <p class="blogodd" style="font-weight: bold"><?php echo $title_ru_RU ?>
+                    <textarea class="edit_article" id="article_ta_ru_RU" name="article_content_ru_RU" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><?php echo $editarticle_ru_RU ?></textarea>
                 </div>
-                <div id="article_ko_KR" class="language_input" <? if ($selectlng != "ko_KR" OR $curarticle->Loca == "0") { echo 'style="display: none"'; } ?>>
-                    <p class="blogodd" style="font-weight: bold"><? echo $title_ko_KR ?>
-                    <textarea class="edit_article" id="article_ta_ko_KR" name="article_content_ko_KR" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><? echo $editarticle_ko_KR ?></textarea>
+                <div id="article_ko_KR" class="language_input" <?php if ($selectlng != "ko_KR" OR $curarticle->Loca == "0") { echo 'style="display: none"'; } ?>>
+                    <p class="blogodd" style="font-weight: bold"><?php echo $title_ko_KR ?>
+                    <textarea class="edit_article" id="article_ta_ko_KR" name="article_content_ko_KR" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><?php echo $editarticle_ko_KR ?></textarea>
                 </div>
-                <div id="article_zh_TW" class="language_input" <? if ($selectlng != "zh_TW" OR $curarticle->Loca == "0") { echo 'style="display: none"'; } ?>>
-                    <p class="blogodd" style="font-weight: bold"><? echo $title_zh_TW ?>
-                    <textarea class="edit_article" id="article_ta_zh_TW" name="article_content_zh_TW" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><? echo $editarticle_zh_TW ?></textarea>
+                <div id="article_zh_TW" class="language_input" <?php if ($selectlng != "zh_TW" OR $curarticle->Loca == "0") { echo 'style="display: none"'; } ?>>
+                    <p class="blogodd" style="font-weight: bold"><?php echo $title_zh_TW ?>
+                    <textarea class="edit_article" id="article_ta_zh_TW" name="article_content_zh_TW" style="height: 500; width: 100%; margin-top: 10px" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'rmg','100000')" maxlength="100000"><?php echo $editarticle_zh_TW ?></textarea>
                 </div>
             </td>
         </tr>
@@ -706,12 +703,12 @@ $(document).on('opened', '.remodal', function () {
 });
 
 function adjust_editfield() {
-    var el = document.getElementById('article_ta_<? echo $selectlng ?>');
+    var el = document.getElementById('article_ta_<?php echo $selectlng ?>');
     var h = el.scrollHeight;
     el.style.height = h+"px";
 }
 </script>
-<? }
+<?php }
 
 
 
@@ -722,7 +719,7 @@ function adjust_editfield() {
 
 // =========== OUTPUT ARTICLE ==============  ?>
 
-<? if ($maintype == "0") { // Header for Articles with Strategies
+<?php if ($maintype == "0") { // Header for Articles with Strategies
     $subsdb = mysqli_query($dbcon, "SELECT * FROM Sub WHERE Main = $mainid");
     if (mysqli_num_rows($subsdb) < "4" && $mainselector != "17") {
         $articleclass = "articlecontent2";
@@ -733,51 +730,51 @@ function adjust_editfield() {
 
     ?>
     <div class="subtitle">
-    <table width="100%" border="0" margin="0" cellpadding="0" cellspacing="0">
-    <tr>
-    <td width="100%"><h class="megatitle"><? echo $publishtitle; ?></h>
-            <? if ($userrights[$article->UserRight] == "yes" && $pagemode != "review" && $preview != "Preview") { ?>
-                <br><a class="alternativessmall" style="color: white" data-remodal-target="edit_article" style="display:block">Edit Article</a>
-            <? } ?>
-            <? if ($userrights[$article->UserRight] != "yes" AND $userrights['LocArticles'] == "yes" && $pagemode != "review" && $article->Loca == "1" && $preview != "Preview") { ?>
-                <br><a class="alternativessmall" style="color: white" data-remodal-target="edit_article" style="display:block">Edit Translations</a>
-            <? } ?>
-            <? if ($userrights[$article->UserRight] != "yes" AND $userrights['LocArticles'] == "yes" && $pagemode != "review" && $article->Loca == "0" && $preview != "Preview") { ?>
-                <br><p class="alternativessmall" style="color: white" style="display:block">No translations required</p>
-            <? } ?>
-            <? if ($pagemode == "review" && $preview != "Preview" && ($userrights[$article->UserRight] == "yes" OR ($userrights['LocArticles'] == "yes" && $curarticle->Loca == "1"))) { ?>
-                <br><a class="alternativessmall" style="color: white" data-remodal-target="article_source" style="display:block">View Source</a>
-            <? } ?>
-    </td>
-    <td><img src="images/main_bg02_2.png"></td>
-    </tr>
-    </table>
+        <table width="100%" border="0" margin="0" cellpadding="0" cellspacing="0">
+        <tr>
+        <td width="100%"><h class="megatitle"><?php echo $publishtitle; ?></h>
+                <?php if ($userrights[$article->UserRight] == "yes" && $pagemode != "review" && $preview != "Preview") { ?>
+                    <br><a class="alternativessmall" style="color: white" data-remodal-target="edit_article" style="display:block">Edit Article</a>
+                <?php } ?>
+                <?php if ($userrights[$article->UserRight] != "yes" AND $userrights['LocArticles'] == "yes" && $pagemode != "review" && $article->Loca == "1" && $preview != "Preview") { ?>
+                    <br><a class="alternativessmall" style="color: white" data-remodal-target="edit_article" style="display:block">Edit Translations</a>
+                <?php } ?>
+                <?php if ($userrights[$article->UserRight] != "yes" AND $userrights['LocArticles'] == "yes" && $pagemode != "review" && $article->Loca == "0" && $preview != "Preview") { ?>
+                    <br><p class="alternativessmall" style="color: white" style="display:block">No translations required</p>
+                <?php } ?>
+                <?php if ($pagemode == "review" && $preview != "Preview" && ($userrights[$article->UserRight] == "yes" OR ($userrights['LocArticles'] == "yes" && $curarticle->Loca == "1"))) { ?>
+                    <br><a class="alternativessmall" style="color: white" data-remodal-target="article_source" style="display:block">View Source</a>
+                <?php } ?>
+        </td>
+        <td><img src="images/main_bg02_2.png"></td>
+        </tr>
+        </table>
     </div>
 
 <div class="article">
    <div class="articlebottom"></div>
-<div class="<? echo $articleclass ?>">
+<div class="<?php echo $articleclass ?>">
 
-<? }
+<?php }
 else { // Header for articles without strategies / full page ?>
 
 <div class="blogtitle">
     <table width="100%" border="0" margin="0" cellpadding="0" cellspacing="0">
         <tr>
             <td><img src="images/main_bg02_1.png"></td>
-            <td width="100%"><center><h class="megatitle"><? echo $publishtitle; ?></h>
-            <? if ($userrights[$article->UserRight] == "yes" && $pagemode != "review" && $preview != "Preview") { ?>
+            <td width="100%"><center><h class="megatitle"><?php echo $publishtitle; ?></h>
+            <?php if ($userrights[$article->UserRight] == "yes" && $pagemode != "review" && $preview != "Preview") { ?>
                 <br><a class="alternativessmall" style="color: white" data-remodal-target="edit_article" style="display:block">Edit Article</a>
-            <? } ?>
-            <? if ($userrights[$article->UserRight] != "yes" AND $userrights['LocArticles'] == "yes" && $pagemode != "review" && $article->Loca == "1" && $preview != "Preview") { ?>
+            <?php } ?>
+            <?php if ($userrights[$article->UserRight] != "yes" AND $userrights['LocArticles'] == "yes" && $pagemode != "review" && $article->Loca == "1" && $preview != "Preview") { ?>
                 <br><a class="alternativessmall" style="color: white" data-remodal-target="edit_article" style="display:block">Edit Translations</a>
-            <? } ?>
-            <? if ($userrights[$article->UserRight] != "yes" AND $userrights['LocArticles'] == "yes" && $pagemode != "review" && $article->Loca == "0" && $preview != "Preview") { ?>
+            <?php } ?>
+            <?php if ($userrights[$article->UserRight] != "yes" AND $userrights['LocArticles'] == "yes" && $pagemode != "review" && $article->Loca == "0" && $preview != "Preview") { ?>
                 <br><p style="color: white" style="display:block">No translation required</p>
-            <? } ?>
-            <? if ($pagemode == "review" && $preview != "Preview" && ($userrights[$article->UserRight] == "yes" OR ($userrights['LocArticles'] == "yes" && $curarticle->Loca == "1"))) { ?>
+            <?php } ?>
+            <?php if ($pagemode == "review" && $preview != "Preview" && ($userrights[$article->UserRight] == "yes" OR ($userrights['LocArticles'] == "yes" && $curarticle->Loca == "1"))) { ?>
                 <br><a class="alternativessmall" style="color: white" data-remodal-target="article_source" style="display:block">View Source</a>
-            <? } ?>
+            <?php } ?>
             </td>
             <td><img src="images/main_bg02_2.png"></td>
         </tr>
@@ -787,7 +784,7 @@ else { // Header for articles without strategies / full page ?>
 <div class="blogentryfirst">
     <div class="articlebottom"></div>
 <div class="articlecontent2">
-<? }
+<?php }
 
 
 
@@ -799,7 +796,7 @@ if (($userrights[$article->UserRight] == "yes" OR $userrights['LocArticles'] == 
                 <div id="admarrup" style="display: none; cursor: pointer" onclick="$('#adminext').hide(1000);$('#admarrdw').show();$('#admarrup').hide();"><b>-</b></div>
                 <div style="display:none" id="adminext">
                     <p class="smallodd"><b>Admin Menu:</b><br>
-                    <? if ($article->Loca != "0" && $curarticle->Loca != "0") { ?>
+                    <?php if ($article->Loca != "0" && $curarticle->Loca != "0") { ?>
                         Switch language:<br><br>
                         <?
                         if ($urllng == "en_US" OR !$urllng) { echo "<b><i>English</i></b><br>"; }
@@ -824,7 +821,7 @@ if (($userrights[$article->UserRight] == "yes" OR $userrights['LocArticles'] == 
                         else { echo '<a class="comlinkdark" href="?m='.$mainselector.'&rev='.$revision.'&lng=zh_TW">Chinese</a><br>'; }
                         ?>
                         <br>
-                    <? } ?>
+                    <?php } ?>
                     <?
                     $updatesdb = mysqli_query($dbcon, "SELECT * FROM Articles WHERE Article = '$mainid' AND Preview != '1' ORDER BY LastUpdate DESC") or die(mysqli_error($dbcon));
                     if (mysqli_num_rows($updatesdb) > "0") { ?>
@@ -852,7 +849,7 @@ if (($userrights[$article->UserRight] == "yes" OR $userrights['LocArticles'] == 
             </td>
         </tr>
     </table>
-<? }
+<?php }
 
 
 
@@ -865,36 +862,36 @@ if ($pagemode == "review") { ?>
         <tr class="profile" style=" background: #f2ebcd">
             <td class="profile" style="padding-right: 10px">
                 <center>
-                    <? $revdate = explode(" ", $article->LastUpdate); ?>
-                    <p class="blogodd">You are viewing an older version of this article from <span name="time"><? echo $revdate[0] ?></span>
+                    <?php $revdate = explode(" ", $article->LastUpdate); ?>
+                    <p class="blogodd">You are viewing an older version of this article from <span name="time"><?php echo $revdate[0] ?></span>
                     <br>
-                    <a class="comlinkdark" href="?m=<? echo $mainselector ?>&lng=<? echo $urllng ?>">Go to current version</a></p>
+                    <a class="comlinkdark" href="?m=<?php echo $mainselector ?>&lng=<?php echo $urllng ?>">Go to current version</a></p>
             </td>
         </tr>
     </table>
-<? } ?>
+<?php } ?>
 
-<? if ($preview == "Preview") { ?>
+<?php if ($preview == "Preview") { ?>
     <center>
     <table class="profile" style="position: sticky; top: 10px; height: 50px; min-width: 300px; border: 5px solid #e2d181; margin-bottom: 20px">
         <tr class="profile" style=" background: #f2ebcd">
             <td class="profile" style="padding-right: 10px">
                 <center>
                     <p class="blogodd">This is an unsaved preview. If you close this page, your changes will be discarded.
-                    <? if ($_POST['seleclang'] != "en_US" && $_POST['seleclang'] != "" && $article->Loca == "0") {
+                    <?php if ($_POST['seleclang'] != "en_US" && $_POST['seleclang'] != "" && $article->Loca == "0") {
                         echo "<br><b>Note:</b> you are about to set localization off. This defaults all languages to English and the article you are viewing right now will not be visible anymore.";
                     } ?>
                     </p>
                     <br>
-                    <form method="post" action="?m=<? echo $mainselector ?>&lng=<? echo $urllng ?>" style="display: inline">
-                        <input type="hidden" name="prevarticle" value="<? echo $article->id ?>">
+                    <form method="post" action="?m=<?php echo $mainselector ?>&lng=<?php echo $urllng ?>" style="display: inline">
+                        <input type="hidden" name="prevarticle" value="<?php echo $article->id ?>">
                         <input type="hidden" name="action" value="save_preview">
                         <input type="submit" class="comsubmit" name="saveprev" value="Save & Publish Changes" style="margin: 10 0 10 0">
                     </form>
             </td>
         </tr>
     </table>
-<? }
+<?php }
 
 
 
@@ -912,7 +909,7 @@ if ($article->TOC != "0") {
             break;
     } ?>
 
-    <div class="remodal-bg <? echo $qiposition; ?>">
+    <div class="remodal-bg <?php echo $qiposition; ?>">
     <center>
     <table class="profile" style="width: 100%">
         <tr class="profile">
@@ -946,7 +943,7 @@ if ($article->TOC != "0") {
                         </td>
                     </tr>
 
-                    <? if ($article->Translators != "" && $language != "en_US") { ?>
+                    <?php if ($article->Translators != "" && $language != "en_US") { ?>
                     <tr>
                         <td style="padding-right: 7px; vertical-align:top">
                             <img style="padding: 1px;" src="https://www.wow-petguide.com/images/icon_art_loca.png" />
@@ -969,9 +966,9 @@ if ($article->TOC != "0") {
                             ?>
                         </td>
                     </tr>
-                    <? } ?>
+                    <?php } ?>
 
-                    <? if ($toc) { ?>
+                    <?php if ($toc) { ?>
                     <tr>
                         <td style="vertical-align:top; padding-top: 16px">
                             <img style="padding: 1px" src="https://www.wow-petguide.com/images/icon_art_toc.png" alt="" />
@@ -996,7 +993,7 @@ if ($article->TOC != "0") {
                             <br>
                         </td>
                     </tr>
-                    <? } ?>
+                    <?php } ?>
                 </table>
             </td>
         </tr>
@@ -1042,30 +1039,132 @@ if ($article->TOC != "0") {
 
     </div>
 
-<? } ?>
+<?php } ?>
 
     <center>
-    <div style="max-width: <? echo $pagewidth ?>; text-align: left">
-
-        <?
-        if (strpos($publisharticle, '[petlist]') && $maintype == "0") {
-            $articlepieces = explode("[petlist]", $publisharticle);
-            echo $articlepieces[0];
-            echo "<i><b>The list of required pets can sadly not be displayed right now due to updates Blizzard is making on the armory. <br>A new version of the tables will be added as soon as possible.</b></i><br>";
-            // print_pet_table("on");
-            echo $articlepieces[1];
-        }
-        else {
-            echo $publisharticle;
-        }
-
-?>
-        <br><br>
-    </div>
+    <div style="max-width: <?php echo $pagewidth ?>; text-align: left; padding-bottom: 20px; overflow: auto">
+        <?php echo $publisharticle; ?>  
+    </div>     
 </div>
-<br>
+
+
+
+<?php  // Automated Petlists
+           
+if ($mainentry->Pet_Table != 'None') { ?>
+    <div class="pet_table" style="padding-top: 0px; float: left; width: 250px; z-index: 5">
+        <img src="images/xu_fu_pettable.png" style="height: 220px">
+    </div>  
+    <div class="pet_table" id="pet_table">
+    
+        <?php if ($mainentry->Pet_Table == 'Standard') { // Regular table buttons ?>
+            <div id="pet_table_buttons" style="display: table">
+                Xu-Fu can scan this section for the most suitable strategies according to your preferences and show the required pets.<br>
+                Depending on the amount of fights in the section, this can take up to a minute to process.<br>
+                <br>
+                <button tabindex="5" class="bnetlogin" type="submit" onclick="load_petlist('<?php echo $mainselector ?>','<?php echo $user->id ?>','<?php echo $language ?>')">Load Pet Table</button>
+                <br><br>
+            </div>
+        <?php } ?>
+        
+        <?php if ($mainentry->Pet_Table == 'Dungeon') { // Dungeon table ?>
+            <div id="pet_table_buttons" style="display: table">
+                Xu-Fu can scan this section for the most suitable strategies according to your preferences and show the required pets.<br>
+                The Regular option will allow using pets multiple times.<br>
+                Heroic mode will use each pet only once due to the restriction of no healing.<br>
+                <br>
+                <button tabindex="5" style="float: left" class="bnetlogin" type="submit" onclick="load_petlist('<?php echo $mainselector ?>','<?php echo $user->id ?>','<?php echo $language ?>')">Regular Table</button>
+                <button tabindex="5" style="float: left; margin-left: 30px" class="bnetlogin" type="submit" onclick="load_petlist('<?php echo $mainselector ?>','<?php echo $user->id ?>','<?php echo $language ?>','heroic')">Heroic Mode</button>
+                <br><br>
+            </div>
+        <?php } ?>
+
+
+        <?php if ($mainentry->Pet_Table == 'Celestial') { // Celestial Tournament selection
+            
+            // Week calculation
+            $start = strtotime("2015-09-16"); 
+            $end = strtotime(date('Y-m-d'));
+            $difference = $end-$start;
+            $weekdiff = floor($difference/604800);
+            $ct_week = $weekdiff % 3;
+            
+            switch ($ct_week) {
+                case "1":
+                    $ct_week_us = 'Week 1 with Taran Zhu, Wrathion and Chen Stormstout';
+                    $ct_week_eu = 'Week 2 with Shademaster Kiryn, Wise Mari and Blingtron 4000';
+                    break;
+                case "2":
+                    $ct_week_us = 'Week 2 with Shademaster Kiryn, Wise Mari and Blingtron 4000';
+                    $ct_week_eu = 'Week 3 with Sully "The Pickle" McLeary, Dr. Ion Goldbloom and Lorewalker Cho';
+                    break;
+                case "0":
+                    $ct_week_us = 'Week 3 with Sully "The Pickle" McLeary, Dr. Ion Goldbloom and Lorewalker Cho';
+                    $ct_week_eu = 'Week 1 with Taran Zhu, Wrathion and Chen Stormstout';
+                    break;
+            }
+            
+            
+            
+            ?>
+            <div id="pet_table_buttons" style="display: table">
+                Xu-Fu can scan this section for the most suitable strategies according to your preferences and show the required pets.<br>
+                It is recommended to check the tables week by week since you won't have to face all 9 tamers in one run.<br>
+                The tool will use every pet only once due to the restriction of no healing.<br>
+                <br>
+                Active:<br>
+                <?php echo '<b>US: '.$ct_week_us.'<br>';
+                echo 'EU: '.$ct_week_eu.'</b><br>';
+                ?><br>
+                <button tabindex="5" style="float: left" class="bnetlogin" type="submit" onclick="load_petlist('<?php echo $mainselector ?>','<?php echo $user->id ?>','<?php echo $language ?>','heroic','ct1')">Week 1</button>
+                <button tabindex="5" style="float: left; margin-left: 10px" class="bnetlogin" type="submit" onclick="load_petlist('<?php echo $mainselector ?>','<?php echo $user->id ?>','<?php echo $language ?>','heroic','ct2')">Week 2</button>
+                <button tabindex="5" style="float: left; margin-left: 10px" class="bnetlogin" type="submit" onclick="load_petlist('<?php echo $mainselector ?>','<?php echo $user->id ?>','<?php echo $language ?>','heroic','ct3')">Week 3</button>
+                <button tabindex="5" style="float: left; margin-left: 30px" class="bnetlogin" type="submit" onclick="load_petlist('<?php echo $mainselector ?>','<?php echo $user->id ?>','<?php echo $language ?>','heroic')">All Weeks</button>
+                <br><br>
+
+            </div>
+        <?php } ?>
+        
+        
+        
+        <?php if ($mainentry->Pet_Table == 'Family') { // Family sections  ?>
+            <div id="pet_table_buttons" style="display: table">
+                Xu-Fu can scan this section for the most suitable strategies according to your preferences and show the required pets.<br>
+                Pick a family below to check which pets you need.<br>
+                <br>
+                <a class="ffhumanoid" style="float: left; margin-right: 2px; margin-left: 15px" onclick="load_petlist('<?php echo $mainselector ?>','<?php echo $user->id ?>','<?php echo $language ?>','','humanoid')"></a>
+                <a class="ffdragonkin" style="float: left; margin-right: 2px" onclick="load_petlist('<?php echo $mainselector ?>','<?php echo $user->id ?>','<?php echo $language ?>','','dragonkin')"></a>
+                <a class="ffflying" style="float: left; margin-right: 2px" onclick="load_petlist('<?php echo $mainselector ?>','<?php echo $user->id ?>','<?php echo $language ?>','','flying')"></a>
+                <a class="ffundead" style="float: left; margin-right: 2px" onclick="load_petlist('<?php echo $mainselector ?>','<?php echo $user->id ?>','<?php echo $language ?>','','undead')"></a>
+                <a class="ffcritter" style="float: left" onclick="load_petlist('<?php echo $mainselector ?>','<?php echo $user->id ?>','<?php echo $language ?>','','critter')"></a>
+                <br><br>
+                <a class="ffmagic" style="float: left; margin-right: 2px; margin-left: 15px" onclick="load_petlist('<?php echo $mainselector ?>','<?php echo $user->id ?>','<?php echo $language ?>','','magic')"></a>
+                <a class="ffelemental" style="float: left; margin-right: 2px" onclick="load_petlist('<?php echo $mainselector ?>','<?php echo $user->id ?>','<?php echo $language ?>','','elemental')"></a>
+                <a class="ffbeast" style="float: left; margin-right: 2px" onclick="load_petlist('<?php echo $mainselector ?>','<?php echo $user->id ?>','<?php echo $language ?>','','beast')"></a>
+                <a class="ffaquatic" style="float: left; margin-right: 2px" onclick="load_petlist('<?php echo $mainselector ?>','<?php echo $user->id ?>','<?php echo $language ?>','','aquatic')"></a>
+                <a class="ffmechanical" style="float: left" onclick="load_petlist('<?php echo $mainselector ?>','<?php echo $user->id ?>','<?php echo $language ?>','','mechanical')"></a>
+              <br><br><br>
+              <?php if ($mainentry->id == 42) { ?>
+                <button class="bnetlogin" style="float: left; margin-right: 20px"" type="submit" onclick="load_petlist('<?php echo $mainselector ?>','<?php echo $user->id ?>','<?php echo $language ?>','','regular')">Regular strategies</button>
+              <?php } ?>
+              <button class="bnetlogin" type="submit" onclick="load_petlist('<?php echo $mainselector ?>','<?php echo $user->id ?>','<?php echo $language ?>')">All Families</button>
+              <i>(1 min+ to load)</i><br><br><br>
+            </div>
+        <?php } ?>
+        
+        
+
+                    
+        <div id="loading_field" style="display: none; width: 450px; text-align: center; margin: 20px auto">
+            <img src="images/loading.gif">
+            <br>
+            <i>Loading... this can take a while</i>
+        </div>
+    </div>
+<?php } ?> 
+
+
 <div class="maincomment">
-   <br>
    <table class="maincomseven" width="100%" cellspacing="0" cellpadding="0" style="background-color:4D4D4D" align="center">
    <tr><td style="width:100%;padding-left: 240px">
    <br><br>

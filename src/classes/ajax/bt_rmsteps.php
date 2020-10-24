@@ -1,6 +1,8 @@
 <?php
 include("../../data/dbconnect.php");
 include("../functions.php");
+require_once ('../BBCode.php');
+require_once ('../BBCode2.php');
 
 $stratid = $_REQUEST["stratid"];
 $language = $_REQUEST["lang"];
@@ -9,16 +11,17 @@ $petnext = "Name_".$language;
 if ($language == "en_US") {
     $petnext = "Name";
 }
-     
 
 // INIITIALIZE GETTEXT AND PULL LANGUAGE FILE
-putenv("LANG=".$language.".UTF-8");
-setlocale(LC_ALL, $language.".UTF-8");
+require_once ("../../thirdparty/motranslator/vendor/autoload.php");
+PhpMyAdmin\MoTranslator\Loader::loadFunctions();
+  _setlocale(LC_MESSAGES, $language);
+  _textdomain('messages');
+  _bindtextdomain('messages', __DIR__ . '/../../Locale/');
+  _bind_textdomain_codeset('messages', 'UTF-8');
+  set_language_vars($language);
 
-$domain = "messages";
-bindtextdomain($domain, "../../Locale");
-textdomain($domain);
-set_language_vars($language);
+$all_pets = get_all_pets($petnext, $external);
 
 $stratdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE id = $stratid");
 $strat = mysqli_fetch_object($stratdb);
@@ -50,63 +53,10 @@ echo $headertext;
 if ($strat->Comment != "") {
     
     $stratcomment = stripslashes(htmlentities($strat->Comment, ENT_QUOTES, "UTF-8"));
-    // Replace URLs:
-    if (strpos($stratcomment, '[url=') !== false && strpos($stratcomment, '[/url]') !== false) {
-        $cutarticle = explode("[url=", $stratcomment);
-        foreach ($cutarticle as $key => $value) {
-            if ($key > "0") {
-                $snippets1 = explode("[/url]", $value);
-                $snippets2 = explode("]", $snippets1[0]);
-                $replacestring = '[url='.$snippets2[0].']'.$snippets2[1].'[/url]';
-                $maskurl = preg_replace('/^(?!https?:\/\/)/', 'http://', $snippets2[0]);
-                $maskurl = str_replace('http','WLPz37f2',$maskurl);
-                $maskurl = str_replace('www','MjwMhR9z',$maskurl);
-                $replacewith = $snippets2[1].' ('.$maskurl.')';
-                $stratcomment = str_replace($replacestring,$replacewith,$stratcomment);
-            }
-        }
-    }
-
-    // Replace Pets:
-    if (strpos($stratcomment, '[pet=') !== false) {
-        $cutarticle = explode("[pet=", $stratcomment);
-        $beginning = $cutarticle[0];
-        foreach ($cutarticle as $key => $value) {
-            if ($key > "0") {
-                $snippets1 = explode("]", $value, 2);
-                $allpetsdb = mysqli_query($dbcon, "SELECT * FROM PetsUser WHERE PetID = '$snippets1[0]'") or die(mysqli_error($dbcon));
-                $thispet = mysqli_fetch_object($allpetsdb);
-                $beginning = $beginning.$thispet->${'petnext'}.$snippets1[1];
-            }
-        }
-        $stratcomment = $beginning;
-    }
-    // Replace Spells:
-    if (strpos($stratcomment, '[skill=') !== false) {
-        $cutarticle = explode("[skill=", $stratcomment);
-        $beginning = $cutarticle[0];
-        foreach ($cutarticle as $key => $value) {
-            if ($key > "0") {
-                $snippets1 = explode("]", $value, 2);
-                $allpetsdb = mysqli_query($dbcon, "SELECT * FROM Spells WHERE SpellID = '$snippets1[0]'") or die(mysqli_error($dbcon));
-                $thisspell = mysqli_fetch_object($allpetsdb);
-                $beginning = $beginning.$thisspell->${'language'}.$snippets1[1];
-            }
-        }
-        $stratcomment = $beginning;
-    }
-
+    $stratcomment = \BBCode\bbparse_pets($stratcomment, 12, 'rematch');
     $stratcomment = str_replace('WLPz37f2','http',$stratcomment);
     $stratcomment = str_replace('MjwMhR9z','www',$stratcomment);
-    // Replace simple formatting:
-    $stratcomment = str_replace("[u]", "", $stratcomment);
-    $stratcomment = str_replace("[/u]", "", $stratcomment);
-    $stratcomment = str_replace("[i]", "", $stratcomment);
-    $stratcomment = str_replace("[/i]", "", $stratcomment);
-    $stratcomment = str_replace("[b]", "", $stratcomment);
-    $stratcomment = str_replace("[/b]", "", $stratcomment);
-    $stratcomment = str_replace("[s]", "", $stratcomment);
-    $stratcomment = str_replace("[/s]", "", $stratcomment);
+    $stratcomment = \BBCode\bbparse_simple($stratcomment, 'rematch');
     $stratcomment = str_replace(PHP_EOL, "xzzuvwzzxn", $stratcomment);
     $stratcomment = preg_replace( "/\r|\n/", "", $stratcomment );
 
@@ -121,106 +71,13 @@ $stratdb = mysqli_query($dbcon, "SELECT * FROM Strategy WHERE SortingID = $strat
 while ($step = mysqli_fetch_object($stratdb)) {
 
     // Format Step and Instructions
-
     $showturn = stripslashes($step->Step);
     $showturn = translate_turn($showturn, $language);
     $showinstruction = translate_instruction($step->Instruction, $language);
-
     $showinstruction = str_replace("&#039;","'",$showinstruction);
-    $showinstruction = str_replace("[u]", "", $showinstruction);
-    $showinstruction = str_replace("[/u]", "", $showinstruction);
-    $showinstruction = str_replace("[i]", "", $showinstruction);
-    $showinstruction = str_replace("[/i]", "", $showinstruction);
-    $showinstruction = str_replace("[b]", "", $showinstruction);
-    $showinstruction = str_replace("[/b]", "", $showinstruction);    
+    $showinstruction = \BBCode\bbparse_simple($showinstruction, 'rematch');   
     $showinstruction = str_replace(PHP_EOL, " ", $showinstruction);
-    
-    // =========== Gather Spell and Pet names and transform formatting accordingly =========
-
-    $checkspells = extract_text($showinstruction);
-    if ($checkspells[0] != ""){
-        
-        // A) Tansform Spells
-        if (strpos($showinstruction, 'spell=') !== false) {
-            foreach ($checkspells as $key => $value) {
-                $cutinstruction = explode("spell=", $checkspells[$key]);
-                $cutinstruction = explode("]", $cutinstruction[1]);
-                $findspell = str_replace('&quot;','"',$cutinstruction[0]);
-                $spelldb = mysqli_query($dbcon, "SELECT * FROM Spells WHERE en_US = '$findspell' AND PetSpell = '1'");
-                if (mysqli_num_rows($spelldb) > "0") {
-                    $spell = mysqli_fetch_object($spelldb);
-                    if ($spell->${'language'} != "") {
-                        $spellfull = $spell->${'language'};   
-                    }
-                    else {
-                        $spellfull = $spell->en_US;
-                    }
-                }
-                else {
-                    $spellfull = $cutinstruction[0];
-                }
-                $replacespell = "[spell=".$cutinstruction[0]."]";
-                $showinstruction = str_replace($replacespell,$spellfull,$showinstruction);
-                $cutinstruction = "";
-                $spelldb = "";
-                $spell = "";
-            }
-        }
-
-        // B) Tansform Enemy Pets
-        if (strpos($showinstruction, 'enemy=') !== false) {
-            foreach ($checkspells as $key => $value) {
-                $cutinstruction = explode("enemy=", $checkspells[$key]);
-                $cutinstruction = explode("]", $cutinstruction[1]);
-                $findpet = str_replace('&quot;','"',$cutinstruction[0]);
-                $transpetdb = mysqli_query($dbcon, "SELECT * FROM PetsNPC WHERE Name Like '$findpet'");
-                if (mysqli_num_rows($transpetdb) > "0") {
-                    $transpet = mysqli_fetch_object($transpetdb);
-                    if ($transpet->${'petnext'} != "") {
-                        $transpetfull = $transpet->${'petnext'};   
-                    }
-                    else {
-                        $transpetfull = $transpet->Name;
-                    }
-                }
-                else {
-                    $transpetfull = $cutinstruction[0];
-                }
-                $replacepet = "[enemy=".$cutinstruction[0]."]";
-                $showinstruction = str_replace($replacepet,$transpetfull,$showinstruction);
-                $cutinstruction = "";
-                $transpetdb = "";
-                $transpet = "";
-            }
-        }
-        
-        // C) Tansform Pets
-        if (strpos($showinstruction, 'pet=') !== false) {
-            foreach ($checkspells as $key => $value) {
-                $cutinstruction = explode("pet=", $checkspells[$key]);
-                $cutinstruction = explode("]", $cutinstruction[1]);
-                $findpet = str_replace('&quot;','"',$cutinstruction[0]);
-                $transpetdb = mysqli_query($dbcon, "SELECT * FROM PetsUser WHERE Name Like '$findpet'");
-                if (mysqli_num_rows($transpetdb) > "0") {
-                    $transpet = mysqli_fetch_object($transpetdb);
-                    if ($transpet->${'petnext'} != "") {
-                        $transpetfull = $transpet->${'petnext'};   
-                    }
-                    else {
-                        $transpetfull = $transpet->Name;
-                    }
-                }
-                else {
-                    $transpetfull = $cutinstruction[0];
-                }
-                $replacepet = "[pet=".$cutinstruction[0]."]";
-                $showinstruction = str_replace($replacepet,$transpetfull,$showinstruction);
-                $cutinstruction = "";
-                $transpetdb = "";
-                $transpet = "";
-            }
-        }
-    }
+    $showinstruction = \BBCode\bbparse_pets($showinstruction, 12, 'rematch');
     $showinstruction = stripslashes($showinstruction);
     if ($showturn == "") {
         echo $showinstruction."xzzuvwzzxn";

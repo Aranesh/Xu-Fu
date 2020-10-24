@@ -16,7 +16,7 @@ else if ($viewuser->UseWowAvatar == "1"){
 }
 
     $viewusersettings = format_usersettings($viewuser->Settings);
-    if ($viewusersettings[7] == "1" OR $viewusersettings[7] == "") { 
+    if ($viewusersettings[7] != 0 OR $user->Role > 49) { 
         $viewuser_findcol = find_collection($viewuser);
         if ($viewuser_findcol != "No Collection") {
             $fp = fopen($viewuser_findcol['Path'], 'r');
@@ -43,31 +43,31 @@ else if ($viewuser->UseWowAvatar == "1"){
         $datetimenow = strtotime(date("Y-m-d H:i:s"));
         $calctime = $datetimenow - strtotime($mydatetime);
         if ($calctime > 29030400) {
-            $showtime = _("UP_TTLL1");
+            $showtime = __("more than a year ago");
         }
         if ($calctime <= 29030400) {
-            $showtime = _("UP_TTLL2");
+            $showtime = __("a year ago");
         }
         if ($calctime <= 24192000) {
-            $showtime = _("UP_TTLL3");
+            $showtime = __("several months ago");
         }
         if ($calctime <= 4838400) {
-            $showtime = _("UP_TTLL4");
+            $showtime = __("a few months ago");
         }
         if ($calctime <= 4838400) {
-            $showtime = _("UP_TTLL5");
+            $showtime = __("two months ago");
         }
         if ($calctime <= 2419200) {
-            $showtime = _("UP_TTLL6");
+            $showtime = __("this month");
         }
         if ($calctime <= 604800) {
-            $showtime = _("UP_TTLL7");
+            $showtime = __("this week");
         }
         if ($calctime <= 70000) {
-            $showtime = _("UP_TTLL8");
+            $showtime = __("today");
         }
         if ($calctime <= 3600) {
-            $showtime = _("UP_TTLL9");
+            $showtime = __("an hour ago");
         }
         if ($calctime <= 260) {
             $useronline = "true";
@@ -196,6 +196,8 @@ else if ($viewuser->UseWowAvatar == "1"){
         $strats[$stratcounter]['Pet2'] = $thisstrat->PetID2;
         $strats[$stratcounter]['Pet3'] = $thisstrat->PetID3;
         
+        $strats[$stratcounter]['Deleted'] = $thisstrat->Deleted;
+        
         $strats[$stratcounter]['Published'] = $thisstrat->Published;
         
         $strats[$stratcounter]['Attempts'] = $thisstrat->__attempts_total;
@@ -252,7 +254,7 @@ else if ($viewuser->UseWowAvatar == "1"){
     ?>
     <script>
     $(function () {
-        $("#families_header_<? echo $user->id ?>").CanvasJSChart( {
+        $("#families_header_<?php echo $user->id ?>").CanvasJSChart( {
             title:{
                 fontFamily: "MuseoSans-500",
                 fontWeight: "normal",
@@ -272,23 +274,23 @@ else if ($viewuser->UseWowAvatar == "1"){
                     toolTipContent: "",
                     indexLabel: "",
                     dataPoints: [
-                        {  y: <? echo $stats['Humanoid'] ?>, color: "#08adff" },
-                        {  y: <? echo $stats['Dragonkin'] ?>, color: "#59bc11" },
-                        {  y: <? echo $stats['Flying'] ?>, color: "#d4ca4f" },
-                        {  y: <? echo $stats['Undead'] ?>, color: "#9f6c73" },
-                        {  y: <? echo $stats['Critter'] ?>, color: "#7c5943" },
-                        {  y: <? echo $stats['Magic'] ?>, color: "#7341ee" },
-                        {  y: <? echo $stats['Elemental'] ?>, color: "#eb7012" },
-                        {  y: <? echo $stats['Beast'] ?>, color: "#ec2b22" },
-                        {  y: <? echo $stats['Aquatic'] ?>, color: "#08aab7" },
-                        {  y: <? echo $stats['Mechanic'] ?>, color: "#7e776d" }
+                        {  y: <?php echo $stats['Humanoid'] ?>, color: "#08adff" },
+                        {  y: <?php echo $stats['Dragonkin'] ?>, color: "#59bc11" },
+                        {  y: <?php echo $stats['Flying'] ?>, color: "#d4ca4f" },
+                        {  y: <?php echo $stats['Undead'] ?>, color: "#9f6c73" },
+                        {  y: <?php echo $stats['Critter'] ?>, color: "#7c5943" },
+                        {  y: <?php echo $stats['Magic'] ?>, color: "#7341ee" },
+                        {  y: <?php echo $stats['Elemental'] ?>, color: "#eb7012" },
+                        {  y: <?php echo $stats['Beast'] ?>, color: "#ec2b22" },
+                        {  y: <?php echo $stats['Aquatic'] ?>, color: "#08aab7" },
+                        {  y: <?php echo $stats['Mechanic'] ?>, color: "#7e776d" }
                    ]
                 }
                 ]
             });
         });
     </script>
-    <? } ?>
+    <?php } ?>
 
 
     <div class="blogtitle">
@@ -296,28 +298,28 @@ else if ($viewuser->UseWowAvatar == "1"){
             <img src="images/main_bg02_2.png">
         </div>
     
-        <? if ($viewuser_collection) { ?>
+        <?php if ($viewuser_collection) { ?>
             <div class="ut_petdonut" style="left: 29px;">
-                <div id="families_header_<? echo $user->id ?>" style="height: 100%; width: 100%;"></div>
+                <div id="families_header_<?php echo $user->id ?>" style="height: 100%; width: 100%;"></div>
             </div>
-        <? } ?>
+        <?php } ?>
     
-        <div class="ut_icon" <? if (!$viewuser_collection) { echo 'style="left: 50px;"'; } else { echo 'style="left: 53px;"'; }?>>
-            <a href="index.php?user=<? echo $viewuser->id ?>"><img <? echo $viewusericon ?> class="ut_icon" <? if (!$viewuser_collection) { echo 'style="border: 1px dotted #5678ad;"'; } ?>></a>
+        <div class="ut_icon" <?php if (!$viewuser_collection) { echo 'style="left: 50px;"'; } else { echo 'style="left: 53px;"'; }?>>
+            <a href="index.php?user=<?php echo $viewuser->id ?>"><img <?php echo $viewusericon ?> class="ut_icon" <?php if (!$viewuser_collection) { echo 'style="border: 1px dotted #5678ad;"'; } ?>></a>
         </div>
     
         <div style="position: relative; padding-left: 170px;top: 48%;transform: translateY(-50%);">
-            <h class="megatitle" style="line-height: 25px;"><? echo $viewuser->Name ?></h>
-            <p class="pr_role"><? echo $showtitle ?></p>
+            <h class="megatitle" style="line-height: 25px;"><?php echo $viewuser->Name ?></h>
+            <p class="pr_role"><?php echo $showtitle ?></p>
         </div>
     
-        <? if ($viewuser_collection OR $viewstrategies == "true") { ?>
+        <?php if ($viewuser_collection OR $viewstrategies == "true") { ?>
         <div style="position: absolute;left: 310px;top: 148px;">
-            <button id="ButtonAbout" onclick="profile_about('<? echo $viewuser->id ?>')" class="profile <? if ($display != "Collection" AND $display != "Strategies") { echo 'profileactive'; } ?>" style="display: block"><? echo _("UP_TabAbout") ?></button>
-            <? if ($viewuser_collection) { ?><button id="ButtonCollection" onclick="profile_collection('<? echo $viewuser->id ?>')" class="profile <? if ($display == "Collection") { echo 'profileactive'; } ?>" style="display: block"><? echo _("UP_TabCollection") ?></button><? } ?>
-            <? if ($viewstrategies == "true") { ?><button id="ButtonStrategies" onclick="profile_strategies('<? echo $viewuser->id ?>')" class="profile <? if ($display == "Strategies") { echo 'profileactive'; } ?>" style="display: block"><? echo _("UP_TabStrategies") ?></button><? } ?>
+            <button id="ButtonAbout" onclick="profile_about('<?php echo $viewuser->id ?>')" class="profile <?php if ($display != "Collection" AND $display != "Strategies") { echo 'profileactive'; } ?>" style="display: block"><?php echo __("About") ?></button>
+            <?php if ($viewuser_collection) { ?><button id="ButtonCollection" onclick="profile_collection('<?php echo $viewuser->id ?>')" class="profile <?php if ($display == "Collection") { echo 'profileactive'; } ?>" style="display: block"><?php echo __("Collection") ?></button><?php } ?>
+            <?php if ($viewstrategies == "true") { ?><button id="ButtonStrategies" onclick="profile_strategies('<?php echo $viewuser->id ?>')" class="profile <?php if ($display == "Strategies") { echo 'profileactive'; } ?>" style="display: block"><?php echo __("Strategies") ?></button><?php } ?>
         </div>
-        <? } ?>
+        <?php } ?>
     </div>
 
 
@@ -326,15 +328,15 @@ else if ($viewuser->UseWowAvatar == "1"){
 
     <div style="position: relative; float:left; min-height: 600px; padding-left: 300px;">
 
-        <div id="collection" style="padding: 32 10 10 25; <? if ($display != "Collection") { echo 'display: none'; } ?>" >
-             <? if ($viewuser_collection) {
-                print_collection($viewuser_collection,'0',$viewuser->Name);
+        <div id="collection" style="padding: 32 10 10 25; <?php if ($display != "Collection") { echo 'display: none'; } ?>" >
+             <?php if ($viewuser_collection) {
+                print_collection($viewuser_collection,'0',$viewuser->Name, $viewuser);
             } ?>
         <br><br>
         </div>
 
-        <div id="about" style="padding: 32 10 10 15; <? if ($display != "About" && $display != "") { echo 'display: none'; } ?>">
-            <? if ($viewuser->PrIntro != "") {
+        <div id="about" style="padding: 32 10 10 15; <?php if ($display != "About" && $display != "") { echo 'display: none'; } ?>">
+            <?php if ($viewuser->PrIntro != "") {
                 $introoutput = stripslashes($viewuser->PrIntro);
                 $introoutput = htmlentities($introoutput, ENT_QUOTES, "UTF-8");
                 $introoutput = AutoLinkUrls($introoutput,'1','dark');
@@ -347,15 +349,15 @@ else if ($viewuser->UseWowAvatar == "1"){
                 $introoutput = preg_replace("/\n/s", "<br>", $introoutput);
                 }
                 else if ($viewuser->PrIntro == ""){
-                    $introoutput = '<span class="username" style="text-decoration: none;font-weight: bold" rel="'.$viewuser->id.'" value="'.$user->id.'">'.$viewuser->Name.'</span> '._("UP_ABNoInfo");
+                    $introoutput = '<span class="username" style="text-decoration: none;font-weight: bold" rel="'.$viewuser->id.'" value="'.$user->id.'">'.$viewuser->Name.'</span> '.__("has not added any personal information.");
                 }
             ?>
-            <p class="blogodd"><?  echo $introoutput ?><br>
+            <p class="blogodd"><?php  echo $introoutput ?><br>
         </div>
 
 
-<? if ($viewstrategies == "true") { ?>
-    <div id="strategies" style="padding: 32 10 10 25; <? if ($display != "Strategies") { echo 'display: none'; } ?>" >
+<?php if ($viewstrategies == "true") { ?>
+    <div id="strategies" style="padding: 32 10 10 25; <?php if ($display != "Strategies") { echo 'display: none'; } ?>" >
 
         <table style="min-width: 800px" class="profile">
             <tr class="profile">
@@ -384,13 +386,19 @@ else if ($viewuser->UseWowAvatar == "1"){
                             if ($value['Published'] == 0) {
                                 $row_class = "mystratslistrowunpub";
                             }
+                            if ($value['Deleted'] == 1) {
+                                $row_class = "mystratslistrowdeleted";
+                            }
                             
+                            
+                            
+                            
+                        if ($value['Deleted'] == 0 OR $userrights['EditStrats'] == "yes") {
                             ?>
-                            
                             <tr class="mystratslistrow">
-                                <td class="<? echo $row_class ?>" style="padding-left: 10px"><a class="comlinkdark" href="<? echo $value['Fightlink'] ?>" target="_blank"><? echo $value['Fightname'] ?></a></td>
+                                <td class="<?php echo $row_class ?>" style="padding-left: 10px"><a class="comlinkdark" href="<?php echo $value['Fightlink'] ?>" target="_blank"><?php echo $value['Fightname'] ?></a></td>
                           
-                                <td class="<? echo $row_class ?>"><center>
+                                <td class="<?php echo $row_class ?>"><center>
                                 
                                 <?
                                 $i = "1";
@@ -408,55 +416,55 @@ else if ($viewuser->UseWowAvatar == "1"){
                                     }
             
                                     if ($fetchpet == "0") {  // Level Pet ?>
-                                        <img class="rating_tt" data-tooltip-content="#atooltip_<? echo $i ?>_<? echo $key ?>" style="width: 24px; height: 24px; cursor: help" src="https://www.wow-petguide.com/images/pets/resize50/level.png">
+                                        <img class="rating_tt" data-tooltip-content="#atooltip_<?php echo $i ?>_<?php echo $key ?>" style="width: 24px; height: 24px; cursor: help" src="https://www.wow-petguide.com/images/pets/resize50/level.png">
                                         <div style="display:none">
-                                            <span id="atooltip_<? echo $i ?>_<? echo $key ?>">Level Pet</span>
+                                            <span id="atooltip_<?php echo $i ?>_<?php echo $key ?>">Level Pet</span>
                                         </div> 
-                                    <? }
+                                    <?php }
                                     if ($fetchpet == "1") {  // Any Pet ?>
-                                        <img class="rating_tt" data-tooltip-content="#atooltip_<? echo $i ?>_<? echo $key ?>" style="width: 24px; height: 24px; cursor: help" src="https://www.wow-petguide.com/images/pets/resize50/any.png">
+                                        <img class="rating_tt" data-tooltip-content="#atooltip_<?php echo $i ?>_<?php echo $key ?>" style="width: 24px; height: 24px; cursor: help" src="https://www.wow-petguide.com/images/pets/resize50/any.png">
                                         <div style="display:none">
-                                            <span id="atooltip_<? echo $i ?>_<? echo $key ?>">Any Pet</span>
+                                            <span id="atooltip_<?php echo $i ?>_<?php echo $key ?>">Any Pet</span>
                                         </div>                             
-                                    <? }
+                                    <?php }
                                     if ($fetchpet > "10" && $fetchpet <= "20") { // Family pets
                                         switch ($fetchpet) { 
                                             case "11":
-                                               $famname = _("PetCardPrefixAny")." "._("PetCardSuffixHumanoid");
+                                               $famname = __("Any")." ".__("Humanoid");
                                             break;      
                                             case "12":
-                                               $famname = _("PetCardPrefixAny")." "._("PetCardSuffixMagic");
+                                               $famname = __("Any")." ".__("Magic");
                                             break;
                                             case "13":
-                                               $famname = _("PetCardPrefixAny")." "._("PetCardSuffixElemental");
+                                               $famname = __("Any")." ".__("Elemental");
                                             break;      
                                             case "14":
-                                               $famname = _("PetCardPrefixAny")." "._("PetCardSuffixUndead");
+                                               $famname = __("Any")." ".__("Undead");
                                             break;   
                                             case "15":
-                                               $famname = _("PetCardPrefixAny")." "._("PetCardSuffixMech");
+                                               $famname = __("Any")." ".__("Mech");
                                             break;      
                                             case "16":
-                                               $famname = _("PetCardPrefixAny")." "._("PetCardSuffixFlyer");
+                                               $famname = __("Any")." ".__("Flyer");
                                             break;
                                             case "17":
-                                               $famname = _("PetCardPrefixAny")." "._("PetCardSuffixCritter");
+                                               $famname = __("Any")." ".__("Critter");
                                             break;      
                                             case "18":
-                                               $famname = _("PetCardPrefixAny")." "._("PetCardSuffixAquatic");
+                                               $famname = __("Any")." ".__("Aquatic");
                                             break;   
                                             case "19":
-                                               $famname = _("PetCardPrefixAny")." "._("PetCardSuffixBeast");
+                                               $famname = __("Any")." ".__("Beast");
                                             break;      
                                             case "20":
-                                               $famname = _("PetCardPrefixAny")." "._("PetCardSuffixDragonkin");
+                                               $famname = __("Any")." ".__("Dragon");
                                             break;  
                                          } ?>
-                                        <img class="rating_tt" data-tooltip-content="#atooltip_<? echo $i ?>_<? echo $key ?>" style="width: 24px; height: 24px; cursor: help" src="https://www.wow-petguide.com/images/pets/resize50/<? echo $fetchpet ?>.png">
+                                        <img class="rating_tt" data-tooltip-content="#atooltip_<?php echo $i ?>_<?php echo $key ?>" style="width: 24px; height: 24px; cursor: help" src="https://www.wow-petguide.com/images/pets/resize50/<?php echo $fetchpet ?>.png">
                                         <div style="display:none">
-                                            <span id="atooltip_<? echo $i ?>_<? echo $key ?>"><? echo $famname ?></span>
+                                            <span id="atooltip_<?php echo $i ?>_<?php echo $key ?>"><?php echo $famname ?></span>
                                         </div>                               
-                                        <? }
+                                        <?php }
                                         if ($fetchpet > "20") { 
                                             if (file_exists('images/pets/resize50/'.$all_pets[$fetchpet]['PetID'].'.png')) {
                                                 $peticon = 'https://www.wow-petguide.com/images/pets/resize50/'.$all_pets[$fetchpet]['PetID'].'.png';
@@ -464,34 +472,34 @@ else if ($viewuser->UseWowAvatar == "1"){
                                             else {
                                                 $peticon = 'https://www.wow-petguide.com/images/pets/resize50/unknown.png';
                                             } ?>                    
-                                            <a href="http://<? echo $GLOBALS['wowhdomain'] ?>.wowhead.com/npc=<? echo $all_pets[$fetchpet]['PetID'] ?>" target="_blank"><img style="width: 24px; height: 24px" src="<? echo $peticon ?>"></a>
+                                            <a href="http://<?php echo $GLOBALS['wowhdomain'] ?>.wowhead.com/npc=<?php echo $all_pets[$fetchpet]['PetID'] ?>" target="_blank"><img style="width: 24px; height: 24px" src="<?php echo $peticon ?>"></a>
             
-                                        <? }
+                                        <?php }
                                     $i++;
                                 }
                                     ?>
                                             
             
                                 </td>
-                                <td class="<? echo $row_class ?>">
+                                <td class="<?php echo $row_class ?>">
                                 <div>
-                                    <div style="float: left; margin: 0 5 0 25"><p class="blogodd"><? echo $value['Favs'] ?></div>
+                                    <div style="float: left; margin: 0 5 0 25"><p class="blogodd"><?php echo $value['Favs'] ?></div>
                                     <div style="float: left"><img src="https://www.wow-petguide.com/images/icon_strats_fav.png"></div>
                                 </div>
                                 </td>
-                                <td class="<? echo $row_class ?>" style="width: 1%; text-align: left; padding-left: 20px"><p class="blogodd"><? echo $value['RatingAverage'] ?></td>
+                                <td class="<?php echo $row_class ?>" style="width: 1%; text-align: left; padding-left: 20px"><p class="blogodd"><?php echo $value['RatingAverage'] ?></td>
                                 <td><center>
-                                    <div class="strat_star_<? echo $value['StratClass'] ?> rating_tt" data-tooltip-content="#atooltip_content_<? echo $key ?>" style="width:100px; height:20px; display:block; cursor: help"></div>
+                                    <div class="strat_star_<?php echo $value['StratClass'] ?> rating_tt" data-tooltip-content="#atooltip_content_<?php echo $key ?>" style="width:100px; height:20px; display:block; cursor: help"></div>
                                     <div style="display:none">
-                                        <span id="atooltip_content_<? echo $key ?>"><? echo $value['Ratings'] ?> battler(s) voted on this strategy.</span>
+                                        <span id="atooltip_content_<?php echo $key ?>"><?php echo $value['Ratings'] ?> battler(s) voted on this strategy.</span>
                                     </div>       
                                 </td>
 
-                                <td class="<? echo $row_class ?>"><center><p class="blogodd"><? echo $value['Views'] ?></td>
-                                <td class="<? echo $row_class ?>"><center><p class="blogodd">
-                                    <div class="rating_tt" data-tooltip-content="#coms_tooltip_content_<? echo $key ?>" style="cursor: help"><p class="blogodd"><? echo $value['Comments']; ?></p></div>
+                                <td class="<?php echo $row_class ?>"><center><p class="blogodd"><?php echo $value['Views'] ?></td>
+                                <td class="<?php echo $row_class ?>"><center><p class="blogodd">
+                                    <div class="rating_tt" data-tooltip-content="#coms_tooltip_content_<?php echo $key ?>" style="cursor: help"><p class="blogodd"><?php echo $value['Comments']; ?></p></div>
                                     <div style="display:none">
-                                        <span id="coms_tooltip_content_<? echo $key ?>">
+                                        <span id="coms_tooltip_content_<?php echo $key ?>">
                                             This number shows all comments, including those written in different languages. You can change the displayed language in your account settings.
                                         </span>
                                     </div>                    
@@ -501,6 +509,7 @@ else if ($viewuser->UseWowAvatar == "1"){
             
                         <?php
                         }
+                    }
                         ?>
             
                         </tbody>
@@ -531,7 +540,7 @@ else if ($viewuser->UseWowAvatar == "1"){
     });
 </script>
     </div>
-<? } ?>    
+<?php } ?>    
     
     
 </div>      
@@ -578,14 +587,14 @@ else if ($viewuser->UseWowAvatar == "1"){
                 }
                 ?>
                 <br><br>
-            <? } ?>
+            <?php } ?>
 
 
             <table class="profileleft" style="width: auto; margin-right: 0px; margin-left: auto; cellpadding: 0; cellspacing: 0">
-                <? if ($viewuser->PrBattleTag OR $viewuser->PrDiscord) {
+                <?php if ($viewuser->PrBattleTag OR $viewuser->PrDiscord) {
                     if ($viewuser->PrBattleTag) { ?>
                         <tr>
-                            <td style="text-align:right; vertical-align: top"><p class="blogodd" style="font-size: 15px; white-space:nowrap;"><? echo _("UP_PRHBtag") ?></td>
+                            <td style="text-align:right; vertical-align: top"><p class="blogodd" style="font-size: 15px; white-space:nowrap;"><?php echo __("BattleTag:") ?></td>
                             <td><p class="blogodd" style="font-size: 15px;"><b><?
                                         echo htmlentities($viewuser->PrBattleTag, ENT_QUOTES, "UTF-8");
                                         echo "#";
@@ -596,31 +605,31 @@ else if ($viewuser->UseWowAvatar == "1"){
                         ?>
                             </b></td>
                         </tr>
-                    <? }
+                    <?php }
                     if ($viewuser->PrDiscord) { ?>
                         <tr>
-                            <td style="text-align:right; vertical-align: top"><p class="blogodd" style="font-size: 15px; white-space:nowrap;"><? echo _("UP_PRHDiscord") ?>:</td>
-                            <td><p class="blogodd" style="font-size: 15px;"><b><? echo htmlentities($viewuser->PrDiscord, ENT_QUOTES, "UTF-8"); ?></b></td>
+                            <td style="text-align:right; vertical-align: top"><p class="blogodd" style="font-size: 15px; white-space:nowrap;"><?php echo __("Discord") ?>:</td>
+                            <td><p class="blogodd" style="font-size: 15px;"><b><?php echo htmlentities($viewuser->PrDiscord, ENT_QUOTES, "UTF-8"); ?></b></td>
                         </tr>
-                    <? } ?>
+                    <?php } ?>
 
                     <tr>
                         <td colspan="2">
                             <hr class="quickfacts">
                         </td>
                     </tr>
-                <? } ?>
+                <?php } ?>
 
-                <? if ($viewuser_collection) { ?>
+                <?php if ($viewuser_collection) { ?>
 
                     <tr>
-                        <td style="text-align:right; vertical-align: top"><p class="blogodd" style="font-size: 15px; white-space:nowrap;"><? echo _("UP_ABPetsCol") ?>:</td>
-                        <td><p class="blogodd" style="font-size: 15px"><b><? echo $stats['Maxed']+$stats['NotMaxed']; ?></b></td>
+                        <td style="text-align:right; vertical-align: top"><p class="blogodd" style="font-size: 15px; white-space:nowrap;"><?php echo __("Pets Collected") ?>:</td>
+                        <td><p class="blogodd" style="font-size: 15px"><b><?php echo $stats['Maxed']+$stats['NotMaxed']; ?></b></td>
                     </tr>
 
                     <tr>
-                        <td style="text-align:right; vertical-align: top"><p class="blogodd" style="font-size: 15px; white-space:nowrap;"><? echo _("ColTableChartUnique") ?>:</td>
-                        <td><p class="blogodd" style="font-size: 15px"><b><? echo $stats['Unique']; ?></b></td>
+                        <td style="text-align:right; vertical-align: top"><p class="blogodd" style="font-size: 15px; white-space:nowrap;"><?php echo __("Unique pets") ?>:</td>
+                        <td><p class="blogodd" style="font-size: 15px"><b><?php echo $stats['Unique']; ?></b></td>
                     </tr>
 
                     <tr>
@@ -628,18 +637,18 @@ else if ($viewuser->UseWowAvatar == "1"){
                             <hr class="quickfacts">
                         </td>
                     </tr>
-                <? } ?>
+                <?php } ?>
 
-                <? if ($viewuser->PrFavPet) {
+                <?php if ($viewuser->PrFavPet) {
                 $favpet = Database_query_object ( "SELECT * "
-                                                . "FROM Pets "
+                                                . "FROM PetsUser "
                                                 . "WHERE PetID = $viewuser->PrFavPet"
                                                 );
                   ?>
                     <tr>
-                        <td style="text-align:right; vertical-align: top"><p class="blogodd" style="font-size: 15px; white-space:nowrap"><? echo _("UP_ABFavPet") ?>:</td>
+                        <td style="text-align:right; vertical-align: top"><p class="blogodd" style="font-size: 15px; white-space:nowrap"><?php echo __("Favourite Pet") ?>:</td>
                         <td><p class="blogodd" style="font-size: 15px;"><b>
-                            <a class="wowhead" style="text-decoration: none" href="http://<? echo $wowhdomain ?>.wowhead.com/npc=<? echo $favpet->PetID ?>" target="_blank"><? echo $favpet->${'petnext'}; ?></a>
+                            <a class="wowhead" style="text-decoration: none" href="http://<?php echo $wowhdomain ?>.wowhead.com/npc=<?php echo $favpet->PetID ?>" target="_blank"><?php echo $favpet->${'petnext'}; ?></a>
                         </b></td>
                     </tr>
 
@@ -648,13 +657,13 @@ else if ($viewuser->UseWowAvatar == "1"){
                             <hr class="quickfacts">
                         </td>
                     </tr>
-                <? } ?>
+                <?php } ?>
                 
-                <? if ($stratcounter > "0") {
+                <?php if ($stratcounter > "0") {
                   ?>
                     <tr>
                         <td style="text-align:right; vertical-align: top"><p class="blogodd" style="font-size: 15px; white-space:nowrap">Strategies:</td>
-                        <td><p class="blogodd" style="font-size: 15px"><b><? echo $stratcounter ?></b></td>
+                        <td><p class="blogodd" style="font-size: 15px"><b><?php echo $stratcounter ?></b></td>
                     </tr>
 
                     <tr>
@@ -662,12 +671,12 @@ else if ($viewuser->UseWowAvatar == "1"){
                             <hr class="quickfacts">
                         </td>
                     </tr>
-                <? } ?>
+                <?php } ?>
 
-                <? if ($comments_count > 0) { ?>
+                <?php if ($comments_count > 0) { ?>
                     <tr>
-                        <td style="text-align:right; vertical-align: top"><p class="blogodd" style="font-size: 15px; white-space:nowrap;"><? echo _("FormComBlogPromptComments") ?>:</td>
-                        <td><p class="blogodd" style="font-size: 15px"><b><? echo $comments_count; ?></b></td>
+                        <td style="text-align:right; vertical-align: top"><p class="blogodd" style="font-size: 15px; white-space:nowrap;"><?php echo __("Comments") ?>:</td>
+                        <td><p class="blogodd" style="font-size: 15px"><b><?php echo $comments_count; ?></b></td>
                     </tr>
 
                     <tr>
@@ -675,24 +684,27 @@ else if ($viewuser->UseWowAvatar == "1"){
                             <hr class="quickfacts">
                         </td>
                     </tr>
-                 <? } ?>
-
+                 <?php } ?>
+                 
                 <tr>
-                    <td style="text-align:right; vertical-align: top"><p class="blogodd" style="font-size: 15px; white-space:nowrap;"><? echo _("UP_ABRegDate") ?>:</td>
-                    <td><p class="blogodd" style="font-size: 15px"><b><span name="time"><? echo $viewuser->regtime ?></span></b></td>
+                    <td style="text-align:right; vertical-align: top"><p class="blogodd" style="font-size: 15px; white-space:nowrap;"><?php echo __("Registered") ?>:</td>
+                    <td><p class="blogodd" style="font-size: 15px"><b><span name="time"><?php echo $viewuser->regtime ?></span></b></td>
                 </tr>
+                
+                
+                <?php if ($viewusersettings[6] != 0 OR $user->Role > 49) { ?>
                 <tr>
-                    <td style="text-align:right; vertical-align: top"><p class="blogodd" style="font-size: 15px; white-space:nowrap;"><? echo _("UP_TTLL") ?></td>
-                    <td><p class="blogodd" style="font-size: 15px"><b><? echo $showtime ?></b></td>
+                    <td style="text-align:right; vertical-align: top"><p class="blogodd" style="font-size: 15px; white-space:nowrap;"><?php echo __("Last active:") ?></td>
+                    <td><p class="blogodd" style="font-size: 15px"><b><?php echo $showtime ?></b></td>
                 </tr>
-
+                <?php } ?>
 
             </table>
 
             <br>
-            <? if (!$user && $viewuser->id != "1") { ?>
-                <span class="tooltip" title="<? echo _("UP_TTErrNoAcc") ?>">
-                    <span style="cursor: pointer"><img src="https://www.wow-petguide.com/images/userdd_messages.png"> <a class="pr_contact"><? echo _("UP_TTSendMsg") ?></a></span>
+            <?php if (!$user && $viewuser->id != "1") { ?>
+                <span class="tooltip" title="<?php echo __("You must be logged in to send messages") ?>">
+                    <span style="cursor: pointer"><img src="https://www.wow-petguide.com/images/userdd_messages.png"> <a class="pr_contact"><?php echo __("Send message") ?></a></span>
                 </span>
                 <script>
                     $(document).ready(function() {
@@ -702,11 +714,11 @@ else if ($viewuser->UseWowAvatar == "1"){
                         });
                     });
                 </script>
-            <? }
+            <?php }
 
             if ($viewuser->id == $user->id && $viewuser->id != "1") { ?>
-                <span class="tooltip" title="<? echo _("UP_TTNoMsgToS") ?>">
-                    <span style="cursor: pointer"><img src="https://www.wow-petguide.com/images/userdd_messages.png"> <a class="pr_contact"><? echo _("UP_TTSendMsg") ?></a></span>
+                <span class="tooltip" title="<?php echo __("Cannot send messages to yourself") ?>">
+                    <span style="cursor: pointer"><img src="https://www.wow-petguide.com/images/userdd_messages.png"> <a class="pr_contact"><?php echo __("Send message") ?></a></span>
                 </span>
                 <script>
                     $(document).ready(function() {
@@ -716,10 +728,10 @@ else if ($viewuser->UseWowAvatar == "1"){
                         });
                     });
                 </script>
-            <? }
+            <?php }
 
             if ($user && $viewuser->id != $user->id && $viewuser->id != "1") { ?>
-                <a data-remodal-target="modalsendmsg" style="cursor:pointer"><img src="https://www.wow-petguide.com/images/userdd_messages.png"></a> <a data-remodal-target="modalsendmsg" class="pr_contact"><? echo _("UP_TTSendMsg") ?></a>
+                <a data-remodal-target="modalsendmsg" style="cursor:pointer"><img src="https://www.wow-petguide.com/images/userdd_messages.png"></a> <a data-remodal-target="modalsendmsg" class="pr_contact"><?php echo __("Send message") ?></a>
 
                 <div class="remodal remodalsuggest" data-remodal-id="modalsendmsg" data-remodal-options="hashTracking: false">
                     <table width="600" class="profile">
@@ -729,7 +741,7 @@ else if ($viewuser->UseWowAvatar == "1"){
                                     <tr>
                                         <td><img src="images/headericon_profile_blue.png"></td>
                                         <td><img src="images/blank.png" width="5" height="1"></td>
-                                        <td><p class="blogodd"><span style="white-space: nowrap;"><b><? echo _("UP_ABSendPM") ?> <span class="username" style="text-decoration: none;" rel="<? echo $viewuser->id ?>" value="<? echo $user->id ?>"><? echo $viewuser->Name ?></span></span></td>
+                                        <td><p class="blogodd"><span style="white-space: nowrap;"><b><?php echo __("Send private message to") ?> <span class="username" style="text-decoration: none;" rel="<?php echo $viewuser->id ?>" value="<?php echo $user->id ?>"><?php echo $viewuser->Name ?></span></span></td>
                                     </tr>
                                 </table>
                             </th>
@@ -738,7 +750,7 @@ else if ($viewuser->UseWowAvatar == "1"){
                         <tr class="profile">
                             <td class="collectionbordertwo" colspan="2">
 
-                               <textarea required placeholder="<? echo _("PM_PHTypeMsg") ?>" class="cominputbright" id="rsp_field_write" style="height: 60px; width: 600px;" name="msgcontent" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'write','2000')" maxlength="2000"><? echo $editoutput ?></textarea>
+                               <textarea required placeholder="<?php echo __("Type your message here") ?>" class="cominputbright" id="rsp_field_write" style="height: 60px; width: 600px;" name="msgcontent" onkeyup="auto_adjust_textarea_size(this); count_remaining_msgs(this,'write','2000')" maxlength="2000"><?php echo $editoutput ?></textarea>
                                 <p class="blogodd">
                             </td>
                         </tr>
@@ -748,14 +760,14 @@ else if ($viewuser->UseWowAvatar == "1"){
                                 <table>
                                     <tr>
                                         <td style="padding-left: 12px;">
-                                                <input type="hidden" name="delimiter" value="<? echo $user->ComSecret; ?>">
+                                                <input type="hidden" name="delimiter" value="<?php echo $user->ComSecret; ?>">
                                                 <input type="hidden" name="cmd" value="sendmsg">
-                                                <input type="hidden" name="recipient" value="<? echo $viewuser->id ?>">
-                                                <input type="submit" class="comedit" value="<? echo _("FormButtonSend") ?>">
+                                                <input type="hidden" name="recipient" value="<?php echo $viewuser->id ?>">
+                                                <input type="submit" class="comedit" value="<?php echo __("Send") ?>">
                                         </td>
                                         </form>
                                         <td style="padding-left: 15px;">
-                                            <input data-remodal-action="close" type="submit" class="comdelete" value="<? echo _("FormButtonCancel"); ?>">
+                                            <input data-remodal-action="close" type="submit" class="comdelete" value="<?php echo __("Cancel"); ?>">
                                         </td>
                                         <td align="right" width="100%">
                                             <span class="smallodd" style="padding-right: 10px" id="rsp_remaining_write">0/2000</span>
@@ -766,7 +778,7 @@ else if ($viewuser->UseWowAvatar == "1"){
                         </tr>
                     </table>
                 </div>
-            <? } ?>
+            <?php } ?>
              <br><br><br><br>
         </div>
     </div>
@@ -782,6 +794,3 @@ else if ($viewuser->UseWowAvatar == "1"){
 mysqli_close($dbcon);
 echo "</body>";
 die;
-
-
-

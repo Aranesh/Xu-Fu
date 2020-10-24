@@ -1,7 +1,7 @@
 <?php require_once ($_SERVER['DOCUMENT_ROOT'] . '/preamble.php');
 
 // error_reporting (E_ALL | E_WARNINGS);
-// ini_set ('display_errors', 1);
+ini_set ('display_errors', 0);
 
 require_once ('BBCode.php');
 require_once ('Database.php');
@@ -12,6 +12,8 @@ require_once ('Localization.php');
 require_once ('Time.php');
 require_once ('User.php');
 require_once ('Util.php');
+require_once ("../../thirdparty/motranslator/vendor/autoload.php");
+PhpMyAdmin\MoTranslator\Loader::loadFunctions();
 
 $userid = \HTTP\argument_GET ('userid');
 $user = $userid ? Database_SELECT_object ('Users', 'WHERE id = ?', 'i', $userid) : NULL;
@@ -26,12 +28,15 @@ $all_pets[1]['PetID'] = "1";
 $stratid = \HTTP\argument_GET ('strat');
 
 $language = \HTTP\argument_GET ('l');
-Localization_initialize_global_state ($language);
+  _setlocale(LC_MESSAGES, $language);
+  _textdomain('messages');
+  _bindtextdomain('messages', __DIR__ . '/../../Locale/');
+  _bind_textdomain_codeset('messages', 'UTF-8');
 
 $all_tags = get_all_tags();
 
 $strats = calc_strats_rating($stratid, $language, $user, 1);
-
+// if ($user->id == 2) echo "<pre>"; print_r($strats);
 $tt_container = HTML_create_root ('div');
 $tt_container->setAttribute ('class', 'alternative_tooltip');
 
@@ -231,7 +236,8 @@ foreach ($strats as $thisstrat)
     }
     if ($thisstrat->CreatorComment)
     {
-      \BBCode\append_to_HTML ($usercomment_tt_div, $thisstrat->CreatorComment, $language);
+      $stratcomment = \BBCode\bbparse_pets($thisstrat->CreatorComment, 12, 'rematch');
+      \BBCode\append_to_HTML ($usercomment_tt_div, $stratcomment, $language);
     }
   }
 

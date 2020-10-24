@@ -1,5 +1,7 @@
 ﻿<?php
 
+require_once ('Strategy.php');
+
 if ($settingspage == ""){
 $settingspage = $_POST['settingspage'];
 }
@@ -12,21 +14,14 @@ if (!$source) {
 }
 
 
-$alltagsdb = mysqli_query($dbcon, "SELECT * FROM StrategyTags ORDER BY DefaultPrio");
-while ($row_tag = mysqli_fetch_object($alltagsdb)) {
-    $alltags[$row_tag->id]['id'] = $row_tag->id;
-    $alltags[$row_tag->id]['Name'] = _("Tag_".$row_tag->PO_Name);
-    $alltags[$row_tag->id]['DefaultPrio'] = $row_tag->DefaultPrio;
-}
-
 if ($user->TagPrio == "") {
-    foreach ($alltags as $key => $value) {
+    foreach ($all_tags as $key => $value) {
         $cutprio = explode("-", $value['DefaultPrio']);
-        $tagprio[$cutprio[0]][$cutprio[1]] = $value['id'];
+        $tagprio[$cutprio[0]][$cutprio[1]] = $value['ID'];
     }  
 }
 else {
-    $test_tags = $alltags;
+    $test_tags = $all_tags;
     $countone = "0";
     $counttwo = "0";
     $countthr = "0";    
@@ -58,17 +53,17 @@ else {
     }
     if (count($test_tags) > "0") {
         foreach ($test_tags as $key => $value) {
-            $cutprio = explode("-", $alltags[$value['id']]['DefaultPrio']);
+            $cutprio = explode("-", $all_tags[$value['ID']]['DefaultPrio']);
             if ($cutprio[0] == "0") {
-                $tagprio[0][$countone] = $value['id'];
+                $tagprio[0][$countone] = $value['ID'];
                 $countone++;
             }
             if ($cutprio[0] == "1") {
-                $tagprio[1][$counttwo] = $value['id'];
+                $tagprio[1][$counttwo] = $value['ID'];
                 $counttwo++;
             }
             if ($cutprio[0] == "2") {
-                $tagprio[2][$countthr] = $value['id'];
+                $tagprio[2][$countthr] = $value['ID'];
                 $countthr++;
             }
         }        
@@ -91,36 +86,36 @@ if ($settingspage == "namechange") {
     $usernum = mysqli_num_rows($userdb);
     if ($usernum > "0") {
     $regnameerror = "true";
-    $regnameprob = _("UR_ErrNameDupe");
+    $regnameprob = __("This name is already in use.");
     }
 
     if (mb_strlen($subname) > "15"){
     $regnameerror = "true";
     if ($regnameprob != "" ){ $regnameprob = $regnameprob."<br>"; }
-    $regnameprob = $regnameprob." "._("UR_ErrNameLength");
+    $regnameprob = $regnameprob." ".__("This username is too long. Please do not use more than 15 characters.");
     }
 
     if (mb_strlen($subname) < "2" && $firstclick != "true" && $directload != "true"){
     $regnameerror = "true";
     if ($regnameprob != "" ){ $regnameprob = $regnameprob."<br>"; }
-    $regnameprob = $regnameprob." "._("UR_ErrNameShort");
+    $regnameprob = $regnameprob." ".__("This name is too short. Please use at least 2 characters.");
     }
 
     if (preg_match('/[\'\/#\$\{\}\[\ \]\|\<\>\?\"\\\]/', $subname))
     {
     $regnameerror = "true";
     if ($regnameprob != "" ){ $regnameprob = $regnameprob."<br>"; }
-    $regnameprob = $regnameprob." "._("UR_ErrNameChars")."<br># < > [ ] | { } \" ' / \ $ ?";
+    $regnameprob = $regnameprob." ".__("Please do not use empty spaces or any of these characters:")."<br># < > [ ] | { } \" ' / \ $ ?";
     }
 
     if (filter_var($subname, FILTER_VALIDATE_EMAIL)) {
     $regnameerror = "true";
-    $regnameprob = _("UR_ErrNameIsMail");
+    $regnameprob = __("Please do not use an email address as your login name.");
     }
 
     if ($user->NameChange != "1") {
     $regnameerror = "true";
-    $regnameprob = _("AS_ErrNameCh");
+    $regnameprob = __("Your account is not eligible for a name change. You little trickster ;-)");
     }
 
     // Applying Changes
@@ -149,15 +144,15 @@ if ($settingspage == "addpw") {
 
     if (mb_strlen($pass) < "6"){
         $regpasserror = "true";
-        $regpassprob = _("UR_ErrPassShort");
+        $regpassprob = __("Your password must be at least 6 characters long.");
     }
     if ($pass != $passrep){
         $regpasserror = "true";
-        $regpassprob = _("UR_ErrPassNomatch");
+        $regpassprob = __("The two entries did not match. Please type in your preferred password again.");
     }
     if ($pass == $user->Name ){
         $regpasserror = "true";
-        $regpassprob = _("UR_ErrPassIsName");
+        $regpassprob = __("Your password cannot be identical to your username.");
     }
 
     // Applying Changes
@@ -185,20 +180,10 @@ if ($settingspage == "addbnet" OR $command == "addbnet") {
   
   try
   {
-    // SET REGION
     $regionselect = strtolower($_POST['regionselect']);
-    if ($regionselect == "standard") {
-        $region = "us";
-    }
-    else if ($regionselect == "china") {
-        $region = "cn";
-    }
-    if (!$region){
-        $region = $user->Region;
-    }
-    
-    $oauth = new \BattleNet\OAuth ($region, 'addbnet_'.$source, '/index.php?page=settings');
 
+    $oauth = new \BattleNet\OAuth ($regionselect, 'addbnet_'.$source, '/index.php?page=settings');
+  
     if (!$oauth->is_authed) {
       \HTTP\redirect_and_die ($oauth->auth_url());
     }
@@ -238,6 +223,8 @@ if ($settingspage == "addbnet" OR $command == "addbnet") {
     }   
   }
   catch (\BattleNet\OAuthException $e) {
+    print_r($e);
+    die;
     // access denied by user or undefined error
     $sendtoast = 'bnetregfail';
   }
@@ -253,9 +240,9 @@ if ($settingspage == "addbnetone" OR $command == "addbnetone") {
 
   try
   {
-    $region = strtolower($_POST['regionselect']);
+    $regionselect = strtolower($_POST['regionselect']);
     
-    $oauth = new \BattleNet\OAuth ($region, 'addbnetone', '/index.php?page=settings');
+    $oauth = new \BattleNet\OAuth ($regionselect, 'addbnetone', '/index.php?page=settings');
 
     if (!$oauth->is_authed) {
       \HTTP\redirect_and_die ($oauth->auth_url());
@@ -418,18 +405,18 @@ if ($settingspage == "addemail") {
 
     if (!$submail) {
         $regmailerror = "true";
-        $regmailprob = _("UR_ErrMailInvalid");
+        $regmailprob = __("The email address you entered is not valid.");
     }
 
     if ($regmailerror != "true") {
         $checkuserdb = mysqli_query($dbcon, "SELECT * FROM Users WHERE Email = '$submail'");
         if (mysqli_num_rows($checkuserdb) > "0") {
             $regmailerror = "true";
-            $regmailprob = _("UR_ErrMailDupe");
+            $regmailprob = __("This email address is already registered to another account.");
         }
         if (!filter_var($submail, FILTER_VALIDATE_EMAIL)) {
             $regmailerror = "true";
-            $regmailprob = _("UR_ErrMailInvalid");
+            $regmailprob = __("The email address you entered is not valid.");
         }
     }
 
@@ -463,18 +450,18 @@ if ($settingspage == "changemail") {
 
     if (!$submail) {
         $regmailerror = "true";
-        $regmailprob = _("UR_ErrMailInvalid");
+        $regmailprob = __("The email address you entered is not valid.");
     }
 
     if ($regmailerror != "true") {
         $checkuserdb = mysqli_query($dbcon, "SELECT * FROM Users WHERE Email = '$submail'");
         if (mysqli_num_rows($checkuserdb) > "0") {
             $regmailerror = "true";
-            $regmailprob = _("UR_ErrMailDupe");
+            $regmailprob = __("This email address is already registered to another account.");
         }
         if (!filter_var($submail, FILTER_VALIDATE_EMAIL)) {
             $regmailerror = "true";
-            $regmailprob = _("UR_ErrMailInvalid");
+            $regmailprob = __("The email address you entered is not valid.");
         }
         if ($submail == $user->Email){
             $regmailerror = "";
@@ -517,15 +504,15 @@ if ($settingspage == "changepw") {
 
     if (mb_strlen($pass) < "6"){
         $changepasserror = "true";
-        $changepassprob = _("UR_ErrPassShort");
+        $changepassprob = __("Your password must be at least 6 characters long.");
     }
     if ($pass != $passrep){
         $changepasserror = "true";
-        $changepassprob = _("UR_ErrPassNomatch");
+        $changepassprob = __("The two entries did not match. Please type in your preferred password again.");
     }
     if ($pass == $user->Name ){
         $changepasserror = "true";
-        $changepassprob = _("UR_ErrPassIsName");
+        $changepassprob = __("Your password cannot be identical to your username.");
     }
 
     // Applying Changes
@@ -564,7 +551,7 @@ if ($settingspage == "delaccpass") {
         else {
             $settingspage = "deleteacc";
             $delpasserror = "true";
-            $delpassprob = _("AC_PWWrong1");
+            $delpassprob = __("Submitted password was not correct.");
         }
     }
     else {
@@ -666,24 +653,8 @@ if ($settingspage == "delaccfinal") {
         if ($delstrats == "delete"){
             $stratsdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE User = '$user->id'") OR die(mysqli_error($dbcon));
             if (mysqli_num_rows($stratsdb) > "0"){
-                $countstrats = "0";
-                while ($countstrats < mysqli_num_rows($stratsdb)) {
-                    $strat = mysqli_fetch_object($stratsdb);
-
-                    $updatedate = date('Y-m-d H:i:s');
-                    mysqli_query($dbcon, "UPDATE Comments SET `Closed` = '1' WHERE Category = '2' AND SortingID = '$strat->id'") OR die(mysqli_error($dbcon));
-                    mysqli_query($dbcon, "UPDATE Comments SET `CloseType` = 'Strategy Deleted by Creator' WHERE Category = '2' AND SortingID = '$strat->id'") OR die(mysqli_error($dbcon));
-                    mysqli_query($dbcon, "UPDATE Comments SET `ClosedOn` = '$updatedate' WHERE Category = '2' AND SortingID = '$strat->id'") OR die(mysqli_error($dbcon));
-                    mysqli_query($dbcon, "UPDATE Comments SET `Deleted` = '1' WHERE Category = '2' AND SortingID = '$strat->id'") OR die(mysqli_error($dbcon));
-                    mysqli_query($dbcon, "UPDATE Comments SET `ForReview` = '0' WHERE Category = '2' AND SortingID = '$strat->id'") OR die(mysqli_error($dbcon));
-                    mysqli_query($dbcon, "UPDATE Comments SET `ClosedBy` = 'Strategy Creator' WHERE Category = '2' AND SortingID = '$strat->id'") OR die(mysqli_error($dbcon));
-
-                    mysqli_query($dbcon, "DELETE FROM Strategy WHERE SortingID = '$strat->id'") OR die(mysqli_error($dbcon));
-                    mysqli_query($dbcon, "DELETE FROM UserAttempts WHERE Strategy = '$strat->id'") OR die(mysqli_error($dbcon));
-                    mysqli_query($dbcon, "DELETE FROM UserFavStrats WHERE Strategy = '$strat->id'") OR die(mysqli_error($dbcon));
-                    mysqli_query($dbcon, "DELETE FROM UserStratRating WHERE Strategy = '$strat->id'") OR die(mysqli_error($dbcon));
-                    mysqli_query($dbcon, "DELETE FROM Alternatives WHERE id = '$strat->id'") OR die(mysqli_error($dbcon));
-                    $countstrats++;
+                while ($strat = mysqli_fetch_object($stratsdb)) {
+                    \Strategy\delete ($strat->id, $user);
                 }
             }
         }
@@ -760,14 +731,14 @@ if ($settingspage == "delaccfinal") {
     <img src="images/blank.png" width="50" height="1" alt="" />
 </td>
 <td>
-    <img class="ut_icon" width="84" height="84" <? echo $usericon ?>>
+    <img class="ut_icon" width="84" height="84" <?php echo $usericon ?>>
 </td>
 
 <td>
     <img src="images/blank.png" width="50" height="1" alt="" />
 </td>
 
-<td width="100%"><h class="megatitle"><? echo _("AS_Title"); ?></h></td>
+<td width="100%"><h class="megatitle"><?php echo __("Account Settings"); ?></h></td>
 <td><img src="images/main_bg02_2.png"></td>
 </tr>
 </table>
@@ -796,8 +767,8 @@ if ($settingspage == "delaccfinal") {
         </td>
     <td>
 
-<? // ============= MODULE 8.1 - Account Deletion Process - Step 1 ============= ?>
-<? if ($settingspage == "deleteacc") { ?>
+<?php // ============= MODULE 8.1 - Account Deletion Process - Step 1 ============= ?>
+<?php if ($settingspage == "deleteacc") { ?>
 
 
 <table width="85%" class="profilehl">
@@ -807,7 +778,7 @@ if ($settingspage == "delaccfinal") {
                 <tr>
                     <td><img src="images/userdd_settings_grey.png"></td>
                     <td><img src="images/blank.png" width="5" height="1"></td>
-                    <td><p class="blogodd"><b><? echo _("AS_AccDelSt1"); ?></td>
+                    <td><p class="blogodd"><b><?php echo __("Account Deletion Process - Step 1"); ?></td>
                 </tr>
             </table>
         </th>
@@ -817,25 +788,25 @@ if ($settingspage == "delaccfinal") {
         <td class="profile">
 
 
-            <br><p class="blogodd" style="margin-left: 30px"><b><? echo _("AS_AccDelWarn"); ?></b><br><br></p>
+            <br><p class="blogodd" style="margin-left: 30px"><b><?php echo __("Warning!"); ?></b><br><br></p>
 
-            <p class="blogodd"><? echo _("AS_AccDelTx1"); ?>
+            <p class="blogodd"><?php echo __("Following this process will permanently remove your user account.<br>In the next step you can decide what will happen to your comments or strategies, in case you submitted any."); ?>
 
-            <? if ($user->Hash != "") { ?>
-                <br><br><? echo _("AS_AccDelTx2"); ?><br><br>
+            <?php if ($user->Hash != "") { ?>
+                <br><br><?php echo __("To continue, please enter your current password:"); ?><br><br>
                 <form class="form-style-register" action="index.php?page=settings" method="post">
                     <input type="hidden" name="settingspage" value="delaccpass">
                 <table>
                     <tr>
-                    <td align="right"><p class="blogodd"><b><? if ($delpasserror == "true"){ echo "<font color=\"red\">"; } ?><? echo _("UL_LogPass"); ?>:</b></td>
+                    <td align="right"><p class="blogodd"><b><?php if ($delpasserror == "true"){ echo "<font color=\"red\">"; } ?><?php echo __("Password"); ?>:</b></td>
                     <td><img src="images/blank.png" width="5" height="1"/></td>
                     <td><input tabindex="1" placeholder="" type="password" name="delpass" value="" required></td>
 
                     <td><img src="images/blank.png" width="38" height="1"/></td>
-                    <td><button type="submit" tabindex="2" class="comdelete"><? echo _("AS_AccDelBTC"); ?></button></td>
+                    <td><button type="submit" tabindex="2" class="comdelete"><?php echo __("Continue Deletion Process"); ?></button></td>
                     </form>
                     <form class="form-style-login" action="index.php?page=settings" method="post">
-                    <td><button style="margin-left: 15px;" type="submit" tabindex="3" class="comsubmit"><? echo _("FormButtonCancel"); ?></button></td>
+                    <td><button style="margin-left: 15px;" type="submit" tabindex="3" class="comsubmit"><?php echo __("Cancel"); ?></button></td>
                     </form>
                     </tr>
 
@@ -846,18 +817,18 @@ if ($settingspage == "delaccfinal") {
                     ?>
                 </table><br>
 
-            <? }
+            <?php }
             else { ?>
-                <br><br><? echo _("AS_AccDelInst1"); ?>:<br><br>
+                <br><br><?php echo __("Please confirm that you want to continue with the deletion"); ?>:<br><br>
                 <form class="form-style-register" action="index.php?page=settings" method="post">
                     <input type="hidden" name="settingspage" value="delaccpass">
                 <table>
                     <tr>
                     <td><img src="images/blank.png" width="38" height="1"/></td>
-                    <td><button type="submit" tabindex="2" class="comdelete"><? echo _("AS_AccDelBTC"); ?></button></td>
+                    <td><button type="submit" tabindex="2" class="comdelete"><?php echo __("Continue Deletion Process"); ?></button></td>
                     </form>
                     <form class="form-style-login" action="index.php?page=settings" method="post">
-                    <td><button style="margin-left: 15px;" type="submit" tabindex="3" class="comsubmit"><? echo _("FormButtonCancel"); ?></button></td>
+                    <td><button style="margin-left: 15px;" type="submit" tabindex="3" class="comsubmit"><?php echo __("Cancel"); ?></button></td>
                     </form>
                     </tr>
 
@@ -867,7 +838,7 @@ if ($settingspage == "delaccfinal") {
                     }
                     ?>
                 </table>
-            <? } ?>
+            <?php } ?>
     </form>
 
 
@@ -885,7 +856,7 @@ echo "</body>";
 die;
 }
 ?>
-<? // ============= END OF MODULE 8.1 ============= ?>
+<?php // ============= END OF MODULE 8.1 ============= ?>
 
 
 
@@ -893,8 +864,8 @@ die;
 
 
 
-<? // ============= MODULE 8.2 - Account Deletion Process - Step 2 ============= ?>
-<? if ($settingspage == "delacc2") { ?>
+<?php // ============= MODULE 8.2 - Account Deletion Process - Step 2 ============= ?>
+<?php if ($settingspage == "delacc2") { ?>
 
 <table width="85%" class="profilehl">
     <tr class="profile">
@@ -903,7 +874,7 @@ die;
                 <tr>
                     <td><img src="images/userdd_settings_grey.png"></td>
                     <td><img src="images/blank.png" width="5" height="1"></td>
-                    <td><p class="blogodd"><b><? echo _("AS_AccDelSt2"); ?></td>
+                    <td><p class="blogodd"><b><?php echo __("Account Deletion Process - Step 2"); ?></td>
                 </tr>
             </table>
         </th>
@@ -916,21 +887,21 @@ die;
 
             <?
             $commentsdb = mysqli_query($dbcon, "SELECT * FROM Comments WHERE User = '$user->id' AND Deleted != '1'");
-            $stratsdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE User = '$user->id'");
+            $stratsdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE User = '$user->id' AND Deleted != '1'");
 
             if (mysqli_num_rows($commentsdb) > "0" OR mysqli_num_rows($stratsdb) > "0") { ?>
 
-            <br><p class="blogodd"><? echo _("AS_AccDelInst2"); ?>:
+            <br><p class="blogodd"><?php echo __("Before continuing, please select what should happen to some of your data"); ?>:
             <br><br>
 
                 <form class="form-style-register" action="index.php?page=settings" method="post">
                     <input type="hidden" name="settingspage" value="delaccfinal">
-                    <input type="hidden" name="delstring" value="<? echo $user->DelHash ?>">
+                    <input type="hidden" name="delstring" value="<?php echo $user->DelHash ?>">
             <table border="0" style="margin-left: 80px">
 
-            <? if (mysqli_num_rows($commentsdb) > "0"){ ?>
+            <?php if (mysqli_num_rows($commentsdb) > "0"){ ?>
                 <tr><td colspan="3">
-                    <p class="blogodd"><b><? echo _("AS_AccDelInfCom"); ?>: <? echo mysqli_num_rows($commentsdb) ?>
+                    <p class="blogodd"><b><?php echo __("Your comments. You wrote in total"); ?>: <?php echo mysqli_num_rows($commentsdb) ?>
                 </td>
                 </tr>
 
@@ -946,7 +917,7 @@ die;
                         </ul>
                     </td>
                     <td>
-                        <p class="blogodd"><? echo _("AS_AccDelComOpt1"); ?>
+                        <p class="blogodd"><?php echo __("Keep all your comments with your name."); ?>
                     </td>
                 </tr>
 
@@ -962,7 +933,7 @@ die;
                         </ul>
                     </td>
                     <td>
-                        <p class="blogodd"><? echo _("AS_AccDelComOpt2"); ?>
+                        <p class="blogodd"><?php echo __("Keep your comments with the name <i>Anonymous</i>."); ?>
                     </td>
                 </tr>
 
@@ -978,18 +949,18 @@ die;
                         </ul>
                     </td>
                     <td>
-                        <p class="blogodd"><? echo _("AS_AccDelComOpt3"); ?>
+                        <p class="blogodd"><?php echo __("Delete all comments."); ?>
                     </td>
                 </tr>
 
                 <tr><td><br></td></tr>
 
-            <? } ?>
+            <?php } ?>
 
 
-            <? if (mysqli_num_rows($stratsdb) > "0"){ ?>
+            <?php if (mysqli_num_rows($stratsdb) > "0"){ ?>
                 <tr><td colspan="3">
-                    <p class="blogodd"><b><? echo _("AS_AccDelInfStrat"); ?>: <? echo mysqli_num_rows($stratsdb) ?></p>
+                    <p class="blogodd"><b><?php echo __("Your strategies. You created a total of"); ?>: <?php echo mysqli_num_rows($stratsdb) ?></p>
                 </td>
                 </tr>
 
@@ -1005,7 +976,7 @@ die;
                         </ul>
                     </td>
                     <td>
-                        <p class="blogodd"><? echo _("AS_AccDelStratOpt1"); ?>
+                        <p class="blogodd"><?php echo __("Keep strategies with your name as the creator."); ?>
                     </td>
                 </tr>
 
@@ -1021,7 +992,7 @@ die;
                         </ul>
                     </td>
                     <td>
-                        <p class="blogodd"><? echo _("AS_AccDelStratOpt2"); ?>
+                        <p class="blogodd"><?php echo __("Keep strategies with creator name <i>Anonymous</i>."); ?>
                     </td>
                 </tr>
 
@@ -1037,45 +1008,45 @@ die;
                         </ul>
                     </td>
                     <td>
-                        <p class="blogodd"><? echo _("AS_AccDelStratOpt3"); ?>
+                        <p class="blogodd"><?php echo __("Delete all your strategies including all comments submitted to them."); ?>
                     </td>
                 </tr>
 
                 <tr><td><br></td></tr>
 
-            <? } ?>
+            <?php } ?>
             </table>
 
             <table>
                 <tr>
                 <td><img src="images/blank.png" width="38" height="1"/></td>
-                <td><button type="submit" tabindex="2" class="comdelete"><? echo _("AS_AccDelBTFin"); ?></button></td>
+                <td><button type="submit" tabindex="2" class="comdelete"><?php echo __("Finish account deletion"); ?></button></td>
                 </form>
                 <form class="form-style-login" action="index.php?page=settings" method="post">
-                <td><button style="margin-left: 15px;" type="submit" tabindex="3" class="comsubmit"><? echo _("FormButtonCancel"); ?></button></td>
+                <td><button style="margin-left: 15px;" type="submit" tabindex="3" class="comsubmit"><?php echo __("Cancel"); ?></button></td>
                 </form>
                 </tr>
             </table>
 
-            <? }
+            <?php }
             if (mysqli_num_rows($commentsdb) == "0" AND mysqli_num_rows($stratsdb) == "0") { ?>
 
-            <br><p class="blogodd"><? echo _("AS_AccDelInst3"); ?><br><br>
+            <br><p class="blogodd"><?php echo __("This is the last step of the account deletion.<br>If you confirm below, your account will be irrevocably deleted."); ?><br><br>
 
                 <form class="form-style-register" action="index.php?page=settings" method="post">
                     <input type="hidden" name="settingspage" value="delaccfinal">
-                    <input type="hidden" name="delstring" value="<? echo $user->DelHash ?>">
+                    <input type="hidden" name="delstring" value="<?php echo $user->DelHash ?>">
                 <table>
                     <tr>
                     <td><img src="images/blank.png" width="38" height="1"/></td>
-                    <td><button type="submit" tabindex="2" class="comdelete"><? echo _("AS_AccDelBTEnd"); ?></button></td>
+                    <td><button type="submit" tabindex="2" class="comdelete"><?php echo __("I'm sure, delete my account"); ?></button></td>
                     </form>
                     <form class="form-style-login" action="index.php?page=settings" method="post">
-                    <td><button style="margin-left: 15px;" type="submit" tabindex="3" class="comsubmit"><? echo _("FormButtonCancel"); ?></button></td>
+                    <td><button style="margin-left: 15px;" type="submit" tabindex="3" class="comsubmit"><?php echo __("Cancel"); ?></button></td>
                     </form>
                     </tr>
                 </table>
-            <? } ?>
+            <?php } ?>
     </td>
     </tr>
 
@@ -1091,11 +1062,11 @@ echo "</body>";
 die;
 }
 ?>
-<? // ============= END OF MODULE 8.2 ============= ?>
+<?php // ============= END OF MODULE 8.2 ============= ?>
 
 
 
-<? // ============= MODULE 3.2 - Battle.net authorization was successfull but bnet is associated with another xufu account ============= ?>
+<?php // ============= MODULE 3.2 - Battle.net authorization was successfull but bnet is associated with another xufu account ============= ?>
 <?
 
 if ($addbneterror == "alreadyregistered") {
@@ -1109,10 +1080,10 @@ if ($addbneterror == "alreadyregistered") {
     $commentstwodb = mysqli_query($dbcon, "SELECT * FROM Comments WHERE User = '$usertwo->id' && Deleted != '1'");
     $comstwo = mysqli_num_rows($commentstwodb);
     
-    $stratsonedb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE User = '$user->id' && Published = '1'");
+    $stratsonedb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE User = '$user->id' && Published = '1' && Deleted = '0'");
     $stratsone = mysqli_num_rows($stratsonedb);
     
-    $stratstwodb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE User = '$usertwo->id' && Published = '1'");
+    $stratstwodb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE User = '$usertwo->id' && Published = '1' && Deleted = '0'");
     $stratstwo = mysqli_num_rows($stratstwodb);
     
     if ($usertwo->UseWowAvatar == "0"){
@@ -1130,7 +1101,7 @@ if ($addbneterror == "alreadyregistered") {
                     <tr>
                         <td><img src="images/userdd_settings_grey.png"></td>
                         <td><img src="images/blank.png" width="5" height="1"></td>
-                        <td><p class="blogodd"><b><? echo _("AS_BNTitle"); ?></td>
+                        <td><p class="blogodd"><b><?php echo __("Battle.net Connection"); ?></td>
                     </tr>
                 </table>
             </th>
@@ -1139,10 +1110,10 @@ if ($addbneterror == "alreadyregistered") {
         <tr class="profile">
             <td class="profile">
                 <p class="blogodd">
-                <? echo _("AS_BNDupCon1"); ?><br>
-                <? echo _("AS_BNDupCon2"); ?><br><br>
+                <?php echo __("The authorization was successful but there is another Xu-Fu account already connected to your Battle.net account."); ?><br>
+                <?php echo __("You can select which one to use in the future in association with your Battle.net account:"); ?><br><br>
     
-                <i><b><? echo _("AS_PleaseNote"); ?>:</b></b></i> <? echo _("AS_BNDupCon3"); ?><br><br>
+                <i><b><?php echo __("Please note"); ?>:</b></b></i> <?php echo __("If you connect your current account with Battle.net, your old account could be lost. <br>To check the account, log out and select -Login with Battle.net-"); ?><br><br>
     
     <center>
     
@@ -1153,8 +1124,8 @@ if ($addbneterror == "alreadyregistered") {
             <center>
             <form name="loginform" action="index.php?page=settings" method="post">
             <input type="hidden" name="settingspage" value="addbnetone">
-            <input type="hidden" name="regionselect" value="<? echo $region ?>">
-            <h6><b><? echo _("AS_BNDupT1"); ?>:</b><br>
+            <input type="hidden" name="regionselect" value="<?php echo $region ?>">
+            <h6><b><?php echo __("This account"); ?>:</b><br>
     
             <table>
                 <tr>
@@ -1162,10 +1133,10 @@ if ($addbneterror == "alreadyregistered") {
                         <table>
                             <tr>
                                 <td>
-                                    <img class="usericonsmall" <? echo $usericon ?> heigth="30" width="30" />
+                                    <img class="usericonsmall" <?php echo $usericon ?> heigth="30" width="30" />
                                 </td>
                                 <td>
-                                    <span class="username" style="text-decoration: none" rel="<? echo $user->id ?>" value="<? echo $user->id ?>"><p class="blogodd"><b><? echo $user->Name ?></p></span>
+                                    <span class="username" style="text-decoration: none" rel="<?php echo $user->id ?>" value="<?php echo $user->id ?>"><p class="blogodd"><b><?php echo $user->Name ?></p></span>
                                 </td>
                             </tr>
                         </table>
@@ -1174,28 +1145,28 @@ if ($addbneterror == "alreadyregistered") {
     
                 <tr>
                     <td>
-                        <p class="blogodd"><b><? echo _("UP_ABRegDate"); ?>:</b>
+                        <p class="blogodd"><b><?php echo __("Registered"); ?>:</b>
                     </td>
                     <td style="text-align: right">
-                        <p class="blogodd"><span name="time"><? echo $user->regtime ?></span></p>
+                        <p class="blogodd"><span name="time"><?php echo $user->regtime ?></span></p>
                     </td>
                 </tr>
     
                 <tr>
                     <td>
-                        <p class="blogodd"><b><? echo _("FormComBlogPromptComments"); ?>:</b>
+                        <p class="blogodd"><b><?php echo __("Comments"); ?>:</b>
                     </td>
                     <td style="text-align: right">
-                        <p class="blogodd"><? echo $comsone ?></p>
+                        <p class="blogodd"><?php echo $comsone ?></p>
                     </td>
                 </tr>
     
                 <tr>
                     <td>
-                        <p class="blogodd"><b><? echo _("UP_TabStrategies"); ?>:</b>
+                        <p class="blogodd"><b><?php echo __("Strategies"); ?>:</b>
                     </td>
                     <td style="text-align: right">
-                        <p class="blogodd"><? echo $stratsone ?></p>
+                        <p class="blogodd"><?php echo $stratsone ?></p>
                     </td>
                 </tr>
     
@@ -1206,7 +1177,7 @@ if ($addbneterror == "alreadyregistered") {
     
                 <tr>
                     <td colspan="2">
-                        <center><button tabindex="20" type="submit" class="bnetlogin" name="page" value="settings"><? echo _("Move Battle.net connection to this account"); ?></button>
+                        <center><button tabindex="20" type="submit" class="bnetlogin" name="page" value="settings"><?php echo __("Move Battle.net connection to this account"); ?></button>
                     </td>
                 </tr>
     
@@ -1219,7 +1190,7 @@ if ($addbneterror == "alreadyregistered") {
         <td width="250" style="vertical-align: top;">
             <center>
     
-            <h6><b><? echo _("AS_BNDupT2"); ?>:</b><br>
+            <h6><b><?php echo __("The old account"); ?>:</b><br>
     
             <table>
                 <tr>
@@ -1227,10 +1198,10 @@ if ($addbneterror == "alreadyregistered") {
                         <table>
                             <tr>
                                 <td>
-                                    <img class="usericonsmall" <? echo $usertwoicon ?> heigth="30" width="30" />
+                                    <img class="usericonsmall" <?php echo $usertwoicon ?> heigth="30" width="30" />
                                 </td>
                                 <td>
-                                    <span class="username" style="text-decoration: none" rel="<? echo $usertwo->id ?>" value="<? echo $user->id ?>"><p class="blogodd"><b><? echo $usertwo->Name ?></p></span>
+                                    <span class="username" style="text-decoration: none" rel="<?php echo $usertwo->id ?>" value="<?php echo $user->id ?>"><p class="blogodd"><b><?php echo $usertwo->Name ?></p></span>
                                 </td>
                             </tr>
                         </table>
@@ -1239,28 +1210,28 @@ if ($addbneterror == "alreadyregistered") {
     
                 <tr>
                     <td>
-                        <p class="blogodd"><b><? echo _("UP_ABRegDate"); ?>:</b>
+                        <p class="blogodd"><b><?php echo __("Registered"); ?>:</b>
                     </td>
                     <td style="text-align: right">
-                        <p class="blogodd"><span name="time"><? echo $usertwo->regtime ?></span></p>
+                        <p class="blogodd"><span name="time"><?php echo $usertwo->regtime ?></span></p>
                     </td>
                 </tr>
     
                 <tr>
                     <td>
-                        <p class="blogodd"><b><? echo _("FormComBlogPromptComments"); ?>:</b>
+                        <p class="blogodd"><b><?php echo __("Comments"); ?>:</b>
                     </td>
                     <td style="text-align: right">
-                        <p class="blogodd"><? echo $comstwo ?></p>
+                        <p class="blogodd"><?php echo $comstwo ?></p>
                     </td>
                 </tr>
     
                 <tr>
                     <td>
-                        <p class="blogodd"><b><? echo _("UP_TabStrategies"); ?>:</b>
+                        <p class="blogodd"><b><?php echo __("Strategies"); ?>:</b>
                     </td>
                     <td style="text-align: right">
-                        <p class="blogodd"><? echo $stratstwo ?></p>
+                        <p class="blogodd"><?php echo $stratstwo ?></p>
                     </td>
                 </tr>
     
@@ -1270,7 +1241,7 @@ if ($addbneterror == "alreadyregistered") {
     
                 <tr>
                     <td colspan="2">
-                        <p class="blogodd"><? echo _("AS_BNDupT3"); ?>
+                        <p class="blogodd"><?php echo __("Has active Battle.net connection"); ?>
                     </td>
                 </tr>
     
@@ -1290,7 +1261,7 @@ if ($addbneterror == "alreadyregistered") {
 <?
 die;
 } ?>
-<? // ============= END OF MODULE 3.2 ============= ?>
+<?php // ============= END OF MODULE 3.2 ============= ?>
 
 
 
@@ -1310,29 +1281,29 @@ die;
 
 
 
-<? // ============= Begin of Account Settings ============= ?>
+<?php // ============= Begin of Account Settings ============= ?>
 
 
 <div style="width: 85%; background-color: #4b4b4b; padding: 5px; margin-bottom: 15px; border-radius: 5px;">
     <div style="width: 100%; padding: 3 0 3 5; font-family: MuseoSans-500,Roboto; color: white">
-        Account Settings
+        <?php echo __("Account Settings"); ?>
     </div>
     
     
 
-<? // ============= MODULE 1 - Select new user name ============= ?>
+<?php // ============= MODULE 1 - Select new user name ============= ?>
 <?
 if ($user->NameChange > "0") { ?>
 
 
-<table width="100%" style="margin-top: 5px" class="profile<? if ($regnameerror == "true"){ echo "hl"; } ?>">
+<table width="100%" style="margin-top: 5px" class="profile<?php if ($regnameerror == "true"){ echo "hl"; } ?>">
     <tr class="profile">
-        <th class="profile<? if ($regnameerror == "true"){ echo "hl"; } ?>">
+        <th class="profile<?php if ($regnameerror == "true"){ echo "hl"; } ?>">
             <table>
                 <tr>
                     <td><img src="images/userdd_settings_grey.png"></td>
                     <td><img src="images/blank.png" width="5" height="1"></td>
-                    <td><p class="blogodd"><b><? echo _("AS_UNTitle"); ?></td>
+                    <td><p class="blogodd"><b><?php echo __("Your Account Name"); ?></td>
                 </tr>
             </table>
         </th>
@@ -1342,11 +1313,11 @@ if ($user->NameChange > "0") { ?>
         <td class="profile">
             <p class="blogodd">
 
-            <? echo _("AS_UNChInst1"); ?><br>
-           <? echo _("AS_UNChInst2"); ?>
+            <?php echo __("Since you signed up through Battle.net, your BattleTag was entered as your account name. It is now visible to others when you post comments."); ?><br>
+           <?php echo __("If you do not want your BattleTag shown you can change it here."); ?>
             <br><br>
             <i>
-                <? echo _("AS_UNChInst3"); ?>
+                <?php echo __("Please note that your account name can only be changed <b>once<b>."); ?>
             </i>
             <br><br>
 
@@ -1355,23 +1326,23 @@ if ($user->NameChange > "0") { ?>
 
             <table>
                 <tr>
-                <td align="right"><p class="blogodd"><b><? if ($regnameerror == "true"){ echo "<font color=\"red\">"; } ?><? echo _("AS_UNHead1"); ?>:</b></td>
+                <td align="right"><p class="blogodd"><b><?php if ($regnameerror == "true"){ echo "<font color=\"red\">"; } ?><?php echo __("New name"); ?>:</b></td>
                 <td><img src="images/blank.png" width="5" height="1"/></td>
-                <td><input tabindex="5" placeholder="" type="text" name="username" value="<? echo stripslashes(htmlentities($subname, ENT_QUOTES, "UTF-8")); ?>" maxlength="15" required>
+                <td><input tabindex="5" placeholder="" type="text" name="username" value="<?php echo stripslashes(htmlentities($subname, ENT_QUOTES, "UTF-8")); ?>" maxlength="15" required>
                 </td>
                 <td><a class="alternativessmall" style="display:block;" href="#"><font size="3">?<span class="alternativespan">
                     <img class="xufu" src="images/xufu_tooltip.png" alt="Alternative 3" height="48" width="48" />
-                    <em><? echo _("RG_HNick"); ?></em>
-                    <? echo _("RG_NickDesc"); ?><br>
+                    <em><?php echo __("Nickname"); ?></em>
+                    <?php echo __("Your nickname is the name under which your comments and info are shown.<br> The following restrictions are in place:"); ?><br>
                     <ul>
-                        <li><? echo _("RG_NickRest1"); ?></li>
-                        <li><? echo _("RG_NickRest2"); ?><br># < > [ ] | { } " ' / \ $ ?</li>
-                        <li><? echo _("RG_NickRest3"); ?></li>
+                        <li><?php echo __("Usernames must be between <b>2</b> and <b>15</b> characters long."); ?></li>
+                        <li><?php echo __("Empty spaces and the following characters are not allowed:"); ?><br># < > [ ] | { } " ' / \ $ ?</li>
+                        <li><?php echo __("No offensive names :P"); ?></li>
                     </ul>
                 </span></a>
                 </td>
                 <td><img src="images/blank.png" width="20" height="1"/></td>
-                <td><button type="submit" tabindex="6" class="comedit"><? echo _("AS_UNBTSave"); ?></button></td>
+                <td><button type="submit" tabindex="6" class="comedit"><?php echo __("Save New Name"); ?></button></td>
                 </tr>
 
                 <?
@@ -1392,24 +1363,24 @@ if ($user->NameChange > "0") { ?>
 
 </table>
 
-<? } ?>
-<? // ============= END OF MODULE 1 ============= ?>
+<?php } ?>
+<?php // ============= END OF MODULE 1 ============= ?>
 
 
 
 
-<? // ============= MODULE 2 - Adding a password for Battle.net Registered Users  ============= ?>
+<?php // ============= MODULE 2 - Adding a password for Battle.net Registered Users  ============= ?>
 <?
 if (!$user->Hash) { ?>
 
-<table width="100%" style="margin-top: 5px" class="profile<? if ($regpasserror == "true"){ echo "hl"; } ?>">
+<table width="100%" style="margin-top: 5px" class="profile<?php if ($regpasserror == "true"){ echo "hl"; } ?>">
     <tr class="profile">
-        <th width="5" class="profile<? if ($regpasserror == "true"){ echo "hl"; } ?>">
+        <th width="5" class="profile<?php if ($regpasserror == "true"){ echo "hl"; } ?>">
             <table>
                 <tr>
                     <td><img src="images/userdd_settings_grey.png"></td>
                     <td><img src="images/blank.png" width="5" height="1"></td>
-                    <td><p class="blogodd"><b><? echo _("AS_PWTitle"); ?></td>
+                    <td><p class="blogodd"><b><?php echo __("Password Protection"); ?></td>
                 </tr>
             </table>
         </th>
@@ -1418,9 +1389,9 @@ if (!$user->Hash) { ?>
     <tr class="profile">
         <td class="profile">
             <p class="blogodd">
-            <? echo _("AS_PWInst1"); ?>
+            <?php echo __("Your account does not have a password associated. Logging in through Battle.net is perfectly fine. Adding a password gives you the additional option to login with your username and password instead."); ?>
             <br>
-            <? echo _("AS_PWInst2"); ?>
+            <?php echo __("You can change your password at any time."); ?>
             <br><br>
 
             <form class="form-style-register" action="index.php?page=settings" method="post">
@@ -1430,14 +1401,14 @@ if (!$user->Hash) { ?>
 
 
                 <tr>
-                <td align="right"><p class="blogodd"><b><? if ($regpasserror == "true"){ echo "<font color=\"red\">"; } ?><? echo _("UL_LogPass"); ?>:</b></td>
+                <td align="right"><p class="blogodd"><b><?php if ($regpasserror == "true"){ echo "<font color=\"red\">"; } ?><?php echo __("Password"); ?>:</b></td>
                 <td><img src="images/blank.png" width="5" height="1"/></td>
                 <td><input tabindex="10" placeholder="" type="password" id="passwordy" name="password" required></td>
                 <td><a class="alternativessmall" style="display:block;" href="#"><font size="3">?<span class="alternativespan">
                     <img class="xufu" src="images/xufu_tooltip.png" alt="Alternative 3" height="48" width="48" />
-                    <em><? echo _("UL_LogPass"); ?></em>
-                    <? echo _("RG_PassRest1"); ?><br><br>
-                    <? echo _("RG_PassRest2"); ?><br>
+                    <em><?php echo __("Password"); ?></em>
+                    <?php echo __("Your password has to be at least 6 characters long. It is advisable to use a complex password."); ?><br><br>
+                    <?php echo __("Your password will be encrypted. No one, including the site admin, can see your real password."); ?><br>
                 </span></a>
 
                 </td>
@@ -1446,12 +1417,12 @@ if (!$user->Hash) { ?>
 
 
                 <tr>
-                <td align="right"><p class="blogodd"><b><? if ($regpasserror == "true"){ echo "<font color=\"red\">"; } ?><? echo _("RG_RepPass"); ?>:</b></td>
+                <td align="right"><p class="blogodd"><b><?php if ($regpasserror == "true"){ echo "<font color=\"red\">"; } ?><?php echo __("Repeat password"); ?>:</b></td>
                 <td><img src="images/blank.png" width="5" height="1"/></td>
                 <td><input tabindex="11" placeholder="" type="password" name="passwordrep" id="password" required></td>
                 <td></td>
                 <td><img src="images/blank.png" width="20" height="1"/></td>
-                <td><button type="submit" tabindex="12" class="comedit"><? echo _("RP_Save"); ?></button></td>
+                <td><button type="submit" tabindex="12" class="comedit"><?php echo __("Save Password"); ?></button></td>
                 </tr>
 
 
@@ -1462,7 +1433,7 @@ if (!$user->Hash) { ?>
                 ?>
 
 
-                <tr><td></td><td></td><td><div id="capsWarning" class="registerError"><p class="commenteven"><? echo _("UL_CapsOn"); ?></div></td></tr>
+                <tr><td></td><td></td><td><div id="capsWarning" class="registerError"><p class="commenteven"><?php echo __("Warning! Caps Lock is on!"); ?></div></td></tr>
 
                 <tr>
                     <td><img src="images/blank.png" width="150" height="1"/></td>
@@ -1475,8 +1446,8 @@ if (!$user->Hash) { ?>
 
 </table>
 
-<? } ?>
-<? // ============= END OF MODULE 2 ============= ?>
+<?php } ?>
+<?php // ============= END OF MODULE 2 ============= ?>
 
 
 
@@ -1486,7 +1457,7 @@ if (!$user->Hash) { ?>
 
 
 
-<? // ============= MODULE 4 - Language select ============= ?>
+<?php // ============= MODULE 4 - Language select ============= ?>
 
 
 <table width="100%" style="margin-top: 5px" class="profile">
@@ -1496,7 +1467,7 @@ if (!$user->Hash) { ?>
                 <tr>
                     <td><img src="images/userdd_settings_grey.png"></td>
                     <td><img src="images/blank.png" width="5" height="1"></td>
-                    <td><p class="blogodd"><b><? echo _("AS_LNTitle"); ?></td>
+                    <td><p class="blogodd"><b><?php echo __("Language Selection"); ?></td>
                 </tr>
             </table>
         </th>
@@ -1506,8 +1477,8 @@ if (!$user->Hash) { ?>
         <td class="profile">
             <p class="blogodd">
 
-            <? echo _("AS_LNInst1"); ?> <br>
-            <? echo _("AS_LNInst2"); ?>
+            <?php echo __("You can set your preferred language here."); ?> <br>
+            <?php echo __("If a language is flagged as <i>incomplete</i> only spell and pet names are localized. Most other page assets will default to English."); ?>
 
             <br><br>
 
@@ -1516,18 +1487,18 @@ if (!$user->Hash) { ?>
 
             <table>
                 <tr>
-                <td align="right"><p class="blogodd"><b><? echo _("AS_LNHead"); ?>:</b></td>
+                <td align="right"><p class="blogodd"><b><?php echo __("Select language"); ?>:</b></td>
                 <td><img src="images/blank.png" width="5" height="1"/></td>
                 <td><select tabindex="25" class="petselect" name="setlanguage" onchange="this.form.submit()">
-                    <option class="ctselect" value="en_US" <? if ($user->Language == "en_US") {echo "selected";} ?>>English</option>
-                    <option class="ctselect" value="de_DE" <? if ($user->Language == "de_DE") {echo "selected";} ?>>Deutsch</option>
-                    <option class="ctselect" value="es_ES" <? if ($user->Language == "es_ES") {echo "selected";} ?>>Espa&#xF1;ol</option>
-                    <option class="ctselect" value="fr_FR" <? if ($user->Language == "fr_FR") {echo "selected";} ?>>Fran&#xE7;ais</option>
-                    <option class="ctselect" value="ru_RU" <? if ($user->Language == "ru_RU") {echo "selected";} ?>>&#x420;&#x443;&#x441;&#x441;&#x43A;&#x438;&#x439;</option>
-                    <option class="ctselect" value="pt_BR" <? if ($user->Language == "pt_BR") {echo "selected";} ?>>Portugu&#xEA;s (incomplete)</option>
-                    <option class="ctselect" value="it_IT" <? if ($user->Language == "it_IT") {echo "selected";} ?>>Italiano (incomplete)</option>
-                    <option class="ctselect" value="ko_KR" <? if ($user->Language == "ko_KR") {echo "selected";} ?>>&#xD55C;&#xAD6D;&#xC5B4; (incomplete)</option>
-                    <option class="ctselect" value="zh_TW" <? if ($user->Language == "zh_TW") {echo "selected";} ?>>&#x4E2D;&#x6587; (incomplete)</option>
+                    <option class="ctselect" value="en_US" <?php if ($user->Language == "en_US") {echo "selected";} ?>>English</option>
+                    <option class="ctselect" value="de_DE" <?php if ($user->Language == "de_DE") {echo "selected";} ?>>Deutsch</option>
+                    <option class="ctselect" value="es_ES" <?php if ($user->Language == "es_ES") {echo "selected";} ?>>Espa&#xF1;ol</option>
+                    <option class="ctselect" value="fr_FR" <?php if ($user->Language == "fr_FR") {echo "selected";} ?>>Fran&#xE7;ais</option>
+                    <option class="ctselect" value="ru_RU" <?php if ($user->Language == "ru_RU") {echo "selected";} ?>>&#x420;&#x443;&#x441;&#x441;&#x43A;&#x438;&#x439;</option>
+                    <option class="ctselect" value="pt_BR" <?php if ($user->Language == "pt_BR") {echo "selected";} ?>>Portugu&#xEA;s (incomplete)</option>
+                    <option class="ctselect" value="it_IT" <?php if ($user->Language == "it_IT") {echo "selected";} ?>>Italiano (incomplete)</option>
+                    <option class="ctselect" value="ko_KR" <?php if ($user->Language == "ko_KR") {echo "selected";} ?>>&#xD55C;&#xAD6D;&#xC5B4; (incomplete)</option>
+                    <option class="ctselect" value="zh_TW" <?php if ($user->Language == "zh_TW") {echo "selected";} ?>>&#x4E2D;&#x6587; (incomplete)</option>
                 </td>
                 </tr>
 
@@ -1543,7 +1514,7 @@ if (!$user->Hash) { ?>
 
 </table>
 
-<? // ============= END OF MODULE 4 ============= ?>
+<?php // ============= END OF MODULE 4 ============= ?>
 
 
 
@@ -1553,19 +1524,19 @@ if (!$user->Hash) { ?>
 
 
 
-<? // ============= MODULE 6.1 - Add email address  ============= ?>
+<?php // ============= MODULE 6.1 - Add email address  ============= ?>
 <?
 if (!$user->Email) { ?>
 
 
-<table width="100%" style="margin-top: 5px" class="profile<? if ($regmailerror == "true"){ echo "hl"; } ?>">
+<table width="100%" style="margin-top: 5px" class="profile<?php if ($regmailerror == "true"){ echo "hl"; } ?>">
     <tr class="profile">
-        <th width="5" class="profile<? if ($regmailerror == "true"){ echo "hl"; } ?>">
+        <th width="5" class="profile<?php if ($regmailerror == "true"){ echo "hl"; } ?>">
             <table>
                 <tr>
                     <td><img src="images/userdd_settings_grey.png"></td>
                     <td><img src="images/blank.png" width="5" height="1"></td>
-                    <td><p class="blogodd"><b><? echo _("AS_EMAddTitle"); ?></td>
+                    <td><p class="blogodd"><b><?php echo __("Add Your Email Address"); ?></td>
                 </tr>
             </table>
         </th>
@@ -1574,9 +1545,9 @@ if (!$user->Email) { ?>
     <tr class="profile">
         <td class="profile">
             <p class="blogodd">
-            <? echo _("AS_EMAddInst1"); ?>
+            <?php echo __("Here you can add an email address to your account. Should you forget your password, your email address can be used to recover your account."); ?>
             <br>
-            <? echo _("AS_EMAddInst2"); ?>
+            <?php echo __("You can change or remove it at any time."); ?>
             <br><br>
 
             <form class="form-style-register" action="index.php?page=settings" method="post">
@@ -1585,12 +1556,12 @@ if (!$user->Email) { ?>
             <table>
 
                 <tr>
-                <td align="right"><p class="blogodd"><b><? if ($regmailerror == "true"){ echo "<font color=\"red\">"; } ?><? echo _("AS_EMAddH"); ?>:</b></td>
+                <td align="right"><p class="blogodd"><b><?php if ($regmailerror == "true"){ echo "<font color=\"red\">"; } ?><?php echo __("Your email address"); ?>:</b></td>
                 <td><img src="images/blank.png" width="5" height="1"/></td>
-                <td><input tabindex="150" placeholder="" type="email" name="addemail" value="<? echo $outputemail ?>" required></td>
+                <td><input tabindex="150" placeholder="" type="email" name="addemail" value="<?php echo $outputemail ?>" required></td>
 
                 <td><img src="images/blank.png" width="38" height="1"/></td>
-                <td><button type="submit" tabindex="151" class="comedit"><? echo _("AS_EMBTSave"); ?></button></td>
+                <td><button type="submit" tabindex="151" class="comedit"><?php echo __("Save Email"); ?></button></td>
                 </tr>
 
                 <?
@@ -1610,24 +1581,24 @@ if (!$user->Email) { ?>
 
 </table>
 
-<? } ?>
-<? // ============= END OF MODULE 6.1 ============= ?>
+<?php } ?>
+<?php // ============= END OF MODULE 6.1 ============= ?>
 
 
 
 
-<? // ============= MODULE 6.2 - Change or remove email address  ============= ?>
+<?php // ============= MODULE 6.2 - Change or remove email address  ============= ?>
 <?
 if ($user->Email) { ?>
 
-<table width="100%" style="margin-top: 5px" class="profile<? if ($regmailerror == "true"){ echo "hl"; } ?>">
+<table width="100%" style="margin-top: 5px" class="profile<?php if ($regmailerror == "true"){ echo "hl"; } ?>">
         <tr class="profile">
-                <th width="5" class="profile<? if ($regmailerror == "true"){ echo "hl"; } ?>">
+                <th width="5" class="profile<?php if ($regmailerror == "true"){ echo "hl"; } ?>">
                         <table>
                                 <tr>
                                         <td><img src="images/userdd_settings_grey.png"></td>
                                         <td><img src="images/blank.png" width="5" height="1"></td>
-                                        <td><p class="blogodd"><b><? echo _("AS_EMCTitle"); ?></td>
+                                        <td><p class="blogodd"><b><?php echo __("Change Email Address"); ?></td>
                                 </tr>
                         </table>
                 </th>
@@ -1637,7 +1608,7 @@ if ($user->Email) { ?>
                 <td class="profile">
                         <p class="blogodd">
 
-                        <? echo _("AS_EMCurrent"); ?>: <b><? echo $user->Email ?></b><br><br>
+                        <?php echo __("Your currently saved email address is"); ?>: <b><?php echo $user->Email ?></b><br><br>
 
                         <form class="form-style-register" action="index.php?page=settings" method="post">
                                 <input type="hidden" name="settingspage" value="changemail">
@@ -1645,17 +1616,17 @@ if ($user->Email) { ?>
                         <table>
 
                                 <tr>
-                                <td align="right"><p class="blogodd"><b><? if ($regmailerror == "true"){ echo "<font color=\"red\">"; } ?><? echo _("AS_EMCHeader"); ?>:</b></td>
+                                <td align="right"><p class="blogodd"><b><?php if ($regmailerror == "true"){ echo "<font color=\"red\">"; } ?><?php echo __("New email address"); ?>:</b></td>
                                 <td><img src="images/blank.png" width="5" height="1"/></td>
-                                <td><input tabindex="160" placeholder="" type="email" name="addemail" value="<? echo $outputemail ?>" required></td>
+                                <td><input tabindex="160" placeholder="" type="email" name="addemail" value="<?php echo $outputemail ?>" required></td>
 
                                 <td><img src="images/blank.png" width="38" height="1"/></td>
-                                <td><button type="submit" tabindex="161" class="comedit"><? echo _("AS_EMCBTUpdate"); ?></button></form></td>
+                                <td><button type="submit" tabindex="161" class="comedit"><?php echo __("Update Email"); ?></button></form></td>
 
                                 <td><img src="images/blank.png" width="10" height="1"/></td>
                                 <form class="form-style-register" action="index.php?page=settings" method="post">
                                 <input type="hidden" name="settingspage" value="removemail">
-                                <td><button type="submit" tabindex="162" class="comdelete"><? echo _("AS_EMCBTRemove"); ?></button></td>
+                                <td><button type="submit" tabindex="162" class="comdelete"><?php echo __("Remove Email"); ?></button></td>
                                 </tr>
 
                                 <?
@@ -1675,8 +1646,8 @@ if ($user->Email) { ?>
 
 </table>
 
-<? } ?>
-<? // ============= END OF MODULE 6.2 ============= ?>
+<?php } ?>
+<?php // ============= END OF MODULE 6.2 ============= ?>
 
 
 
@@ -1685,19 +1656,19 @@ if ($user->Email) { ?>
 
 
 
-<? // ============= MODULE 7 - Change password  ============= ?>
+<?php // ============= MODULE 7 - Change password  ============= ?>
 <?
 if ($user->Hash) { ?>
 
 
-<table width="100%" style="margin-top: 5px" class="profile<? if ($changepasserror == "true"){ echo "hl"; } ?>">
+<table width="100%" style="margin-top: 5px" class="profile<?php if ($changepasserror == "true"){ echo "hl"; } ?>">
     <tr class="profile">
-        <th width="5" class="profile<? if ($changepasserror == "true"){ echo "hl"; } ?>">
+        <th width="5" class="profile<?php if ($changepasserror == "true"){ echo "hl"; } ?>">
             <table>
                 <tr>
                     <td><img src="images/userdd_settings_grey.png"></td>
                     <td><img src="images/blank.png" width="5" height="1"></td>
-                    <td><p class="blogodd"><b><? echo _("AS_PWCTitle");  ?></td>
+                    <td><p class="blogodd"><b><?php echo __("Change Password");  ?></td>
                 </tr>
             </table>
         </th>
@@ -1712,14 +1683,14 @@ if ($user->Hash) { ?>
             <table>
 
                 <tr>
-                <td align="right"><p class="blogodd"><b><? if ($changepasserror == "true"){ echo "<font color=\"red\">"; } ?><? echo _("RP_NPField"); ?>:</b></td>
+                <td align="right"><p class="blogodd"><b><?php if ($changepasserror == "true"){ echo "<font color=\"red\">"; } ?><?php echo __("New password"); ?>:</b></td>
                 <td><img src="images/blank.png" width="5" height="1"/></td>
                 <td><input tabindex="170" placeholder="" type="password" id="passwordy" name="password" required></td>
                 <td><a class="alternativessmall" style="display:block;" href="#"><font size="3">?<span class="alternativespan">
                     <img class="xufu" src="images/xufu_tooltip.png" alt="Alternative 3" height="48" width="48" />
-                    <em><? echo _("UL_LogPass"); ?></em>
-                    <? echo _("RG_PassRest1"); ?><br><br>
-                    <? echo _("RG_PassRest2"); ?><br>
+                    <em><?php echo __("Password"); ?></em>
+                    <?php echo __("Your password has to be at least 6 characters long. It is advisable to use a complex password."); ?><br><br>
+                    <?php echo __("Your password will be encrypted. No one, including the site admin, can see your real password."); ?><br>
                 </span></a>
 
                 </td>
@@ -1727,12 +1698,12 @@ if ($user->Hash) { ?>
 
 
                 <tr>
-                <td align="right"><p class="blogodd"><b><? if ($changepasserror == "true"){ echo "<font color=\"red\">"; } ?><? echo _("RG_RepPass"); ?>:</b></td>
+                <td align="right"><p class="blogodd"><b><?php if ($changepasserror == "true"){ echo "<font color=\"red\">"; } ?><?php echo __("Repeat password"); ?>:</b></td>
                 <td><img src="images/blank.png" width="5" height="1"/></td>
                 <td><input tabindex="171" placeholder="" type="password" name="passwordrep" id="passwordz" required></td>
                 <td></td>
                 <td><img src="images/blank.png" width="20" height="1"/></td>
-                <td><button type="submit" tabindex="172" class="comedit"><? echo _("RP_Save"); ?></button></td>
+                <td><button type="submit" tabindex="172" class="comedit"><?php echo __("Save Password"); ?></button></td>
                 </tr>
 
 
@@ -1743,7 +1714,7 @@ if ($user->Hash) { ?>
                 ?>
 
 
-                <tr><td></td><td></td><td><div id="capsWarningz" class="registerError"><p class="commenteven"><? echo _("UL_CapsOn"); ?></div></td></tr>
+                <tr><td></td><td></td><td><div id="capsWarningz" class="registerError"><p class="commenteven"><?php echo __("Warning! Caps Lock is on!"); ?></div></td></tr>
 
                 <tr>
                     <td><img src="images/blank.png" width="150" height="1"/></td>
@@ -1756,25 +1727,25 @@ if ($user->Hash) { ?>
 
 </table>
 
-<? } ?>
-<? // ============= END OF MODULE 7 ============= ?>
+<?php } ?>
+<?php // ============= END OF MODULE 7 ============= ?>
 
 
 </div>
-<? // ============= End of Account Settings ============= ?>
+<?php // ============= End of Account Settings ============= ?>
 
 
 
 
-<? // ============= Begin of Battle.net Options ============= ?>
+<?php // ============= Begin of Battle.net Options ============= ?>
 
 
 <div style="width: 85%; background-color: #4b4b4b; padding: 5px; margin-bottom: 15px; border-radius: 5px;">
     <div style="width: 100%; padding: 3 0 3 5; font-family: MuseoSans-500,Roboto; color: white">
-        Battle.net Options
+        <?php echo __("Battle.net Options"); ?>
     </div>
 
-    <? // ============= MODULE - Battle.net is authenticated, but no access to WoW Characters is given ============= ?>
+    <?php // ============= MODULE - Battle.net is authenticated, but no access to WoW Characters is given ============= ?>
     <?
     if ($bnetuser->WoWAccess == "0"){
     ?>
@@ -1785,7 +1756,7 @@ if ($user->Hash) { ?>
                     <tr>
                         <td><img src="images/userdd_settings_grey.png"></td>
                         <td><img src="images/blank.png" width="5" height="1"></td>
-                        <td><p class="blogodd"><b><? echo _("AS_NoWoWTitle"); ?></td>
+                        <td><p class="blogodd"><b><?php echo __("Missing Battle.net WoW Access"); ?></td>
                     </tr>
                 </table>
             </th>
@@ -1794,28 +1765,28 @@ if ($user->Hash) { ?>
         <tr class="profile">
             <td class="profile">
                 <p class="blogodd">
-                <? echo _("AS_NoWoWInst1"); ?><br>
-                <? echo _("AS_NoWoWInst2"); ?><br>
-                <? echo _("AS_NoWoWInst3"); ?>:
+                <?php echo __("Your Battle.net account is successfully linked with Xu-Fu, but you chose to grant no access to WoW data, which is limited to the list of your characters. If this was intentional, all is well and you don't need to do anything."); ?><br>
+                <?php echo __("It does mean, however, that Xu-Fu cannot import your pet collection automatically, and you will not be able to chose a character picture as your avatar."); ?><br>
+                <?php echo __("If you want to change this, follow these steps"); ?>:
             <br>
             <ol class="blogodd">
-                <li><? echo _("AS_NoWoWInst4"); ?> <a class="wowhead" href="https://<? echo $bnetuser->region ?>.battle.net/account/management/"></a><? echo _("AS_NoWoWInst5"); ?></a></li>
-                <li><? echo _("AS_NoWoWInst6"); ?></li>
-                <li><? echo _("AS_NoWoWInst7"); ?></li>
-                <li><? echo _("AS_NoWoWInst8"); ?></li>
-                <li><? echo _("AS_NoWoWInst9"); ?></li>
+                <li><?php echo __("Visit your"); ?> <a class="wowhead" href="https://<?php echo $bnetuser->region ?>.battle.net/account/management/"></a><?php echo __("Battle.net Account Settings"); ?></a></li>
+                <li><?php echo __("Go to Security -> Approved Apps"); ?></li>
+                <li><?php echo __("Remove Xu-Fu from the list"); ?></li>
+                <li><?php echo __("Log out of wow-petguide.com and back in with Battle.net"); ?></li>
+                <li><?php echo __("When prompted to authorize Xu-Fu again, make sure the tick box is active at -Your World of Warcraft Profile-."); ?></li>
             </ol>
         </td>
         </tr>
     </table>
     
-    <? } ?>
-    <? // ============= END OF MODULE 0.2 ============= ?>
+    <?php } ?>
+    <?php // ============= END OF MODULE 0.2 ============= ?>
 
     
     
     
-    <? // ============= MODULE - Add Battle.net to account ============= ?>
+    <?php // ============= MODULE - Add Battle.net to account ============= ?>
     <?
     $bnetdb = mysqli_query($dbcon, "SELECT * FROM UserBnet WHERE User = '$user->id'");
     if (mysqli_num_rows($bnetdb) == "0" && $addbneterror != "alreadyregistered") { ?>
@@ -1828,7 +1799,7 @@ if ($user->Hash) { ?>
                     <tr>
                         <td><img src="images/userdd_settings_grey.png"></td>
                         <td><img src="images/blank.png" width="5" height="1"></td>
-                        <td><p class="blogodd"><b><? echo _("AS_BNTitle"); ?></td>
+                        <td><p class="blogodd"><b><?php echo __("Battle.net Connection"); ?></td>
                     </tr>
                 </table>
             </th>
@@ -1837,14 +1808,14 @@ if ($user->Hash) { ?>
         <tr class="profile">
             <td class="profile">
                 <p class="blogodd">
-                <? echo _("AS_BNInst1"); ?>
+                <?php echo __("Linking your Battle.net Account with your Xu-Fu Account is optional, but brings a few advantages:"); ?>
                 <ul class="blogodd">
-                <li><? echo _("AS_BNInst2"); ?></li>
-                <li><? echo _("AS_BNInst3"); ?></li>
-                <li><? echo _("AS_BNInst4"); ?></li>
+                <li><?php echo __("You can login with Battle.net, without the need of a password."); ?></li>
+                <li><?php echo __("Xu-Fu can update your pet collection automaticallyn, no manual refreshing required."); ?></li>
+                <li><?php echo __("You can chose a character picture as your avatar."); ?></li>
                 </ul>
-                <p class="blogodd"><? echo _("AS_BNInst5"); ?>
-                <br><? echo _("AS_BNInst6"); ?>
+                <p class="blogodd"><?php echo __("Xu-Fu will not receive any of your personal information by connecting with Battle.net (such as your password, email address or any billing information)."); ?>
+                <br><?php echo __("To link your account, select your account region and click on the button:"); ?>
                 <br><br><center>
     
                 <form name="loginform" action="index.php?page=settings" method="post">
@@ -1868,7 +1839,7 @@ if ($user->Hash) { ?>
                                 </ul>
                             </td>
                             <td>
-                                <p class="blogodd"><? echo _("UL_RegionsW"); ?>
+                                <p class="blogodd"><?php echo __("US/EU/KR/TW"); ?>
                             </td>
                         </tr>
                     
@@ -1884,7 +1855,7 @@ if ($user->Hash) { ?>
                                 </ul>
                             </td>
                             <td>
-                                <p class="blogodd"><? echo _("UL_RegionsC"); ?>
+                                <p class="blogodd"><?php echo __("China"); ?>
                             </td>
                         </tr>
                     </table>
@@ -1899,13 +1870,13 @@ if ($user->Hash) { ?>
     </td>
     </tr>
     </table>
-    <? } ?>
-    <? // ============= END OF MODULE 3.1 ============= ?>
+    <?php } ?>
+    <?php // ============= END OF MODULE 3.1 ============= ?>
 
 
 
 
-    <? // ============= MODULE - Change Battle.net Region ============= ?>
+    <?php // ============= MODULE - Change Battle.net Region ============= ?>
     <?
     if ($bnetuser && $bnetuser->Region != 'cn'){
     ?>
@@ -1916,7 +1887,7 @@ if ($user->Hash) { ?>
                     <tr>
                         <td><img src="images/userdd_settings_grey.png"></td>
                         <td><img src="images/blank.png" width="5" height="1"></td>
-                        <td><p class="blogodd"><b><? echo _("Change Battle.net Region"); ?></td>
+                        <td><p class="blogodd"><b><?php echo __("Change Battle.net Region"); ?></td>
                     </tr>
                 </table>
             </th>
@@ -1925,15 +1896,15 @@ if ($user->Hash) { ?>
         <tr class="profile">
             <td class="profile">
                 <p class="blogodd">
-                <? echo _("Your region for Battle.net is set to:<b>").' '.strtoupper($bnetuser->Region).'</b>'; ?><br>
-                <? echo _("You can change your region manually below. This might be useful if you have characters on multiple regions."); ?><br>
+                <?php echo __("Your region for Battle.net is set to:").' <b>'.strtoupper($bnetuser->Region).'</b>'; ?><br>
+                <?php echo __("You can change your region manually below. This might be useful if you have characters on multiple regions."); ?><br>
                 <br>
 
-                <? if ($user->UseWowAvatar == 1) {
-                    echo '<b>=> '._("Changing the region will remove your avatar icon!").'</b><br>';
+                <?php if ($user->UseWowAvatar == 1) {
+                    echo '<b>=> '.__("Changing the region will remove your avatar icon!").'</b><br>';
                 } ?>
-                <? if ($collection) {
-                    echo '<b>=> '._("Changing the region will remove your saved pet collection from Xu-Fu's!").'</b><br>';
+                <?php if ($collection) {
+                    echo '<b>=> '.__("Changing the region will remove your saved pet collection from Xu-Fu's!").'</b><br>';
                 } ?>
                 <br>
                 
@@ -1942,20 +1913,20 @@ if ($user->Hash) { ?>
 
                 <table border="0">
 
-                <? foreach (['us', 'eu', 'kr', 'tw'] as $region)
+                <?php foreach (['us', 'eu', 'kr', 'tw'] as $region)
                 {
                     switch ($region) {
                         case "us":
-                            $regiontitle = "FormSelectRealmUS";
+                            $regiontitle = "United States";
                             break;
                         case "eu":
-                            $regiontitle = "FormSelectRealmEU";
+                            $regiontitle = "Europe";
                             break;
                         case "kr":
-                            $regiontitle = "FormSelectRealmKR";
+                            $regiontitle = "Korea";
                             break;
                         case "tw":
-                            $regiontitle = "FormSelectRealmTW";
+                            $regiontitle = "Taiwan";
                             break;
                     }
                     if ($region != $bnetuser->Region) { ?>
@@ -1963,22 +1934,22 @@ if ($user->Hash) { ?>
                             <td style="width:30; padding-left: 20px">
                                 <ul class="radios">
                                     <li>
-                                        <input tabindex="11" class="blue" type="radio" id="<? echo $region ?>" value="<? echo $region ?>" name="region" required>
-                                        <label for="<? echo $region ?>"></label>
+                                        <input tabindex="11" class="blue" type="radio" id="<?php echo $region ?>" value="<?php echo $region ?>" name="region" required>
+                                        <label for="<?php echo $region ?>"></label>
                                         <div class="check"></div>
                                     </li>
                                 </ul>
                             </td>
                             <td>
-                                <p class="blogoddnowrap"><b><? echo _($regiontitle) ?>
+                                <p class="blogoddnowrap"><b><?php echo __($regiontitle) ?>
                             </td>
                     </tr>
-                    <? }
+                    <?php }
                 } ?>
 
                 <tr>
                 <td colspan="3" style="padding-top: 10px">
-                    <button type="submit" tabindex="12" style="margin-left: 30px" class="comedit"><? echo _("Change Region"); ?></button>
+                    <button type="submit" tabindex="12" style="margin-left: 30px" class="comedit"><?php echo __("Change Region"); ?></button>
                 </td>
                 </tr>
 
@@ -1993,13 +1964,13 @@ if ($user->Hash) { ?>
         </tr>
     </table>
     
-    <? } ?>
-    <? // ============= END OF MODULE 0.2 ============= ?>
+    <?php } ?>
+    <?php // ============= END OF MODULE 0.2 ============= ?>
     
     
 
 
-    <? // ============= MODULE - Unlink Battle.net Connection ============= ?>
+    <?php // ============= MODULE - Unlink Battle.net Connection ============= ?>
     <?
     if ($bnetuser){
     ?>
@@ -2010,7 +1981,7 @@ if ($user->Hash) { ?>
                     <tr>
                         <td><img src="images/userdd_settings_grey.png"></td>
                         <td><img src="images/blank.png" width="5" height="1"></td>
-                        <td><p class="blogodd"><b><? echo _("Unlink Battle.net Connection"); ?></td>
+                        <td><p class="blogodd"><b><?php echo __("Unlink Battle.net Connection"); ?></td>
                     </tr>
                 </table>
             </th>
@@ -2019,17 +1990,17 @@ if ($user->Hash) { ?>
         <tr class="profile">
             <td class="profile">
                 <p class="blogodd">
-                <? if (!$user->Hash) { 
-                    echo _("Your account does not have a password set. Please set one in the option above. Otherwise, unlinking Battle.net would mean you cannot login to your account anymore.");
+                <?php if (!$user->Hash) { 
+                    echo __("Your account does not have a password set. Please set one in the option above. Otherwise, unlinking Battle.net would mean you cannot login to your account anymore.");
                  }
                 else { ?>
-                <? echo _("You have an active Battle.net connection to log in with Xu-Fu, use a character icon as your avatar and easily import your collection. You can remove this link by clicking the button below."); ?>
+                <?php echo __("You have an active Battle.net connection to log in with Xu-Fu, use a character icon as your avatar and easily import your collection. You can remove this link by clicking the button below."); ?>
                 <br><br>
-                 <? echo _("This will also remove your current pet collection from Xu-Fu and you will have to manually link a character to reimport it."); ?>
+                 <?php echo __("This will also remove your current pet collection from Xu-Fu and you will have to manually link a character to reimport it."); ?>
 
                 <br>
 
-                    <button data-remodal-target="modal_unlink" style="margin-left: 30px; margin-top: 15px;" class="comdelete"><? echo _("Unlink Battle.net"); ?></button>
+                    <button data-remodal-target="modal_unlink" style="margin-left: 30px; margin-top: 15px;" class="comdelete"><?php echo __("Unlink Battle.net"); ?></button>
                     <br>                
                     <div class="remodal remodalstratedit remodaldelete" data-remodal-id="modal_unlink">
                         <table style="width: 400px" class="profile">
@@ -2038,7 +2009,7 @@ if ($user->Hash) { ?>
                                     <table>
                                         <tr>
                                             <td><img src="images/icon_report.png" style="padding-right: 5px"></td>
-                                            <td><p class="blogodd"><span style="white-space: nowrap;"><b><? echo _("Confirm Unlinking"); ?></span></td>
+                                            <td><p class="blogodd"><span style="white-space: nowrap;"><b><?php echo __("Confirm Unlinking"); ?></span></td>
                                         </tr>
                                     </table>
                                 </th>
@@ -2047,10 +2018,10 @@ if ($user->Hash) { ?>
                             <tr class="profile">
                                 <td class="collectionbordertwo" colspan="2" style="font-family: MuseoSans-500; font-size: 14px">
                                     <div id="del_part1">
-                                        <center><br><b><? echo _("Are you sure you want to unlink your Battle.net connection?"); ?></b><br><br>
+                                        <center><br><b><?php echo __("Are you sure you want to unlink your Battle.net connection?"); ?></b><br><br>
                                         <form class="form-style-register" action="index.php?page=settings" method="post">
                                             <input type="hidden" name="settingspage" value="unlink_bnet">
-                                            <button style="margin-left: 30px; margin-top: 15px;" type="submit" tabindex="151" class="redlarge"><? echo _("Unlink Battle.net"); ?></button>
+                                            <button style="margin-left: 30px; margin-top: 15px;" type="submit" tabindex="151" class="redlarge"><?php echo __("Unlink Battle.net"); ?></button>
                                         </form>
                                         <br>
                                     </div>
@@ -2065,14 +2036,14 @@ if ($user->Hash) { ?>
                     };
                     $('[data-remodal-id=modal_unlink]').remodal(options);
                     </script>
-                <? } ?>
+                <?php } ?>
             <br>
         </td>
         </tr>
     </table>
     
-    <? } ?>
-    <? // ============= END OF MODULE ============= ?>
+    <?php } ?>
+    <?php // ============= END OF MODULE ============= ?>
 
     
 
@@ -2081,7 +2052,7 @@ if ($user->Hash) { ?>
 
 
     
-    <? // ============= END OF BATTLE.NET OPTIONS SECTION ============= ?>
+    <?php // ============= END OF BATTLE.NET OPTIONS SECTION ============= ?>
 </div>
 
 
@@ -2091,13 +2062,13 @@ if ($user->Hash) { ?>
 
 
 
-<? // ============= MODULE: Tag priority in alternatives menu ============= ?>
+<?php // ============= MODULE: Tag priority in alternatives menu ============= ?>
 <script src="https://www.wow-petguide.com/data/jquery-sortable.js"></script>
 
 
 <div style="width: 85%; background-color: #4b4b4b; padding: 5px; margin-bottom: 15px; border-radius: 5px;">
     <div style="width: 100%; padding: 3 0 3 5; font-family: MuseoSans-500,Roboto; color: white">
-        Page Browsing
+        <?php echo __("Page Browsing"); ?>
     </div>
 
     <table width="100%" class="profile" style="margin-top: 5px">
@@ -2107,7 +2078,7 @@ if ($user->Hash) { ?>
                     <tr>
                         <td><img src="images/userdd_settings_grey.png"></td>
                         <td><img src="images/blank.png" width="5" height="1"></td>
-                        <td><p class="blogodd"><b>Priority of tags</td>
+                        <td><p class="blogodd"><b><?php echo __("Priority of tags"); ?></td>
                     </tr>
                 </table>
             </th>
@@ -2116,41 +2087,41 @@ if ($user->Hash) { ?>
         <tr class="profile">
             <td class="profile">
                 <p class="blogodd">
-                Decide which tags should be considered more important than others when showing alternative strategies.<br>
-                Tags in the green box will be moved higher up, while those in the red box will be moved down.
+                <?php echo __("Decide which tags should be considered more important than others when showing alternative strategies."); ?><br>
+                <?php echo __("Tags in the green box will be moved higher up, while those in the red box will be moved down."); ?>
                 <br><br>
-                Drag the tags between and within brackets to set their importance.
+                <?php echo __("Drag the tags between and within brackets to set their importance."); ?>
                 <br>
                 <br>
                 
                 <div style="width: 200px; float: left; margin-left: 20px">
-                    <center><p class="blogodd"><b>Preferred</b></center>
+                    <center><p class="blogodd"><b><?php echo __("Preferred"); ?></b></center>
                     <ol class='tags_sorting' id='tags_one' style='background-color: #a3ba87'>
-                       <? if ($tagprio[0][0] != "") {
+                       <?php if ($tagprio[0][0] != "") {
                             foreach ($tagprio[0] as $key => $value) {
-                                echo '<li id="'.$alltags[$value]['id'].'" class="tags_item">'.$alltags[$value]['Name'].'</li>';
+                                echo '<li id="'.$all_tags[$value]['ID'].'" class="tags_item">'.$all_tags[$value]['Name'].'</li>';
                             }
                         } ?>                
                    </ol>   
                 </div>
                 
                 <div style="width: 200px; float: left; margin-left: 20px">
-                     <center><p class="blogodd"><b>Neutral</b></center>    
+                     <center><p class="blogodd"><b><?php echo __("Neutral"); ?></b></center>    
                      <ol class='tags_sorting' id='tags_two' style='background-color: #aeaeae'>
-                       <? if ($tagprio[1][0] != "") {
+                       <?php if ($tagprio[1][0] != "") {
                             foreach ($tagprio[1] as $key => $value) {
-                                echo '<li id="'.$alltags[$value]['id'].'" class="tags_item">'.$alltags[$value]['Name'].'</li>';
+                                echo '<li id="'.$all_tags[$value]['ID'].'" class="tags_item">'.$all_tags[$value]['Name'].'</li>';
                             }
                        } ?>  
                     </ol>   
                 </div>
                 
                 <div style="width: 200px; float: left; margin-left: 20px">
-                    <center><p class="blogodd"><b>Unfavored</b></center>
+                    <center><p class="blogodd"><b><?php echo __("Unfavored"); ?></b></center>
                     <ol class='tags_sorting' id='tags_three' style='background-color: #ba8787'>
-                       <? if ($tagprio[2][0] != "") {
+                       <?php if ($tagprio[2][0] != "") {
                             foreach ($tagprio[2] as $key => $value) {
-                               echo '<li id="'.$alltags[$value]['id'].'" class="tags_item">'.$alltags[$value]['Name'].'</li>';
+                               echo '<li id="'.$all_tags[$value]['ID'].'" class="tags_item">'.$all_tags[$value]['Name'].'</li>';
                             }
                        } ?>  
                     </ol>   
@@ -2196,7 +2167,7 @@ if ($user->Hash) { ?>
                 </script>
     
                 <div style="width: 100%; float: left; margin-left: 20px; margin-bottom: 20px">
-                    <button onclick="save_tag_settings(<? echo $user->id ?>,<? echo $user->ComSecret ?>,)" type="submit" tabindex="36" class="comedit"><? echo _("UP_BTSave") ?></button>
+                    <button onclick="save_tag_settings(<?php echo $user->id ?>,<?php echo $user->ComSecret ?>,)" type="submit" tabindex="36" class="comedit"><?php echo __("Save") ?></button>
                 </div>
                 
             </td>
@@ -2217,7 +2188,7 @@ if ($user->Hash) { ?>
                     <tr>
                         <td><img src="images/userdd_settings_grey.png"></td>
                         <td><img src="images/blank.png" width="5" height="1"></td>
-                        <td><p class="blogodd"><b><? echo _("AS_BTTitle"); ?></td>
+                        <td><p class="blogodd"><b><?php echo __("Beta Features"); ?></td>
                     </tr>
                 </table>
             </th>
@@ -2226,21 +2197,21 @@ if ($user->Hash) { ?>
         <tr class="profile">
                 <td class="profile">
                     <p class="blogodd">
-                    <? echo _("AS_BTInst1"); ?><br>
-                    <b><? echo _("AS_AccDelWarn"); ?></b> - <? echo _("AS_BTInst2"); ?><br><br>
-                    <? echo _("AS_BTInst3"); ?> <span class="username tooltipstered" style="text-decoration: none" rel="2" value="<? echo $user->id ?>"><a target="_blank" href="?user=2" class="usernamelink comheadbright com_role_99_bright">Aranesh</a></span> (<a class="wowhead" href="https://www.wow-petguide.com/index.php?page=writemsg&to=2" target="_blank"><? echo _("UP_TTSendMsg"); ?></a> / <a class="wowhead" href="https://discord.gg/z4dxYUq" target="_blank"><? echo _("UP_PRHDiscord"); ?></a>)<br>
+                    <?php echo __("Aranesh is regularly adding new features. If you want to test them before they are released, activate this option."); ?><br>
+                    <b><?php echo __("Warning!"); ?></b> - <?php echo __("activating beta features might replace parts of the page with versions that are not fully functional!"); ?><br><br>
+                    <?php echo __("To learn what is currently in development, contact"); ?> <span class="username tooltipstered" style="text-decoration: none" rel="2" value="<?php echo $user->id ?>"><a target="_blank" href="?user=2" class="usernamelink comheadbright com_role_99_bright">Aranesh</a></span> (<a class="wowhead" href="https://www.wow-petguide.com/index.php?page=writemsg&to=2" target="_blank"><?php echo __("Send message"); ?></a> / <a class="wowhead" href="https://discord.gg/z4dxYUq" target="_blank"><?php echo __("Discord"); ?></a>)<br>
                     <br>
     
                     <table>
                         <tr>
-                        <td align="right"><p class="blogodd"><b><? echo _("AS_BTTitle"); ?>:</b></td>
+                        <td align="right"><p class="blogodd"><b><?php echo __("Beta Features"); ?>:</b></td>
                         <td><img src="images/blank.png" width="5" height="1"/></td>
                         <td>
-                            <? echo _("Button_Off"); ?>
+                            <?php echo __("Off"); ?>
                         </td>
                         <td>
                             <div class="armoryswitch">
-                                <input type="checkbox" class="armoryswitch-checkbox" id="setbeta" onchange="change_beta_setting('<? echo $user->id ?>','<? echo $user->ComSecret ?>');" <? if ($usersettings['BetaAccess'] == "on" ) { echo "checked"; } ?>>
+                                <input type="checkbox" class="armoryswitch-checkbox" id="setbeta" onchange="change_beta_setting('<?php echo $user->id ?>','<?php echo $user->ComSecret ?>');" <?php if ($usersettings['BetaAccess'] == "on" ) { echo "checked"; } ?>>
                                 <label class="armoryswitch-label" for="setbeta">
                                 <span class="armoryswitch-inner"></span>
                                 <span class="armoryswitch-switch"></span>
@@ -2248,7 +2219,7 @@ if ($user->Hash) { ?>
                             </div>
                         </td>
                         <td>
-                            <? echo _("Button_On"); ?>
+                            <?php echo __("On"); ?>
                         </td>
                         </tr>
                         <tr>
@@ -2272,7 +2243,7 @@ if ($user->Hash) { ?>
 
 
 
-<? // ============= MODULE 8 - Delete Account  ============= ?>
+<?php // ============= MODULE 8 - Delete Account  ============= ?>
 
 <div style="width: 85%; background-color: #4b4b4b; padding: 5px; margin-bottom: 15px; border-radius: 5px;">
     
@@ -2283,7 +2254,7 @@ if ($user->Hash) { ?>
                     <tr>
                         <td><img src="images/userdd_settings_grey.png"></td>
                         <td><img src="images/blank.png" width="5" height="1"></td>
-                        <td><p class="blogodd"><b><? echo _("AS_DLTitle"); ?></td>
+                        <td><p class="blogodd"><b><?php echo __("Delete Account"); ?></td>
                     </tr>
                 </table>
             </th>
@@ -2295,7 +2266,7 @@ if ($user->Hash) { ?>
     
                         <form class="form-style-register" action="index.php?page=settings" method="post">
                                 <input type="hidden" name="settingspage" value="deleteacc">
-                                <button style="margin-left: 30px; margin-top: 15px;" type="submit" tabindex="151" class="comdelete"><? echo _("AS_DLBTStart"); ?></button>
+                                <button style="margin-left: 30px; margin-top: 15px;" type="submit" tabindex="151" class="comdelete"><?php echo __("Start Account Deletion Process"); ?></button>
                         </form>
                 </td>
         </tr>
@@ -2305,7 +2276,7 @@ if ($user->Hash) { ?>
 </div>
 
 
-<? // ============= END OF MODULE 8 ============= ?>
+<?php // ============= END OF MODULE 8 ============= ?>
 
 
 
@@ -2319,43 +2290,43 @@ if ($user->Hash) { ?>
 <?
 switch ($sendtoast) {
     case "pwadded":
-        echo '<script type="text/javascript">$.growl.notice({ message: "'._("GR_PassChanged").'", duration: "5000", size: "large", location: "tc" });</script>';
+        echo '<script type="text/javascript">$.growl.notice({ message: "'.__("Your password was saved.").'", duration: "5000", size: "large", location: "tc" });</script>';
         break;
     case "namechanged":
-        echo '<script type="text/javascript">$.growl.notice({ message: "'._("GR_NameChanged").'", duration: "5000", size: "large", location: "tc" });</script>';
+        echo '<script type="text/javascript">$.growl.notice({ message: "'.__("Your Username was changed successfully.").'", duration: "5000", size: "large", location: "tc" });</script>';
         break;
     case "addbnet":
-        echo '<script type="text/javascript">$.growl.notice({ message: "'._("AS_GRBnetCon").'", duration: "5000", size: "large", location: "tc" });</script>';
+        echo '<script type="text/javascript">$.growl.notice({ message: "'.__("Your Battle.net Account was connected successfully!").'", duration: "5000", size: "large", location: "tc" });</script>';
         break;
     case "bnetregfail":
-        echo '<script type="text/javascript">$.growl.error({ message: "'._("GR_BnetDecl").'", duration: "10000", size: "large", location: "tc" });</script>';
+        echo '<script type="text/javascript">$.growl.error({ message: "'.__("The Battle.net authorization was declined. To login using your Battle.net Account please try again and authorize Xu-Fu.<br>Note: Your personal data (password, email address) will never be shared by Battle.net to authorized apps.").'", duration: "10000", size: "large", location: "tc" });</script>';
         break;
     case "bnetregsuccess":
-        echo '<script type="text/javascript">$.growl.notice({ message: "'._("AS_GRBnetConY").'", duration: "5000", size: "large", location: "tc" });</script>';
+        echo '<script type="text/javascript">$.growl.notice({ message: "'.__("Your Battle.net Account Authorization was successful. Thank you!").'", duration: "5000", size: "large", location: "tc" });</script>';
         break;
     case "bnetapierror":
-        echo '<script type="text/javascript">$.growl.error({ message: "'._("GR_BnetFailed").'", duration: "10000", size: "large", location: "tc" });</script>';
+        echo '<script type="text/javascript">$.growl.error({ message: "'.__("There was a problem with the Battle.net Account service, most likely a timeout or perhaps the servers are in maintenance. Please try again later.").'", duration: "10000", size: "large", location: "tc" });</script>';
         break;
     case "emailadded":
-        echo '<script type="text/javascript">$.growl.notice({ message: "'._("AS_GREMSaved").'", duration: "5000", size: "large", location: "tc" });</script>';
+        echo '<script type="text/javascript">$.growl.notice({ message: "'.__("Your email address was saved successfully.").'", duration: "5000", size: "large", location: "tc" });</script>';
         break;
     case "mailremoved":
-        echo '<script type="text/javascript">$.growl.notice({ message: "'._("AS_GREMRemoved").'", duration: "5000", size: "large", location: "tc" });</script>';
+        echo '<script type="text/javascript">$.growl.notice({ message: "'.__("Email address removed.").'", duration: "5000", size: "large", location: "tc" });</script>';
         break;
     case "langchanged":
-        echo '<script type="text/javascript">$.growl.notice({ message: "'._("AS_GRLngChanged").'", duration: "5000", size: "large", location: "tc" });</script>';
+        echo '<script type="text/javascript">$.growl.notice({ message: "'.__("Language changed.").'", duration: "5000", size: "large", location: "tc" });</script>';
         break;
     case "genericerror":
-        echo '<script type="text/javascript">$.growl.error({ message: "'._("GR_GenError").'", duration: "7000", size: "large", location: "tc" });</script>';
+        echo '<script type="text/javascript">$.growl.error({ message: "'.__("There was an error processing your data, I am sorry. Please try again.").'", duration: "7000", size: "large", location: "tc" });</script>';
         break;
     case "nowowaccess":
-        echo '<script type="text/javascript">$.growl.error({ message: "'._("UP_WA_noaccess").'", duration: "7000", size: "large", location: "tc" });</script>';
+        echo '<script type="text/javascript">$.growl.error({ message: "'.__("Xu-Fu has no access to your WoW character list. Adding a character picture as your avatar is therefore not possible. <br>Please check below for instructions on how to fix this.").'", duration: "7000", size: "large", location: "tc" });</script>';
         break;
     case "bnet_unlinked":
-        echo '<script type="text/javascript">$.growl.notice({ message: "'._("Battle.net Connection has been removed.").'", duration: "7000", size: "large", location: "tc" });</script>';
+        echo '<script type="text/javascript">$.growl.notice({ message: "'.__("Battle.net Connection has been removed.").'", duration: "7000", size: "large", location: "tc" });</script>';
         break;
     case "region_changed":
-        echo '<script type="text/javascript">$.growl.notice({ message: "'._("Battle.net Region has been changed.").'", duration: "7000", size: "large", location: "tc" });</script>';
+        echo '<script type="text/javascript">$.growl.notice({ message: "'.__("Battle.net Region has been changed.").'", duration: "7000", size: "large", location: "tc" });</script>';
         break;
 }
 

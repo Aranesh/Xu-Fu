@@ -36,8 +36,8 @@ die;
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Xu-Fu's Pet Battle Strategies</title>
-<meta name="Description" content="<? echo _("PageDescription") ?>" />
-<meta name="Keywords" content="<? echo _("PageKeywords") ?>" />
+<meta name="Description" content="<?php echo _("World of Warcraft Pet Battle guides - your one-stop place for strategies to beat all WoW pet battle quests, achievements and opponents!") ?>" />
+<meta name="Keywords" content="<?php echo _("warcraft pets, warcraftpets, wow vanity pets, wow battle pets, wow companions") ?>" />
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <link rel="alternate" hreflang="en" href="https://www.wow-petguide.com/">
     <link rel="alternate" hreflang="fr" href="http://fr.wow-petguide.com/">
@@ -147,27 +147,24 @@ Modo de Manutenção - 유지 관리 모드 - 维护模式计算机</p></td>
 <div style="max-width:800px;text-align: left">
 
 <p class="blogodd">Xu-Fu is currently being updated. <br>
-Downtime started at <a class="wowhead" href="https://www.google.com/search?client=firefox-b-d&q=11%3A15+GMT" target="_blank">11:15 GMT</a> and is expected to last 60-90 minutes.<br><br>
+Update: things broke, fixing it, takes a bit longer sorry<br><br>
+Downtime started at <a class="wowhead" href="https://www.google.com/search?client=firefox-b-d&q=11%3A15+GMT" target="_blank">15:48 GMT</a> and is expected to last 60 minutes.<br><br>
 <b>What's in this update:</b><br><br>
 
-The pet collection import needs to be updated to use a new data connection to the armory. <br>
-This impacts a lot of other systems at the same time which need to be updated as well. Sorry for the inconvenience!<br>
+Fixing an issue that caused localization to not work. While updating, the page will display without any text, better to have maintenance mode on :D<br>
+To all English speaking visitors: sorry, nothing new for you this time!<br>
 <br>
-<b>Update at 13:15 GMT</b> Running into a few problems, working on it!
+<? // You can follow the progress in <a class="wowhead" href="https://trello.com/c/NXbAIXz2/19-localization-restructure" target="_blank">this Trello ticket</a>. ?>
 
 <br>
 <hr class="home"><br>
-<p class="blogodd">Want to support Xu-Fu? Consider sending a donation :-)<br>
-But don't worry, we'll keep the site updated and alive either way.
+<p class="blogodd">Want to support Xu-Fu? Consider sending a Ko-Fi :-)<br>
+But don't worry, we'll keep the site updated and alive either way.<br>
 
                     <div class="home_main_content" style="margin: 10 0 0 0; padding-left: 10px">
-                            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" style="display: inline">
-                                <input type="hidden" name="cmd" value="_s-xclick" />
-                                <input type="hidden" name="hosted_button_id" value="FWARY9QP2MCD2" />
-                                <input type="image" src="https://wow-petguide.com/images/home_donate_pp.png" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-                                <img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1" />
-                            </form>
+<script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Buy Aranesh a Ko-fi', '#2486d1', 'F1F61IQGC');kofiwidget2.draw();</script> 
                     </div>
+                    
 </p>
 </div>
 <br>

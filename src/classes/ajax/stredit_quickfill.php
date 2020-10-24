@@ -45,12 +45,13 @@ if ($veri1 == "true") {
 if ($veri2 == "true") {
     // Type 0 - Pet Skill via Quick-Fill
     if ($type == "0") {
-        $spelldb = mysqli_query($dbcon, "SELECT * FROM Spells WHERE SpellID = '$customid'");
+        $spelldb = mysqli_query($dbcon, "SELECT * FROM Pet_Abilities WHERE id = '$customid'");
         $spell = mysqli_fetch_object($spelldb);
         $spellinput = mysqli_real_escape_string($dbcon, $spell->en_US);
         $spellinput = mysqli_real_escape_string($dbcon, $spellinput);
-        $newinstruction = "[spell=".$spellinput."]";
+        $newinstruction = "[ability=".$customid.":".$spellinput."]";
         $entersuc = "true";
+        $turncount = $spell->Rounds;
     }
 
     // Type 1 - Quick Text: Pass
@@ -66,7 +67,7 @@ if ($veri2 == "true") {
             $pet = mysqli_fetch_object($petdb);
             $petinput = mysqli_real_escape_string($dbcon, $pet->Name);
             $petinput = mysqli_real_escape_string($dbcon, $petinput);
-            $newinstruction = "[i]Bring in your [pet=".$petinput."][/i]";
+            $newinstruction = "[i]Bring in your [pet=".$customid.":".$petinput."][/i]";
             $entersuc = "true";
             $clearturn = "true";
         } 
@@ -79,7 +80,7 @@ if ($veri2 == "true") {
             $pet = mysqli_fetch_object($petdb);
             $petinput = mysqli_real_escape_string($dbcon, $pet->Name);
             $petinput = mysqli_real_escape_string($dbcon, $petinput);
-            $newinstruction = "Swap to your [pet=".$petinput."]";
+            $newinstruction = "Swap to your [pet=".$customid.":".$petinput."]";
             $entersuc = "true";
         } 
     }
@@ -116,12 +117,12 @@ if ($veri2 == "true") {
     
     // Type 8 - Quick Text: enemy pet comes in
     if ($type == "8") {
-        $petdb = mysqli_query($dbcon, "SELECT * FROM PetsNPC WHERE PetID = '$customid'");
+        $petdb = mysqli_query($dbcon, "SELECT * FROM Pets_NPC WHERE id = '$customid'");
         if (mysqli_num_rows($petdb) > "0") {
             $pet = mysqli_fetch_object($petdb);
-            $inputpetname = mysqli_real_escape_string($dbcon, $pet->Name);
+            $inputpetname = mysqli_real_escape_string($dbcon, $pet->en_US);
             $inputpetname = mysqli_real_escape_string($dbcon, $inputpetname);
-            $newinstruction = "[i][enemy=".$inputpetname."] comes in[/i]";
+            $newinstruction = "[i][enemy=".$customid.":".$inputpetname."] comes in[/i]";
             $entersuc = "true";
             $clearturn = "true";
         } 
@@ -166,8 +167,12 @@ if ($entersuc == "true") {
     else { // Auto-Fill Turn numbers and stuff
         $steppieces = explode(" ", $prevstepcont);
         if ($steppieces[0] == "Turn" AND preg_match("/^[1234567890]*$/is", $steppieces[1])) {
-            $newstep = $steppieces[1]+1;
-            $inputstep = "Turn ".$newstep;
+            $start_step = $steppieces[1]+1;
+            if ($turncount > 1) {
+                $end_step = $steppieces[1]+$turncount;
+                $inputstep = "Turns ".$start_step."-".$end_step;
+            }
+            else $inputstep = "Turn ".$start_step;
             mysqli_query($dbcon, "UPDATE Strategy SET `Step` = '$inputstep' WHERE id = '$lineid'");
         }
         if ($steppieces[0] == "Turns" OR $steppieces[0] == "Turn") {
@@ -180,13 +185,21 @@ if ($entersuc == "true") {
                 $newnumber = $piecethree[1];
             }
             if ($newnumber) {
-                $newstep = $newnumber+1;
-                $inputstep = "Turn ".$newstep;
+                $start_step = $newnumber+1;
+                if ($turncount > 1) {
+                    $end_step = $newnumber+$turncount;
+                    $inputstep = "Turns ".$start_step."-".$end_step;
+                }
+                else $inputstep = "Turn ".$start_step;
                 mysqli_query($dbcon, "UPDATE Strategy SET `Step` = '$inputstep' WHERE id = '$lineid'");                    
             }
         }
         if ($prevstepcont == "") {
-            mysqli_query($dbcon, "UPDATE Strategy SET `Step` = 'Turn 1' WHERE id = '$lineid'");
+            $inputstep = "Turn 1";
+            if ($turncount > 1) {
+                $inputstep = "Turns 1-".$turncount;
+            }
+            mysqli_query($dbcon, "UPDATE Strategy SET `Step` = '$inputstep' WHERE id = '$lineid'");
         }
     }
 

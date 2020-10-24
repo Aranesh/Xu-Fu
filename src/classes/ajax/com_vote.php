@@ -31,12 +31,13 @@ $userdb = mysqli_query($dbcon, "SELECT * FROM Users WHERE id = '$userid'");
 if (mysqli_num_rows($userdb) > "0") {
     $user = mysqli_fetch_object($userdb);
     $language = $user->Language;
-    putenv("LANG=".$language.".UTF-8");
-    setlocale(LC_ALL, $language.".UTF-8");
-    $domain = "messages";
-    bindtextdomain($domain, "../../Locale");
-    textdomain($domain);
-    set_language_vars($language);
+    require_once ("../../thirdparty/motranslator/vendor/autoload.php");
+    PhpMyAdmin\MoTranslator\Loader::loadFunctions();
+      _setlocale(LC_MESSAGES, $language);
+      _textdomain('messages');
+      _bindtextdomain('messages', __DIR__ . '/../../Locale/');
+      _bind_textdomain_codeset('messages', 'UTF-8');
+      set_language_vars($language);
 }
 
 if ($user && $user->ComSecret == $comsecret && $votes != "") {
@@ -46,8 +47,22 @@ if ($user && $user->ComSecret == $comsecret && $votes != "") {
     if (mysqli_num_rows($votedb) > "0"){
         $vote = mysqli_fetch_object($votedb);
         if ($vote->Vote == $type) {
-            // Already voted for same
-            echo "NoChange";
+            if ($type == 1) {
+                // Already voted for up, cancelling vote
+                $votes = $votes-1;
+                mysqli_query($dbcon, "UPDATE Comments SET `Votes` = '$votes' WHERE id = '$sortingid'");
+                mysqli_query($dbcon, "DELETE FROM Votes WHERE id = '$vote->id'") OR die(mysqli_error($dbcon));
+                mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$userid', '$user_ip_adress', '1', 'Comment Vote', '$sortingid - Cancelled Upvote')") OR die(mysqli_error($dbcon));
+                echo "CancelUp";
+            }
+            if ($type == 0) {
+                // Already voted for down, cancelling vote
+                $votes = $votes+1;
+                mysqli_query($dbcon, "UPDATE Comments SET `Votes` = '$votes' WHERE id = '$sortingid'");
+                mysqli_query($dbcon, "DELETE FROM Votes WHERE id = '$vote->id'") OR die(mysqli_error($dbcon));
+                mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$userid', '$user_ip_adress', '1', 'Comment Vote', '$sortingid - Cancelled Downvote')") OR die(mysqli_error($dbcon));
+                echo "CancelDown";
+            }
         }
         else {
             if ($type == "1") {
@@ -90,12 +105,12 @@ if ($user && $user->ComSecret == $comsecret && $votes != "") {
 
     if ($type == "1" && $comment->GoldMsgTrig == "0" && $votes >= $pagesettings->Com_Gold && $comment->User != "0") {
         $displaynumb = $pagesettings->Com_Gold+1;
-        $wlcmsgsub = _("CM_GoldSubj");
-        $wlcmsgmsg = _("CM_GoldCont1").'
-'._("CM_GoldCont2").'
-'._("CM_GoldCont3").' https://wow-petguide.com/?Comment='.$sortingid.'
-'._("CM_GoldCont4").'
-'._("AR_CMSig").'
+        $wlcmsgsub = __("Gold Comment Reached!");
+        $wlcmsgmsg = __("Congratulations!").'
+'.__("One of your comments got enough upvotes from other pet battlers to reach Gold status").'
+'.__("It will now be highlighted much more prominently, go check it out:").' https://wow-petguide.com/?Comment='.$sortingid.'
+'.__("Thank you for your contribution!").'
+'.__("Yours,").'
 Xu-Fu';
         $wlcmsgsub = mysqli_real_escape_string($dbcon, $wlcmsgsub);
         $wlcmsgmsg = mysqli_real_escape_string($dbcon, $wlcmsgmsg);

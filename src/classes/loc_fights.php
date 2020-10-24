@@ -23,7 +23,7 @@ $submitbreeds = $_POST['submitbreeds'];
     <img src="images/blank.png" width="50" height="1" alt="" />
 </td>
 <td>
-    <img class="ut_icon" width="84" height="84" <? echo $usericon ?>>
+    <img class="ut_icon" width="84" height="84" <?php echo $usericon ?>>
 </td>
 
 <td>
@@ -67,7 +67,7 @@ $submitbreeds = $_POST['submitbreeds'];
 <td>
 <table style="width: 98%;" class="profile">
 
-    <? print_loc_menu('fights');
+    <?php print_loc_menu('fights');
     
 $locales = array(
     0 => array(
@@ -118,9 +118,9 @@ $locales = array(
             Don't forget to Save each line after adding your translation :-)</p>
                 <table>
                     <tr>
-                        <? foreach ($locales as $locale) { ?>
-                            <td><button class="articleedit_lng" id="atbt_<? echo $locale['locale'] ?>" onclick="loc_toggle_lng('<? echo $locale['locale'] ?>')"><? echo $locale['Name'] ?></button></td>
-                        <? } ?>
+                        <?php foreach ($locales as $locale) { ?>
+                            <td><button class="articleedit_lng" id="atbt_<?php echo $locale['locale'] ?>" onclick="loc_toggle_lng('<?php echo $locale['locale'] ?>')"><?php echo $locale['Name'] ?></button></td>
+                        <?php } ?>
                     </tr>
                 </table>
                 
@@ -129,11 +129,11 @@ $locales = array(
                         <th class="admin">
                             English
                         </th>
-                        <? foreach ($locales as $locale) { ?>
-                            <th class="admin field_<? echo $locale['locale'] ?>" style="display: none">
-                                <? echo $locale['Name'] ?>
+                        <?php foreach ($locales as $locale) { ?>
+                            <th class="admin field_<?php echo $locale['locale'] ?>" style="display: none">
+                                <?php echo $locale['Name'] ?>
                             </th>
-                        <? } ?>
+                        <?php } ?>
                         <th class="admin"></th>
                     </tr>
                 <?
@@ -153,33 +153,33 @@ $locales = array(
                     ?>
                     <tr>
                         <td class="admin_top" style="width: 40%">
-                            <b><a class="alternativessmall" style="margin-left: 0px; font-size: 13px;" href="?s=<? echo $fight->id ?>" target="_blank"><? echo stripslashes(htmlentities($fight->Name, ENT_QUOTES, "UTF-8")); ?></a></b>
+                            <b><a class="alternativessmall" style="margin-left: 0px; font-size: 13px;" href="?s=<?php echo $fight->id ?>" target="_blank"><?php echo stripslashes(htmlentities($fight->Name, ENT_QUOTES, "UTF-8")); ?></a></b>
                         </td>
-                        <? foreach ($locales as $locale) {
+                        <?php foreach ($locales as $locale) {
                             $ext_name = "Name_".$locale['locale']; ?>
-                            <td class="admin_top field_<? echo $locale['locale'] ?>" style="display: none">
-                                <input type="text" maxlength="300" class="stredit_editline" style="width: 100%;" id="title_<? echo $fight->id.'_'.$locale['locale'] ?>" value="<? echo stripslashes(htmlentities($fight->{$ext_name}, ENT_QUOTES, "UTF-8")); ?>">
+                            <td class="admin_top field_<?php echo $locale['locale'] ?>" style="display: none">
+                                <input type="text" maxlength="300" class="stredit_editline" style="width: 100%;" id="title_<?php echo $fight->id.'_'.$locale['locale'] ?>" value="<?php echo stripslashes(htmlentities($fight->{$ext_name}, ENT_QUOTES, "UTF-8")); ?>">
                             </td>
-                        <? } ?>
+                        <?php } ?>
 
                         <td rowspan="2" class="admin_save" style="width: 10px">
-                            <input class="cominputmedium" type="submit" value="Save" onclick="save_line('<? echo $fight->id; ?>', '<? echo $user->id; ?>', '<? echo $user->ComSecret; ?>');">
+                            <input class="cominputmedium" type="submit" value="Save" onclick="save_line('<?php echo $fight->id; ?>', '<?php echo $user->id; ?>', '<?php echo $user->ComSecret; ?>');">
                         </td>
                     </tr>
                         
                     <tr>
                         <td class="admin_bottom">
-                            <? echo stripslashes(htmlentities($fight->Comment, ENT_QUOTES, "UTF-8")); ?>
+                            <?php echo stripslashes(htmlentities($fight->Comment, ENT_QUOTES, "UTF-8")); ?>
                         </td>
-                        <? foreach ($locales as $locale) {
+                        <?php foreach ($locales as $locale) {
                             $ext_comment = "Comment_".$locale['locale']; ?>
-                            <td class="admin_bottom field_<? echo $locale['locale'] ?>" style="display: none">
-                                <input type="text" maxlength="1000" class="stredit_editline" style="width: 100%;" id="comment_<? echo $fight->id.'_'.$locale['locale'] ?>" value="<? echo stripslashes(htmlentities($fight->{$ext_comment}, ENT_QUOTES, "UTF-8")); ?>">
+                            <td class="admin_bottom field_<?php echo $locale['locale'] ?>" style="display: none">
+                                <input type="text" maxlength="1000" class="stredit_editline" style="width: 100%;" id="comment_<?php echo $fight->id.'_'.$locale['locale'] ?>" value="<?php echo stripslashes(htmlentities($fight->{$ext_comment}, ENT_QUOTES, "UTF-8")); ?>">
                             </td>
-                        <? } ?>
+                        <?php } ?>
                     </tr>
                     
-                <? } ?>
+                <?php } ?>
                 </table>             
         </td>
         
@@ -211,10 +211,10 @@ function loc_toggle_lng(lng) {
 }
 
 function save_line(line, u, s) {
-    <? foreach ($locales as $locale) { ?>
-        var title_<? echo $locale['locale'] ?> = document.getElementById('title_' + line + '_<? echo $locale['locale'] ?>').value;
-        var comment_<? echo $locale['locale'] ?> = document.getElementById('comment_' + line + '_<? echo $locale['locale'] ?>').value;
-    <? } ?>    
+    <?php foreach ($locales as $locale) { ?>
+        var title_<?php echo $locale['locale'] ?> = document.getElementById('title_' + line + '_<?php echo $locale['locale'] ?>').value;
+        var comment_<?php echo $locale['locale'] ?> = document.getElementById('comment_' + line + '_<?php echo $locale['locale'] ?>').value;
+    <?php } ?>    
     var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -231,10 +231,10 @@ function save_line(line, u, s) {
     };
 	xmlhttp.open("GET", "classes/ajax/loc_saveline.php?userid=" + encodeURIComponent(u)
     + "&stratid=" + encodeURIComponent(line)
-    <? foreach ($locales as $locale) { ?>
-        + "&title_<? echo $locale['locale'] ?>=" + encodeURIComponent(title_<? echo $locale['locale'] ?>)
-        + "&comment_<? echo $locale['locale'] ?>=" + encodeURIComponent(comment_<? echo $locale['locale'] ?>)
-    <? } ?>
+    <?php foreach ($locales as $locale) { ?>
+        + "&title_<?php echo $locale['locale'] ?>=" + encodeURIComponent(title_<?php echo $locale['locale'] ?>)
+        + "&comment_<?php echo $locale['locale'] ?>=" + encodeURIComponent(comment_<?php echo $locale['locale'] ?>)
+    <?php } ?>
 	+ "&delimiter=" + encodeURIComponent(s), true);
 	xmlhttp.send();     
 }

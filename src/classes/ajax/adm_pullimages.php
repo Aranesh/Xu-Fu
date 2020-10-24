@@ -32,22 +32,22 @@ if ($usercheck == "OK"){
                 ?>
                 <div class="galleryitem">
                     <div style="width: 228px; height: 154px;">
-                        <img class="tooltip_<? echo $thisimg->id ?>" data-tooltip-content="#tooltip_content_<? echo $thisimg->id ?>" src="https://www.wow-petguide.com/images/articles/<? echo $thisimg->Filename ?>" style="max-width: 228; max-height: 145; cursor: pointer">
+                        <img class="tooltip_<?php echo $thisimg->id ?>" data-tooltip-content="#tooltip_content_<?php echo $thisimg->id ?>" src="https://www.wow-petguide.com/images/articles/<?php echo $thisimg->Filename ?>" style="max-width: 228; max-height: 145; cursor: pointer">
                     </div>
 
                     <div style="display: none">
-                        <span id="tooltip_content_<? echo $thisimg->id ?>">
+                        <span id="tooltip_content_<?php echo $thisimg->id ?>">
                             <center>
-                                <p class="smalleven"><i>(<? echo $thisimg->Width ?>x<? echo $thisimg->Height ?>)</i><br>
-                                Uploaded by: <? echo $outputuser ?><br>
-                                <img src="https://www.wow-petguide.com/images/articles/<? echo $thisimg->Filename ?>">
+                                <p class="smalleven"><i>(<?php echo $thisimg->Width ?>x<?php echo $thisimg->Height ?>)</i><br>
+                                Uploaded by: <?php echo $outputuser ?><br>
+                                <img src="https://www.wow-petguide.com/images/articles/<?php echo $thisimg->Filename ?>">
                             </center>
                         </span>
                     </div>
 
                     <script>
                         $(document).ready(function() {
-                            $('.tooltip_<? echo $thisimg->id ?>').tooltipster({
+                            $('.tooltip_<?php echo $thisimg->id ?>').tooltipster({
                                 interactive: 'true'
                             });
                         });
@@ -55,15 +55,15 @@ if ($usercheck == "OK"){
                     
                     <div style="width: 228px; height: 45px;">
 
-                        <? if ($thisimg->Title != "") {
+                        <?php if ($thisimg->Title != "") {
                            echo '<p class="smallodd"><i>'.$thisimg->Title.'</i><br>';    
                         }
                     
                         if ($user->id == $thisimg->User OR $user->Role == "99") { ?>
 
-                        <a class="alternativessmall" style="color: black; font-weight: normal; text-decoration: underline" data-remodal-target="modaldelimg_<? echo $thisimg->id ?>">Delete Image</a>
+                        <a class="alternativessmall" style="color: black; font-weight: normal; text-decoration: underline" data-remodal-target="modaldelimg_<?php echo $thisimg->id ?>">Delete Image</a>
 
-                        <div class="remodalcomments" data-remodal-id="modaldelimg_<? echo $thisimg->id ?>">
+                        <div class="remodalcomments" data-remodal-id="modaldelimg_<?php echo $thisimg->id ?>">
                             <table width="300" class="profile">
                                 <tr class="profile">
                                     <th colspan="2" width="5" class="profile">
@@ -81,13 +81,13 @@ if ($usercheck == "OK"){
                                     <td class="collectionbordertwo"><center>
                                         <form enctype="multipart/form-data" action="?page=adm_images" method="POST">
                                         <input type="hidden" name="action" value="adm_delimage">
-                                        <input type="hidden" name="subuser" value="<? echo $user->id; ?>">
-                                        <input type="hidden" name="delimiter" value="<? echo $user->ComSecret ?>">
-                                        <input type="hidden" name="selimage" value="<? echo $thisimg->id ?>">
+                                        <input type="hidden" name="subuser" value="<?php echo $user->id; ?>">
+                                        <input type="hidden" name="delimiter" value="<?php echo $user->ComSecret ?>">
+                                        <input type="hidden" name="selimage" value="<?php echo $thisimg->id ?>">
                                         <table>
                                             <tr>
                                                 <td colspan="2">
-                                                    <img src="https://www.wow-petguide.com/images/articles/<? echo $thisimg->Filename ?>" style="max-width: 400; max-height: 300">
+                                                    <img src="https://www.wow-petguide.com/images/articles/<?php echo $thisimg->Filename ?>" style="max-width: 400; max-height: 300">
                                                 </td>
                                             </tr>
                                             <tr>
@@ -110,10 +110,10 @@ if ($usercheck == "OK"){
                         var options = {
                             hashTracking: false
                         };
-                        $('[data-remodal-id=modaldelimg_<? echo $thisimg->id ?>]').remodal(options);
+                        $('[data-remodal-id=modaldelimg_<?php echo $thisimg->id ?>]').remodal(options);
                         </script>
 
-                    <? } ?>
+                    <?php } ?>
                     </div>
                 </div>
                 <style>
@@ -142,28 +142,28 @@ if ($usercheck == "OK"){
 
                 <div class="galleryitem">
                     <div style="width: 168px; height: 104px;">
-                        <center><img data-imgid="<? echo $thisimg->id ?>" class="galimg tooltip_<? echo $thisimg->id ?>" data-tooltip-content="#tooltip_content_<? echo $thisimg->id ?>" src="https://www.wow-petguide.com/images/articles/<? echo $thisimg->Filename ?>" style="max-width: 168; max-height: 100; cursor: pointer">
+                        <center><img data-imgid="<?php echo $thisimg->id ?>" class="galimg tooltip_<?php echo $thisimg->id ?>" data-tooltip-content="#tooltip_content_<?php echo $thisimg->id ?>" src="https://www.wow-petguide.com/images/articles/<?php echo $thisimg->Filename ?>" style="max-width: 168; max-height: 100; cursor: pointer">
                     </div>
 
                     <div style="display: none">
-                        <span id="tooltip_content_<? echo $thisimg->id ?>">
+                        <span id="tooltip_content_<?php echo $thisimg->id ?>">
                             <center>
-                                <p class="smalleven"><i>(<? echo $thisimg->Width ?>x<? echo $thisimg->Height ?>)</i><br>
-                                Uploaded by: <? echo $outputuser ?><br>
-                                <img style="max-width: 750; max-height: 500" src="https://www.wow-petguide.com/images/articles/<? echo $thisimg->Filename ?>">
+                                <p class="smalleven"><i>(<?php echo $thisimg->Width ?>x<?php echo $thisimg->Height ?>)</i><br>
+                                Uploaded by: <?php echo $outputuser ?><br>
+                                <img style="max-width: 750; max-height: 500" src="https://www.wow-petguide.com/images/articles/<?php echo $thisimg->Filename ?>">
                             </center>
                         </span>
                     </div>
 
                     <script>
                         $(document).ready(function() {
-                            $('.tooltip_<? echo $thisimg->id ?>').tooltipster({
+                            $('.tooltip_<?php echo $thisimg->id ?>').tooltipster({
                                 interactive: 'false',
                             });
                         });
                     </script>
                     <center>
-                    <? if ($thisimg->Title != "") {
+                    <?php if ($thisimg->Title != "") {
                         echo '<p class="smallodd"><i>'.$thisimg->Title.'</i><br>';    
                     } ?>
                 </div>

@@ -1,5 +1,6 @@
 <?php
 include("data/dbconnect.php");
+require_once ("classes/BBCode2.php");
 
 // XML-Datei automatisch erstellen
 $xml = new DOMDocument('1.0', 'utf-8');
@@ -40,24 +41,23 @@ while ($rssdata = mysqli_fetch_array($result))
     $data = $xml->createElement('title', $showtitle);
     $item->appendChild($data);
 
-    if (strlen($rssdata["Content_en_US"]) > "500") {
-        $showtext = substr($rssdata["Content_en_US"], 0, 500);
+    $showtext = \BBCode\bbremove_code($rssdata["Content_en_US"]);    
+    
+    if (strlen($showtext) > "500") {
+        $showtext = substr($showtext, 0, 500);
         $cutter = "499";
         while (substr($showtext, -1) != " ") {
-            $showtext = substr($rssdata["Content_en_US"], 0, "$cutter");
+            $showtext = substr($showtext, 0, "$cutter");
             $cutter = $cutter - 1;
         }
         $showtext = $showtext." [...]";
-    }
-    else {
-        $showtext = $rssdata["Content_en_US"];
     }
 
     $showtext = htmlspecialchars($showtext, ENT_XML1, 'UTF-8');
     $data = $xml->createElement('description', utf8_encode($showtext));
     $item->appendChild($data);
 
-    $bloglink = 'https://wow-petguide.com/?News='.$rssdata["id"];;
+    $bloglink = 'https://wow-petguide.com/?News='.$rssdata["id"];
     $bloglink = htmlspecialchars($bloglink, ENT_XML1, 'UTF-8');
     $data = $xml->createElement('link', $bloglink);
     $item->appendChild($data);

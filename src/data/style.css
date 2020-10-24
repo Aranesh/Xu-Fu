@@ -451,7 +451,7 @@ nav ul li.active a.top
 }
 
 
-@media only screen and (max-width: 1300px) {
+@media only screen and (max-width: 1430px) {
     /* For smaller screens: */
     nav ul li a.top
     {
@@ -459,7 +459,7 @@ nav ul li.active a.top
     }
 }
 
-@media only screen and (max-width: 1050px) {
+@media only screen and (max-width: 1160px) {
     .searcherfield{
         display: none;
     }
@@ -476,7 +476,7 @@ nav ul li.active a.top
             }
 }
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 970px) {
     /* For mobile phones: */
     .tmenudesktop
     {
@@ -571,6 +571,39 @@ background: #e1e1e1;
 
 
 
+.article_petlist {
+background: #B3B3B3;
+border: 1px solid #a2a2a2;
+}
+.article_petlist:hover {
+background: #C2C2C2;
+}
+.article_petlist_green {
+background: #b3e6b3;
+}
+.article_petlist_green:hover {
+background: #c2f4c2;
+}
+.article_petlist_red {
+background: #e6b3b3;
+}
+.article_petlist_red:hover {
+background: #f1bfbf;
+}
+.article_petlist_yellow {
+background: #dddcb0;
+}
+.article_petlist_yellow:hover {
+background: #eeedc4;
+}
+
+
+
+table.petlist_subtable td {
+  border-left: 1px dotted #9c9c9c;
+}
+
+
 
 table.petlist {
   border-collapse: collapse;
@@ -614,6 +647,10 @@ border: 1px solid #B3B3B3;
 tr.petlist:hover {
 border: 1px solid #C2C2C2;
 background: #C2C2C2;
+}
+
+.hover {
+ background: #C2C2C2;
 }
 
 table.avatarlist
@@ -907,6 +944,30 @@ select option.petselect {
     font-family: MuseoSans-500,Roboto;
     font-size: 14px;
     text-shadow:0 1px 0 rgba(0,0,0,0.4);
+}
+
+
+input.top_pets_toggler[type=checkbox] {
+    display: block;
+    width: 120px;
+    height: 120px;
+    -webkit-appearance: none;
+    outline: 0;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+    cursor: pointer;
+    float: left;
+}
+
+input.top_pets_toggler[type=checkbox]:not(:checked) {
+    filter: grayscale(100%);
+    border: solid 3px grey;
+}
+
+input.top_pets_toggler[type=checkbox]:checked {
+    filter: grayscale(0%);
+    border: solid 3px green;
 }
 
 
@@ -1939,7 +2000,7 @@ p.commentodd
 {
     color: #000000;
     display: inline;
-    font-family: MuseoSans-500,Roboto;
+    font-family: MuseoSans-300,Roboto;
     font-size: 14px;
     text-decoration: none;
     text-align: left;
@@ -2889,7 +2950,7 @@ div.article
     position: absolute;
     top: 266px;
     width: 100%;
-z-index:1;
+    z-index:1;
 }
 div.maincomment
 {
@@ -2900,6 +2961,18 @@ div.maincomment
     top: 0px;
     width: 100%;
     z-index:1;
+}
+div.pet_table {
+    background: #cfcfcf;
+    margin: 20px 0px 0px 0px;
+    position: relative;
+    top: 0px;
+    width: 100%;
+    padding: 15px 0px 20px 0px;
+    font-family: MuseoSans-500,Roboto;
+    font-size: 16px;
+    border-top: 3px dotted #959595;
+    min-height: 210px;    
 }
 div.altcomment
 {
@@ -2927,11 +3000,11 @@ div.articlebottom
 {
     background-image: url(https://www.wow-petguide.com/images/sub_bg02.png);
     position: absolute;
-right: 0;
-bottom: 0;
-width: 90px;
-height: 90px;
-z-index:5;
+    right: 0;
+    bottom: 0;
+    width: 90px;
+    height: 90px;
+    z-index:5;
 }
 
 div.articleend
@@ -3033,8 +3106,6 @@ div.remtt
     font-family: MuseoSans-300,Roboto;
     font-size: 12px;
     font-weight: 400;
-
-    /* Position the tooltip text - see examples below! */
     position: absolute;
     z-index: 999999;
 }
@@ -5846,6 +5917,10 @@ input[type=email].cominputmedium:focus
     background:rgba(255,255,255,0.07);
 }
 
+.ui-icon {
+  background-color: grey !important;
+}
+
 input[type=submit].cominputmedium,
 input[type=button].cominputmedium{
     background: #576E86;
@@ -6407,12 +6482,12 @@ select.comfilterdark:-moz-placeholder
 
 div.ut_container {
     position: relative;
-    width:439px;
+    width:455px;
     min-height: 160px;
 }
 
 div.ut_bg {
-    width:439px;
+    width:455px;
     height:110px;
     position: relative;
     z-index: 105;
@@ -6513,7 +6588,7 @@ div.ut_content {
     padding-left: 25px;
     padding-bottom: 40px;
     padding-right: 8px;
-    width: 406px;
+    width: 422px;
     z-index: 100;
     background: linear-gradient(#313c4a, #17222e);
     background: -moz-linear-gradient(#313c4a, #17222e);
@@ -7412,6 +7487,19 @@ div.alt_tt_box_s {
     box-shadow: 0px 8px 8px -4px rgba(0,0,0,.5);
 }
 
+/* use "mystratslistrow red" instead */
+.mystratslistrowdeleted {
+    border-top: 1px solid #909090;
+    border-bottom: 1px solid #909090;
+    height: 40px;
+    background: #a0a0a0;
+    background: -webkit-linear-gradient(#e84242, #b84242);
+    -webkit-box-shadow: 0px 8px 8px -4px rgba(0,0,0,.5);
+    -moz-box-shadow: 0px 8px 8px -4px rgba(0,0,0,.5);
+    box-shadow: 0px 8px 8px -4px rgba(0,0,0,.5);
+}
+
+/* use "mystratslistrow orange" instead */
 .mystratslistrowunpub {
     border-top: 1px solid #909090;
     border-bottom: 1px solid #909090;
@@ -7423,6 +7511,7 @@ div.alt_tt_box_s {
     box-shadow: 0px 8px 8px -4px rgba(0,0,0,.5);
 }
 
+/* use "mystratslistrow green" instead */
 .mystratslistnew {
     border-top: 1px solid #789575;
     border-bottom: 1px solid #789575;
@@ -7432,6 +7521,31 @@ div.alt_tt_box_s {
     -webkit-box-shadow: 0px 8px 8px -4px rgba(0,0,0,.5);
     -moz-box-shadow: 0px 8px 8px -4px rgba(0,0,0,.5);
     box-shadow: 0px 8px 8px -4px rgba(0,0,0,.5);
+}
+
+.mystratslistrow > .green, .mystratslistrow.green {
+    background-color: hsl(112, 26%, 55%);
+    background: -webkit-linear-gradient(hsl(112, 26%, 65%), hsl(112, 26%, 55%));
+}
+.mystratslistrow > .yellow, .mystratslistrow.yellow {
+    background-color: hsl(50, 40%, 65%);
+    background: -webkit-linear-gradient(hsl(50, 40%, 75%), hsl(50, 40%, 65%));
+}
+.mystratslistrow > .orange, .mystratslistrow.orange {
+    background-color: hsl(31, 39%, 61%);
+    background: -webkit-linear-gradient(hsl(31, 39%, 70%), hsl(31, 39%, 60%));
+}
+.mystratslistrow > .red, .mystratslistrow.red {
+    background-color: hsl(0, 50%, 50%);
+    background: -webkit-linear-gradient(hsl(0, 50%, 70%), hsl(0, 50%, 50%));
+}
+.mystratslistrow > .centered {
+    text-align: center;
+}
+
+.inactive_tag
+{
+  opacity: 0.3;
 }
 
 .strat_stars_container

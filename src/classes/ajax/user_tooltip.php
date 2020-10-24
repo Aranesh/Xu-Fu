@@ -18,19 +18,23 @@ if ($log) {
     if (mysqli_num_rows($watch_userdb) > "0") {
         $watch_user = mysqli_fetch_object($watch_userdb);
         $watch_userrights = format_userrights($watch_user->Rights);
+        $watch_user_col = find_collection($watch_user, 2);
+        if ($watch_user_col != "No Collection") {
+            $watcher_collection = TRUE;
+        }   
     }
 }
 
+
+
 // INIITIALIZE GETTEXT AND PULL LANGUAGE FILE
-putenv("LANG=".$language.".UTF-8");
-setlocale(LC_ALL, $language.".UTF-8");
-
-$domain = "messages";
-bindtextdomain($domain, "../../Locale");
-textdomain($domain);
-
-set_language_vars($language);
-
+require_once ("../../thirdparty/motranslator/vendor/autoload.php");
+PhpMyAdmin\MoTranslator\Loader::loadFunctions();
+  _setlocale(LC_MESSAGES, $language);
+  _textdomain('messages');
+  _bindtextdomain('messages', __DIR__ . '/../../Locale/');
+  _bind_textdomain_codeset('messages', 'UTF-8');
+  set_language_vars($language);
 if ($user) {
     $viewusersets = explode("|", $user->Settings);
     if ($viewusersets[1] == "") {
@@ -69,31 +73,31 @@ if ($user) {
         $mydatetime = strtotime($lastactivity->Date);
         $calctime = $datetimenow - $mydatetime;
         if ($calctime > "29030400") {
-            $showtime = _("UP_TTLL1");
+            $showtime = __("more than a year ago");
         }
         if ($calctime <= "29030400") {
-            $showtime = _("UP_TTLL2");
+            $showtime = __("a year ago");
         }
         if ($calctime <= "24192000") {
-            $showtime = _("UP_TTLL3");
+            $showtime = __("several months ago");
         }
         if ($calctime <= "4838400") {
-            $showtime = _("UP_TTLL4");
+            $showtime = __("a few months ago");
         }
         if ($calctime <= "4838400") {
-            $showtime = _("UP_TTLL5");
+            $showtime = __("two months ago");
         }
         if ($calctime <= "2419200") {
-            $showtime = _("UP_TTLL6");
+            $showtime = __("this month");
         }
         if ($calctime <= "604800") {
-            $showtime = _("UP_TTLL7");
+            $showtime = __("this week");
         }
         if ($calctime <= "70000") {
-            $showtime = _("UP_TTLL8");
+            $showtime = __("today");
         }
         if ($calctime <= "3600") {
-            $showtime = _("UP_TTLL9");
+            $showtime = __("an hour ago");
         }
         if ($calctime <= "260") {
             $useronline = "true";
@@ -108,10 +112,10 @@ if ($user) {
                             $numcomments = "0";
                         }
     if ($watch_userrights['EditStrats'] == "yes") {
-        $stratsdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE User = '$user->id'")or die("None");
+        $stratsdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE User = '$user->id' AND Deleted = '0'")or die("None");
     }
     else {
-        $stratsdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE User = '$user->id' AND Published = '1'")or die("None");
+        $stratsdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE User = '$user->id' AND Deleted = '0' AND Published = '1'")or die("None");
     }
                         if (mysqli_num_rows($stratsdb) > "0"){
                             $numstrats = mysqli_num_rows($stratsdb);
@@ -138,7 +142,7 @@ if ($user) {
     ?>
     <script>
     $(function () {
-        $("#Families_<? echo $user->id ?>").CanvasJSChart( {
+        $("#Families_<?php echo $user->id ?>").CanvasJSChart( {
             title:{
                 fontFamily: "MuseoSans-500",
                 fontWeight: "normal",
@@ -158,57 +162,57 @@ if ($user) {
                     toolTipContent: "",
                     indexLabel: "",
                     dataPoints: [
-                        {  y: <? echo $stats['Humanoid'] ?>, color: "#08adff" },
-                        {  y: <? echo $stats['Dragonkin'] ?>, color: "#59bc11" },
-                        {  y: <? echo $stats['Flying'] ?>, color: "#d4ca4f" },
-                        {  y: <? echo $stats['Undead'] ?>, color: "#9f6c73" },
-                        {  y: <? echo $stats['Critter'] ?>, color: "#7c5943" },
-                        {  y: <? echo $stats['Magic'] ?>, color: "#7341ee" },
-                        {  y: <? echo $stats['Elemental'] ?>, color: "#eb7012" },
-                        {  y: <? echo $stats['Beast'] ?>, color: "#ec2b22" },
-                        {  y: <? echo $stats['Aquatic'] ?>, color: "#08aab7" },
-                        {  y: <? echo $stats['Mechanic'] ?>, color: "#7e776d" }
+                        {  y: <?php echo $stats['Humanoid'] ?>, color: "#08adff" },
+                        {  y: <?php echo $stats['Dragonkin'] ?>, color: "#59bc11" },
+                        {  y: <?php echo $stats['Flying'] ?>, color: "#d4ca4f" },
+                        {  y: <?php echo $stats['Undead'] ?>, color: "#9f6c73" },
+                        {  y: <?php echo $stats['Critter'] ?>, color: "#7c5943" },
+                        {  y: <?php echo $stats['Magic'] ?>, color: "#7341ee" },
+                        {  y: <?php echo $stats['Elemental'] ?>, color: "#eb7012" },
+                        {  y: <?php echo $stats['Beast'] ?>, color: "#ec2b22" },
+                        {  y: <?php echo $stats['Aquatic'] ?>, color: "#08aab7" },
+                        {  y: <?php echo $stats['Mechanic'] ?>, color: "#7e776d" }
                    ]
                 }
                 ]
             });
         });
     </script>
-    <? } ?>
+    <?php } ?>
 
     <div class="ut_container">
 
-        <? if ($viewcollection) { ?>
+        <?php if ($viewcollection) { ?>
             <div class="ut_petdonut">
-                <div id="Families_<? echo $user->id ?>" style="height: 100%; width: 100%;"></div>
+                <div id="Families_<?php echo $user->id ?>" style="height: 100%; width: 100%;"></div>
             </div>
-        <? } ?>
+        <?php } ?>
 
         <div class="ut_bg">
-            <img src="https://www.wow-petguide.com/images/userbgs/<? echo $bgpic ?>.jpg">
+            <img style="width: 455px" src="https://www.wow-petguide.com/images/userbgs/<?php echo $bgpic ?>.jpg">
         </div>
 
-        <div class="ut_icon" <? if (!$viewcollection) { echo 'style="left: 30px;"'; } else { echo 'style="left: 43px;"'; }?>>
-            <a target="_blank" href="index.php?user=<? echo $user->id ?>"><img <? echo $usericon ?> class="ut_icon" <? if (!$viewcollection) { echo 'style="border: 1px solid #509bb9;"'; } ?>></a>
+        <div class="ut_icon" <?php if (!$viewcollection) { echo 'style="left: 25px;"'; } else { echo 'style="left: 38px;"'; }?>>
+            <a target="_blank" href="index.php?user=<?php echo $user->id ?>"><img <?php echo $usericon ?> class="ut_icon" <?php if (!$viewcollection) { echo 'style="border: 1px solid #509bb9;"'; } ?>></a>
         </div>
 
-        <div class="ut_title" <? if (!$viewcollection) { echo 'style="left: 130px;"'; } else { echo 'style="left: 150px;"'; }?>>
-            <a target="_blank"href="index.php?user=<? echo $user->id ?>" class="ut_title"><? echo $user->Name; ?></a>
-            <p class="ut_role"><? echo $showtitle ?></p>
+        <div class="ut_title" <?php if (!$viewcollection) { echo 'style="left: 125px;"'; } else { echo 'style="left: 145px;"'; }?>>
+            <a target="_blank"href="index.php?user=<?php echo $user->id ?>" class="ut_title"><?php echo $user->Name; ?></a>
+            <p class="ut_role"><?php echo $showtitle ?></p>
         </div>
 
-        <? if ($useronline == "true" && ($viewusersets[6] == "1" OR $viewusersets[6] == "")) { ?>
-            <div class="ut_online" <? if (!$viewcollection) { echo 'style="left: 130px;"'; } else { echo 'style="left: 150px;"'; }?>>
-                <p class="ut_online"><b>&#8226;</b> <? echo _("UP_TTLLco") ?></p>
+        <?php if ($useronline == "true" && ($viewusersets[6] != 0 OR $watch_user->Role > 48)) { ?>
+            <div class="ut_online" <?php if (!$viewcollection) { echo 'style="left: 125px;"'; } else { echo 'style="left: 145px;"'; }?>>
+                <p class="ut_online"><b>&#8226;</b> <?php echo __("Currently online") ?></p>
             </div>
-        <? } ?>
+        <?php } ?>
 
 
         <div class="ut_content">
 
-            <div <? if (!$viewcollection) { echo 'style="float: left; height: 30px; width: 335px;"'; } else { echo 'style="float: left; padding-top: 45px; width: 335px;"'; }?>> </div>
+            <div <?php if (!$viewcollection) { echo 'style="float: left; height: 30px; width: 335px;"'; } else { echo 'style="float: left; padding-top: 45px; width: 335px;"'; }?>> </div>
 
-            <? if ($viewusersets[5] == "1"){ ?>
+            <?php if ($viewusersets[5] == "1"){ ?>
                 <div class="ut_socm">
                     <?
                         if ($user->PrSocFacebook != "") {
@@ -243,9 +247,9 @@ if ($user) {
                         }
                     ?>
                 </div>
-            <? } ?>
+            <?php } ?>
 
-            <? if (($viewusersets[2] == "1" OR $viewusersets[2] == "") && $user->PrIntro != ""){
+            <?php if (($viewusersets[2] == "1" OR $viewusersets[2] == "") && $user->PrIntro != ""){
                 $introoutput = stripslashes($user->PrIntro);
                 $introoutput = htmlentities($introoutput, ENT_QUOTES, "UTF-8");
                 $introoutput = str_replace("[u]", "<u>", $introoutput);
@@ -276,31 +280,36 @@ if ($user) {
                 usort($words, 'cmp');
 
                 if (strlen($words[0]) > "35") {
-                    $showintro = "<a class='ut_contact' target='_blank' href='index.php?user=".$user->id."'>"._("UP_TTintrolong1")."</a>";
+                    $showintro = "<a class='ut_contact' target='_blank' href='index.php?user=".$user->id."'>".__("Read full introduction")."</a>";
                 }
                 else {
                     if ($addlink == "true") {
-                        $showintro = $showintro."... <a class='ut_contact' target='_blank' href='index.php?user=".$user->id."'>"._("UP_TTintrolong2")."</a>";
+                        $showintro = $showintro."... <a class='ut_contact' target='_blank' href='index.php?user=".$user->id."'>".__("continue reading")."</a>";
                     }
                 }
             ?>
                 <div class="ut_contelement" style="margin-bottom:20px;">
-                    <p class="ut_intro"><? echo $showintro ?></p>
+                    <p class="ut_intro"><?php echo $showintro ?></p>
                 </div>
-            <? } ?>
+            <?php } ?>
 
 
-            <? if ($viewcollection){ ?>
+            <?php if ($viewcollection){ ?>
                 <div class="ut_contelement" style="margin-bottom:15px;">
-                    <a class="ut_pets" href="index.php?user=<? echo $user->id ?>&display=Collection" target="_blank"><? echo $stats['Unique']; ?> <? echo _("UP_TTunipets") ?></a>
+                    <a class="ut_pets" href="index.php?user=<?php echo $user->id ?>&display=Collection" target="_blank"><?php echo $stats['Unique']; ?> <?php echo __("unique pets collected") ?></a>
+                    <?php if ($viewcollection && $watch_user->id != $user->id && $watcher_collection) { ?>
+                    <a class="ut_contact" style="font-size: 12px; cursor: pointer; line-height: 12px;" target="_blank" href="?m=Compare&user_1=<?php echo $watch_user->id ?>&user_2=<?php echo $user->id ?>">
+                        <?php echo __('Compare against your collection'); ?>
+                    </a>
+                    <?php } ?>
                 </div>
-            <? } ?>
+            <?php } ?>
 
-                        <? if (($user->PrBattleTag && $user->PrBTagNum) OR $user->PrDiscord) { ?>
+                        <?php if (($user->PrBattleTag && $user->PrBTagNum) OR $user->PrDiscord) { ?>
                             <div style="float:left;width:350;margin-bottom:15px;">
                                 <p class="ut_qf"><?
                                     if ($user->PrBattleTag) {
-                                        echo _("UP_PRHBtag")." ";
+                                        echo __("BattleTag:")." ";
                                         echo htmlentities($user->PrBattleTag, ENT_QUOTES, "UTF-8");
                                         echo "#";
                                         echo htmlentities($user->PrBTagNum, ENT_QUOTES, "UTF-8");
@@ -309,37 +318,37 @@ if ($user) {
                                         echo ")";
                                         }
                                     if ($user->PrBattleTag AND $user->PrBattleTag) { echo "<br>"; }
-                                    if ($user->PrDiscord) { ?> <? echo _("UP_PRHDiscord") ?>: <? echo htmlentities($user->PrDiscord, ENT_QUOTES, "UTF-8"); } ?></div>
-                        <? } ?>
+                                    if ($user->PrDiscord) { ?> <?php echo __("Discord") ?>: <?php echo htmlentities($user->PrDiscord, ENT_QUOTES, "UTF-8"); } ?></div>
+                        <?php } ?>
 
             <div style="float:left;width:230;margin-bottom:15px;">
-                <p class="ut_qf"><? echo _("UP_TTTjoined") ?>: <span name="timeuser"><? echo $user->regtime ?></span>
-                <? if ($useronline != "true" && ($viewusersets[6] == "1" OR $viewusersets[6] == "")) { ?><br><? echo _("UP_TTLL") ?> <? echo $showtime ?></p>
-                <? } ?>
+                <p class="ut_qf"><?php echo __("Joined") ?>: <span name="timeuser"><?php echo $user->regtime ?></span>
+                <?php if ($useronline != "true" && ($viewusersets[6] != 0 OR $watch_user->Role > 48)) { ?><br><?php echo __("Last active:") ?> <?php echo $showtime ?></p>
+                <?php } ?>
             </div>
 
-            <? if ($numstrats > "0") { ?>
-                <div style="float:left; min-width: 80px">
-                    <p class="ut_qf">Strategies: 
+            <?php if ($numstrats > "0") { ?>
+                <div style="float:left; min-width: 90px">
+                    <p class="ut_qf"><?php echo __("Strategies") ?>: 
                 </div>
                 <div style="float:left; margin-left: 5px">
-                    <p class="ut_qf"><? echo $numstrats; ?></p>
+                    <p class="ut_qf"><?php echo $numstrats; ?></p>
                 </div>
-            <? } ?>
+            <?php } ?>
 
-            <? if ($numcomments > "0") { ?>                         
-                <div style="float:left; min-width: 80px">
-                    <p class="ut_qf"><? echo _("FormComBlogPromptComments") ?>:
+            <?php if ($numcomments > "0") { ?>                         
+                <div style="float:left; min-width: 90px">
+                    <p class="ut_qf"><?php echo __("Comments") ?>:
                 </div>
                 <div style="float:left; margin-left: 5px">
-                    <p class="ut_qf"><? echo $numcomments; ?></p> 
+                    <p class="ut_qf"><?php echo $numcomments; ?></p> 
                 </div>
-            <? }
+            <?php }
 
             if (!$log && $user->id != "1") { ?>
             <div class="ut_contact">
-                <span class="tooltip" title="<? echo _("UP_TTErrNoAcc") ?>">
-                    <span style="cursor: pointer"><img src="https://www.wow-petguide.com/images/userdd_messages.png"> <a class="ut_contact"><? echo _("UP_TTSendMsg") ?></a></span>
+                <span class="tooltip" title="<?php echo __("You must be logged in to send messages") ?>">
+                    <span style="cursor: pointer"><img src="https://www.wow-petguide.com/images/userdd_messages.png"> <a class="ut_contact"><?php echo __("Send message") ?></a></span>
                 </span>
                 <script>
                     $(document).ready(function() {
@@ -350,12 +359,12 @@ if ($user) {
                     });
                 </script>
             </div>
-            <? }
+            <?php }
 
             if ($log == $user->id && $user->id != "1") { ?>
             <div class="ut_contact">
-                <span class="tooltip" title="<? echo _("UP_TTNoMsgToS") ?>">
-                    <span style="cursor: pointer"><img src="https://www.wow-petguide.com/images/userdd_messages.png"> <a class="ut_contact"><? echo _("UP_TTSendMsg") ?></a></span>
+                <span class="tooltip" title="<?php echo __("Cannot send messages to yourself") ?>">
+                    <span style="cursor: pointer"><img src="https://www.wow-petguide.com/images/userdd_messages.png"> <a class="ut_contact"><?php echo __("Send message") ?></a></span>
                 </span>
                 <script>
                     $(document).ready(function() {
@@ -366,13 +375,13 @@ if ($user) {
                     });
                 </script>
             </div>
-            <? }
+            <?php }
 
             if ($log && $log != $user->id && $user->id != "1") { ?>
             <div class="ut_contact">
-                <a target="_blank" href="index.php?page=writemsg&to=<? echo $user->id ?>"><img src="https://www.wow-petguide.com/images/userdd_messages.png"></a> <a target="_blank" class="ut_contact" href="index.php?page=writemsg&to=<? echo $user->id ?>"><? echo _("UP_TTSendMsg") ?></a>
+                <a target="_blank" href="index.php?page=writemsg&to=<?php echo $user->id ?>"><img src="https://www.wow-petguide.com/images/userdd_messages.png"></a> <a target="_blank" class="ut_contact" href="index.php?page=writemsg&to=<?php echo $user->id ?>"><?php echo __("Send message") ?></a>
             </div>
-            <? } ?>
+            <?php } ?>
 
 
         <div style="clear: both"></div>
@@ -383,6 +392,6 @@ if ($user) {
     <?
 }
 else {
-    echo _("UP_TTDBerror");
+    echo __("There was an error fetching the user data. Please refresh the page and try again");
 }
 mysqli_close($dbcon);

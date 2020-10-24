@@ -8,7 +8,7 @@
 <table width="100%" border="0" margin="0" cellpadding="0" cellspacing="0">
 <tr>
 <td><img src="images/main_bg02_1.png"></td>
-<td width="100%"><center><h class="megatitle"><? echo _("RP_Title") ?></h></td>
+<td width="100%"><center><h class="megatitle"><?php echo __("Password Retrieval") ?></h></td>
 <td><img src="images/main_bg02_2.png"></td>
 </tr>
 </table>
@@ -36,14 +36,14 @@ if ($resetpage == "invalid") {
         <td><img src="/images/xufu_small.png"></td>
         <td><img src="/images/blank.png" width="10"></td>
         <td valign="top"><p class="blogodd"><br>
-        <? echo _("RP_ErrInvLink1") ?></td></tr>
+        <?php echo __("I am sorry, the link to reset your password is not valid.<br>Possible reasons are:") ?></td></tr>
 
 <tr><td></td><td></td><td>
 <ul>
-<li><? echo _("RP_ErrInvLink2") ?></li>
-<li><? echo _("RP_ErrInvLink3") ?></li>
+<li><?php echo __("Another password reset was requested in the meanwhile. Only the most recent link is valid.") ?></li>
+<li><?php echo __("Password reset links expire after 24 hours. If this mail is older, please request a new one.") ?></li>
 </ul>
-<? echo _("RP_ErrInvLink4") ?> <a href="index.php?page=acretrieve" class="wowhead"><? echo _("PWR_EMCont4") ?></a>.
+<?php echo __("Should you have any more trouble, please use the ") ?> <a href="index.php?page=acretrieve" class="wowhead"><?php echo __("account retrieval page") ?></a>.
             </p></td>
         </tr>
     </table>
@@ -73,8 +73,8 @@ if ($resetpage == "enterpw") {
         <td><img src="/images/xufu_small.png"></td>
         <td><img src="/images/blank.png" width="10"></td>
         <td valign="top"><p class="blogodd"><br>
-        <? echo _("RP_NPPrompt") ?><br>
-        <? echo _("RG_PassRest1") ?><br>
+        <?php echo __("Please enter a new password for your account below.") ?><br>
+        <?php echo __("Your password has to be at least 6 characters long. It is advisable to use a complex password.") ?><br>
         </p></td>
         </tr>
     </table>
@@ -82,13 +82,13 @@ if ($resetpage == "enterpw") {
     <br>
     <br>
 
-<form class="form-style-register" action="index.php?page=setpw&pwstring=<? echo $pwstring ?>" method="post">
+<form class="form-style-register" action="index.php?page=setpw&pwstring=<?php echo $pwstring ?>" method="post">
     <input type="hidden" name="submitpw" value="true">
 
 <table>
 
 <tr>
-<td align="right"><p class="blogodd"><b><? if ($setpasserror == "true"){ echo "<font color=\"red\">"; } ?><? echo _("RP_NPField") ?>:</b></td>
+<td align="right"><p class="blogodd"><b><?php if ($setpasserror == "true"){ echo "<font color=\"red\">"; } ?><?php echo __("New password") ?>:</b></td>
 <td><img src="images/blank.png" width="5" height="1"/></td>
 <td><input tabindex="2" placeholder="" type="password" id="passwordy" name="password" required></td>
 </tr>
@@ -99,7 +99,7 @@ if ($resetpage == "enterpw") {
 </tr>
 
 <tr>
-<td align="right"><p class="blogodd"><b><? if ($setpasserror == "true"){ echo "<font color=\"red\">"; } ?><? echo _("RP_NPRepPW") ?>:</b></td>
+<td align="right"><p class="blogodd"><b><?php if ($setpasserror == "true"){ echo "<font color=\"red\">"; } ?><?php echo __("Repeat password") ?>:</b></td>
 <td><img src="images/blank.png" width="5" height="1"/></td>
 <td><input tabindex="3" placeholder="" type="password" name="passwordrep" id="passwordz" required></td>
 </tr>
@@ -112,7 +112,7 @@ echo '<tr><td></td><td></td><td><div class="registerError"><p class="commenteven
 ?>
 
 
-<tr><td></td><td></td><td><div id="capsWarningz" class="registerError"><p class="commenteven"><? echo _("UL_CapsOn") ?></div></td></td></tr>
+<tr><td></td><td></td><td><div id="capsWarningz" class="registerError"><p class="commenteven"><?php echo __("Warning! Caps Lock is on!") ?></div></td></td></tr>
 
 
 
@@ -128,7 +128,7 @@ echo '<tr><td></td><td></td><td><div class="registerError"><p class="commenteven
             <table border="0">
             <tr>
                 <td>
-                    <p class="blogodd"><button type="submit" tabindex="5" class="myGreenButton"><? echo _("RP_Save") ?></button></form>
+                    <p class="blogodd"><button type="submit" tabindex="5" class="myGreenButton"><?php echo __("Save Password") ?></button></form>
                 </td>
             </tr>
         </table>
@@ -174,9 +174,9 @@ if ($resetpage == "pwset") {
         <td><img src="/images/xufu_small.png"></td>
         <td><img src="/images/blank.png" width="10"></td>
         <td valign="top"><p class="blogodd"><br>
-<? echo _("RP_PWChanged1") ?><br>
+<?php echo __("Your password was updated successfully!") ?><br>
 
-<br><? echo _("RP_PWChanged2") ?></p></td>
+<br><?php echo __("You have been logged in and will be redirected to the front page in <span id=\"counter\">5</span> seconds.") ?></p></td>
 
 <META HTTP-EQUIV="refresh" CONTENT="5; URL=index.php?m=Home">
 <script type="text/javascript">

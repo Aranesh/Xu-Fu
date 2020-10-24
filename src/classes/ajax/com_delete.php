@@ -98,7 +98,17 @@ if ($deleteable == "true"){
     mysqli_query($dbcon, "UPDATE Comments SET `ForReview` = '0' WHERE id = '$commentid'") OR die(mysqli_error($dbcon));
     mysqli_query($dbcon, "UPDATE Comments SET `ClosedOn` = '$deletedate' WHERE id = '$commentid'") OR die(mysqli_error($dbcon));
     mysqli_query($dbcon, "UPDATE Comments SET `Deleted` = '1' WHERE id = '$commentid'") OR die(mysqli_error($dbcon));
+    mysqli_query($dbcon, "UPDATE Comments SET `NewActivity` = '0' WHERE id = '$commentid'") OR die(mysqli_error($dbcon));
     mysqli_query($dbcon, "UPDATE Reports SET `Reviewed` = '1' WHERE Category = '0' AND SortingID = '$commentid'") OR die(mysqli_error($dbcon));
+    // Check if this was the only non-deleted subcomment and if so, set New Activity of the parent to 0 to remove the notification for the parent.
+    if ($comment->Parent != 0) {
+        $parent_id = $comment->Parent;
+        $parent_commentdb = mysqli_query($dbcon, "SELECT * FROM Comments WHERE Parent = '$parent_id' AND Deleted = '0'");
+        if (mysqli_num_rows($parent_commentdb) < 1)  {
+            mysqli_query($dbcon, "UPDATE Comments SET `NewActivity` = '0' WHERE id = '$parent_id'") OR die(mysqli_error($dbcon));
+        }
+    }
+    if (!$userid OR !is_int($userid)) $userid = 0;
     mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$userid', '$user_ip_adress', '1', 'Comment Deleted by User', '$commentid')") OR die(mysqli_error($dbcon));
     echo "OK";
 }

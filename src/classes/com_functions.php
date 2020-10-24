@@ -23,6 +23,7 @@ function print_comments_outer($category,$sortingid,$styleset) {
     global $tcomnatoren;
     global $tcomhighlight;
     global $jumptoblog;
+    global $ads_active;
 
     $pagesettingsdb = mysqli_query($dbcon, "SELECT * FROM PageSettings LIMIT 1");
     $pagesettings = mysqli_fetch_object($pagesettingsdb);
@@ -137,6 +138,8 @@ if ($category == "1") {
             break;
     }
 }
+$num_comments_db = mysqli_query($dbcon, "SELECT COUNT(*) AS `count` FROM `Comments` WHERE Category = '$category' AND Deleted = 0 AND SortingID = '$sortingid'");
+$num_comments = mysqli_fetch_array($num_comments_db);
 
 $encommentsnum = "0";
 $dbencounter = "0";
@@ -144,8 +147,6 @@ $eninvalidcount = "0";
 $encompusher = 0;
 
 if (mysqli_num_rows($encommentsdb) > "0") {
-
-
     while ($dbencounter < mysqli_num_rows($encommentsdb)) {
 
         $encomment = mysqli_fetch_object($encommentsdb);
@@ -199,7 +200,6 @@ if (mysqli_num_rows($encommentsdb) > "0") {
     $dbencounter++;
     }
 }
-
 
 $maincommentsnum = $encommentsnum;
 $maincompusher = $encompusher;
@@ -314,56 +314,60 @@ $displaylangen = decode_language("en");
 // Print Table Header 
 ?>
 
-    <? if ($maincommentsnum > 5 && $user->id != 2434) { // Venatus ad placement at top of comments IF there are more than 5 comments! ?>
-        <div class="vm-placement" style="float: left; padding: 0 0 10 60" data-id="5d7905f671d1621a68eb8f22"></div>
-    <? } ?>
+    <?php if ($maincommentsnum > 5 && $user->id != 2434) { // Venatus ad placement at top of comments IF there are more than 5 comments!
+        if ($ads_active == true) { ?>
+            <div class="vm-placement" style="float: left; padding: 0 0 10 60" data-id="5d7905f671d1621a68eb8f22"></div>
+    <?php }
+    } ?>
     
     
-    <div style="width:<? echo $ctablewidth ?>" class="<? echo $ctablehead ?>">
+    <div style="width:<?php echo $ctablewidth ?>" class="<?php echo $ctablehead ?>">
         <table class="anchorcom_header" width="100%" cellpadding="0" cellspacing="0">
             <tr>
                 <td colspan="3" width="100%">
                     <table width="100%">
                         <tr>
+                            <?php if ($category != 1) { // Do not show language selector for news entries, they are global ?>
                             <td align="left" style="padding-left: 20px;">
                                 <div id="coms_head_title_nat">
-                                    <p class="<? echo $ctitle ?>">
-                                        <span id="com_head_numcoms_nat"><? echo $maincommentsnum ?></span> <?
-                                        if ($maincommentsnum == "1") { echo _("FormComBlogPromptComment"); }
-                                        if ($maincommentsnum > "1" OR $maincommentsnum == "0") { echo _("FormComBlogPromptComments"); }
+                                    <p class="<?php echo $ctitle ?>">
+                                        <span id="com_head_numcoms_nat"><?php echo $maincommentsnum; ?></span> <?
+                                        if ($maincommentsnum == "1") { echo __("Comment"); }
+                                        if ($maincommentsnum > "1" OR $maincommentsnum == "0") { echo __("Comments"); }
                                         ?>
-                                        (<? echo $displaylangnat['short'] ?>)
+                                        (<?php echo $displaylangnat['short'] ?>)
                                     </p>
                                 </div>
 
                                 <div id="coms_head_title_en" style="display:none">
-                                    <p class="<? echo $ctitle ?>">
-                                        <span id="com_head_numcoms_en"><? echo $encommentsnum ?></span> <?
-                                        if ($encommentsnum == "1") { echo _("FormComBlogPromptComment"); }
-                                        if ($encommentsnum > "1" OR $encommentsnum == "0") { echo _("FormComBlogPromptComments"); }
+                                    <p class="<?php echo $ctitle ?>">
+                                        <span id="com_head_numcoms_en"><?php echo $encommentsnum ?></span> <?
+                                        if ($encommentsnum == "1") { echo __("Comment"); }
+                                        if ($encommentsnum > "1" OR $encommentsnum == "0") { echo __("Comments"); }
                                         ?>
                                         (EN)
                                     </p>
                                 </div>
-                                <? if ($language != "en_US") { ?>
-                                    <div id="coms_en_button"><p><a class="<? echo $ctitlelink ?>" onclick="show_en_coms()">(<? echo _("CM_QuickLng1"); ?> <span id="coms_head_counter_en"><? echo $encommentsnum ?></span> <? echo _("CM_QuickLng2"); ?>)</a></div>
-                                    <div id="coms_native_button" style="display:none"><p><a class="<? echo $ctitlelink ?>" onclick="show_native_coms()">(<? echo _("CM_QuickLng3"); ?>)</a></div>
-                                <? } ?>
+                                <?php if ($language != "en_US") { ?>
+                                    <div id="coms_en_button"><p><a class="<?php echo $ctitlelink ?>" onclick="show_en_coms()">(<?php echo __("Click to see"); ?> <span id="coms_head_counter_en"><?php echo $encommentsnum ?></span> <?php echo __("English comments"); ?>)</a></div>
+                                    <div id="coms_native_button" style="display:none"><p><a class="<?php echo $ctitlelink ?>" onclick="show_native_coms()">(<?php echo __("Click to go back to your own language"); ?>)</a></div>
+                                <?php } ?>
                             </td>
-                            <td width="50%" align="right"><p class="<? echo $ctitle ?>"><? echo _("CM_FiltersT"); ?>:</p></td>
+                            <?php } ?>
+                            <td width="50%" align="right"><p class="<?php echo $ctitle ?>"><?php echo __("Show first"); ?>:</p></td>
                             <td width="1%" align="right" valign="center">
-                                <form action="<? echo $linkforward ?>" method="post">
-                                    <input type="hidden" name="comcat" value="<? echo $category ?>">
-                                    <input type="hidden" name="comsortid" value="<? echo $sortingid ?>">
-                                    <input type="hidden" name="comlanguage" value="<? echo $language ?>">
+                                <form action="<?php echo $linkforward ?>" method="post">
+                                    <input type="hidden" name="comcat" value="<?php echo $category ?>">
+                                    <input type="hidden" name="comsortid" value="<?php echo $sortingid ?>">
+                                    <input type="hidden" name="comlanguage" value="<?php echo $language ?>">
                                     <input type="hidden" id="comfilternatoren" name="comnatoren" value="nat">
                                     <input type="hidden" name="changecomfilter" value="true">
 
-                                    <select class="<? echo $cfilter ?>" name="comfilter" onchange="this.form.submit()">
-                                        <option class="<? echo $cselects ?>" value="newest" <? if ($comfilter == "0") echo "selected"; ?>><? echo _("CM_FiltersS1"); ?></option>
-                                        <option class="<? echo $cselects ?>" value="oldest" <? if ($comfilter == "1") echo "selected"; ?>><? echo _("CM_FiltersS2"); ?></option>
-                                        <option class="<? echo $cselects ?>" value="votes" <? if ($comfilter == "2") echo "selected"; ?>><? echo _("CM_FiltersS3"); ?></option>
-                                        <option class="<? echo $cselects ?>" value="voteslow" <? if ($comfilter == "3") echo "selected"; ?>><? echo _("CM_FiltersS4"); ?></option>
+                                    <select class="<?php echo $cfilter ?>" name="comfilter" onchange="this.form.submit()">
+                                        <option class="<?php echo $cselects ?>" value="newest" <?php if ($comfilter == "0") echo "selected"; ?>><?php echo __("Newest"); ?></option>
+                                        <option class="<?php echo $cselects ?>" value="oldest" <?php if ($comfilter == "1") echo "selected"; ?>><?php echo __("Oldest"); ?></option>
+                                        <option class="<?php echo $cselects ?>" value="votes" <?php if ($comfilter == "2") echo "selected"; ?>><?php echo __("Highest rating"); ?></option>
+                                        <option class="<?php echo $cselects ?>" value="voteslow" <?php if ($comfilter == "3") echo "selected"; ?>><?php echo __("Lowest rating"); ?></option>
                                      </select>
                                 </form>
                             </td>
@@ -374,7 +378,7 @@ $displaylangen = decode_language("en");
         </table>
     </div>
     <br>
-<? 
+<?php 
 
 
 // Output of selected main language comments:
@@ -406,12 +410,12 @@ else {
 }
 ?>
 <div id="coms_native">
-    <div style="display:none" id="offset_<? echo $sortingid ?>_native"><? echo $startoffset ?></div>
-    <div style="display:none" id="numcoms_<? echo $sortingid ?>_native"><? echo $numcoms ?></div>
-    <div style="display:none" id="allcoms_<? echo $sortingid ?>_native"><? echo $maincommentsnum ?></div>
-    <div style="display:none" id="remcoms_<? echo $sortingid ?>_native"><? echo $remcoms ?></div>
+    <div style="display:none" id="offset_<?php echo $sortingid ?>_native"><?php echo $startoffset ?></div>
+    <div style="display:none" id="numcoms_<?php echo $sortingid ?>_native"><?php echo $numcoms ?></div>
+    <div style="display:none" id="allcoms_<?php echo $sortingid ?>_native"><?php echo $maincommentsnum ?></div>
+    <div style="display:none" id="remcoms_<?php echo $sortingid ?>_native"><?php echo $remcoms ?></div>
 
-    <table id="com_table_<? echo $sortingid ?>_native" width="<? echo $ctablewidth ?>" cellpadding="0" cellspacing="0">
+    <table id="com_table_<?php echo $sortingid ?>_native" width="<?php echo $ctablewidth ?>" cellpadding="0" cellspacing="0">
         <?
             print_comments($category,$sortingid,$styleset,"0",$firstpull,$language,"native",$comfilter);
         ?>
@@ -420,15 +424,15 @@ else {
         </tr>
     </table>
 
-    <table id="com_footer_<? echo $sortingid ?>_native" width="<? echo $ctablewidth ?>" cellpadding="0" cellspacing="0">
+    <table id="com_footer_<?php echo $sortingid ?>_native" width="<?php echo $ctablewidth ?>" cellpadding="0" cellspacing="0">
         <tr>
             <td>
                 <center>
-                    <a class="nostyle" <? if ($maincommentsnum <= $firstpull) { echo 'style="display:none"'; } ?> id="addcomsb_<? echo $sortingid ?>_native" onclick="load_more_coms('<? echo $sortingid ?>','native','<? echo $category ?>','<? echo $sortingid ?>','<? echo $styleset ?>','<? echo $user->id ?>','<? echo $user->ComSecret ?>','<? echo $visitorid ?>','<? echo $numcoms ?>','<? echo $language ?>','<? echo $comeditdeadline ?>','<? echo $comfilter ?>')">
-                    <span id="addcomstext_<? echo $sortingid ?>_native" class='button'><? echo $addcomstext ?></span>
+                    <a class="nostyle" <?php if ($maincommentsnum <= $firstpull) { echo 'style="display:none"'; } ?> id="addcomsb_<?php echo $sortingid ?>_native" onclick="load_more_coms('<?php echo $sortingid ?>','native','<?php echo $category ?>','<?php echo $sortingid ?>','<?php echo $styleset ?>','<?php echo $user->id ?>','<?php echo $user->ComSecret ?>','<?php echo $visitorid ?>','<?php echo $numcoms ?>','<?php echo $language ?>','<?php echo $comeditdeadline ?>','<?php echo $comfilter ?>')">
+                    <span id="addcomstext_<?php echo $sortingid ?>_native" class='button'><?php echo $addcomstext ?></span>
                     </a>
-                    <div id="errorfetch_<? echo $sortingid ?>_native" style="display:none">
-                        <p class="<? echo $cheader ?>"><? echo _("CM_ErrLoad"); ?></div>
+                    <div id="errorfetch_<?php echo $sortingid ?>_native" style="display:none">
+                        <p class="<?php echo $cheader ?>"><?php echo __("There was an error fetching comments, please reload the page."); ?></div>
             </td>
         </tr>
         <tr>
@@ -475,12 +479,12 @@ else {
 }
 ?>
 <div id="coms_en" style="display:none">
-    <div style="display:none" id="offset_<? echo $sortingid ?>_en"><? echo $startoffset ?></div>
-    <div style="display:none" id="numcoms_<? echo $sortingid ?>_en"><? echo $numcoms ?></div>
-    <div style="display:none" id="allcoms_<? echo $sortingid ?>_en"><? echo $encommentsnum ?></div>
-    <div style="display:none" id="remcoms_<? echo $sortingid ?>_en"><? echo $remcoms ?></div>
+    <div style="display:none" id="offset_<?php echo $sortingid ?>_en"><?php echo $startoffset ?></div>
+    <div style="display:none" id="numcoms_<?php echo $sortingid ?>_en"><?php echo $numcoms ?></div>
+    <div style="display:none" id="allcoms_<?php echo $sortingid ?>_en"><?php echo $encommentsnum ?></div>
+    <div style="display:none" id="remcoms_<?php echo $sortingid ?>_en"><?php echo $remcoms ?></div>
 
-    <table id="com_table_<? echo $sortingid ?>_en" width="<? echo $ctablewidth ?>" cellpadding="0" cellspacing="0">
+    <table id="com_table_<?php echo $sortingid ?>_en" width="<?php echo $ctablewidth ?>" cellpadding="0" cellspacing="0">
         <?
             print_comments($category,$sortingid,$styleset,"0",$firstpull,"en_US","en");
         ?>
@@ -489,15 +493,15 @@ else {
         </tr>
     </table>
 
-    <table id="com_footer_<? echo $sortingid ?>_en" width="<? echo $ctablewidth ?>" cellpadding="0" cellspacing="0">
+    <table id="com_footer_<?php echo $sortingid ?>_en" width="<?php echo $ctablewidth ?>" cellpadding="0" cellspacing="0">
         <tr>
             <td>
                 <center>
-                    <a class="nostyle" <? if ($encommentsnum <= $firstpull) { echo 'style="display:none"'; } ?> id="addcomsb_<? echo $sortingid ?>_en" onclick="load_more_coms('<? echo $sortingid ?>','en','<? echo $category ?>','<? echo $sortingid ?>','<? echo $styleset ?>','<? echo $user->id ?>','<? echo $user->ComSecret ?>','<? echo $visitorid ?>','<? echo $numcoms ?>','<? echo $language ?>','<? echo $comeditdeadline ?>','<? echo $comfilter ?>')">
-                    <span id="addcomstext_<? echo $sortingid ?>_en" class='button'><? echo $addcomstext ?></span>
+                    <a class="nostyle" <?php if ($encommentsnum <= $firstpull) { echo 'style="display:none"'; } ?> id="addcomsb_<?php echo $sortingid ?>_en" onclick="load_more_coms('<?php echo $sortingid ?>','en','<?php echo $category ?>','<?php echo $sortingid ?>','<?php echo $styleset ?>','<?php echo $user->id ?>','<?php echo $user->ComSecret ?>','<?php echo $visitorid ?>','<?php echo $numcoms ?>','<?php echo $language ?>','<?php echo $comeditdeadline ?>','<?php echo $comfilter ?>')">
+                    <span id="addcomstext_<?php echo $sortingid ?>_en" class='button'><?php echo $addcomstext ?></span>
                     </a>
-                    <div id="errorfetch_<? echo $sortingid ?>_en" style="display:none">
-                        <p class="<? echo $cheader ?>"><? echo _("CM_ErrLoad"); ?></div>
+                    <div id="errorfetch_<?php echo $sortingid ?>_en" style="display:none">
+                        <p class="<?php echo $cheader ?>"><?php echo __("There was an error fetching comments, please reload the page."); ?></div>
             </td>
         </tr>
         <tr>
@@ -1061,9 +1065,9 @@ if ($comments) {
         }
         ?>
 
-        <div class="anchorCM_<? echo $value['id'] ?>" id="CM_<? echo $value['id'] ?>" data-value="<? echo $value['role'] ?>"> </div>
-        <table <? if ($value['id'] == $tcomhighlight) { echo 'class="'.$comhighlight.'"'; } ?> style="width:100%">
-            <tr <? echo $value['voteopacity'] ?>>
+        <div class="anchorCM_<?php echo $value['id'] ?>" id="CM_<?php echo $value['id'] ?>" data-value="<?php echo $value['role'] ?>"> </div>
+        <table <?php if ($value['id'] == $tcomhighlight) { echo 'class="'.$comhighlight.'"'; } ?> style="width:100%">
+            <tr <?php echo $value['voteopacity'] ?>>
                 <td rowspan="2" valign="top" align="right">
                     <table cellpadding="0" cellspacing="0">
                         <tr><td style="padding-left:30px;"></td></tr>
@@ -1072,47 +1076,47 @@ if ($comments) {
                                 <table cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td style="padding-top:5px"><center>
-                                            <? if ($user) {
+                                            <?php if ($user) {
                                             if ($value['vote'] == "1") $uppic = $iconvotegreen;
                                             else $uppic = $iconvoteup;
                                             ?>
-                                            <a class="votebutton" style="display:block" onclick="com_vote('1','<? echo $value['id'] ?>','<? echo $user->id ?>','<? echo $user->ComSecret ?>','<? echo $votecolorgrey ?>','<? echo $votecolorgreen ?>','<? echo $votecolorgold ?>','<? echo $votecolorred ?>','<? echo $comgolden ?>','<? echo $styleset ?>')">
-                                                <img id="upvpic_<? echo $value['id'] ?>" src="<? echo $uppic ?>" />
-                                                <img src="<? echo $iconvotegreen ?>" />
+                                            <a class="votebutton" style="display:block" onclick="com_vote('1','<?php echo $value['id'] ?>','<?php echo $user->id ?>','<?php echo $user->ComSecret ?>','<?php echo $votecolorgrey ?>','<?php echo $votecolorgreen ?>','<?php echo $votecolorgold ?>','<?php echo $votecolorred ?>','<?php echo $comgolden ?>','<?php echo $styleset ?>')">
+                                                <img id="upvpic_<?php echo $value['id'] ?>" src="<?php echo $uppic ?>" />
+                                                <img src="<?php echo $iconvotegreen ?>" />
                                             </a>
-                                            <? } else { ?>
+                                            <?php } else { ?>
                                             <a class="basictooltip">
-                                                <img src="<? echo $iconvoteup ?>">
+                                                <img src="<?php echo $iconvoteup ?>">
                                                 <span class="custom">
-                                                    <b><? echo _("CM_ErrVNAcc"); ?></b>
+                                                    <b><?php echo __("You must be logged in to vote on comments"); ?></b>
                                                 </span>
                                             </a>
-                                            <? } ?>
+                                            <?php } ?>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td align="right" style="padding-top:2px" ><center>
-                                            <p id="vote_display_c_<? echo $value['id'] ?>" class="<? echo $value['votecolor'] ?>"><span id="vote_display_<? echo $value['id'] ?>"><? echo $value['votes'] ?></span></p>
+                                            <p id="vote_display_c_<?php echo $value['id'] ?>" class="<?php echo $value['votecolor'] ?>"><span id="vote_display_<?php echo $value['id'] ?>"><?php echo $value['votes'] ?></span></p>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td style="padding-top:2px"><center>
-                                            <? if ($user) {
+                                            <?php if ($user) {
                                             if ($value['vote'] == "0") $downpic = $iconvotered;
                                             else $downpic = $iconvotedown;
                                             ?>
-                                            <a class="votebutton" style="display:block" onclick="com_vote('0','<? echo $value['id'] ?>','<? echo $user->id ?>','<? echo $user->ComSecret ?>','<? echo $votecolorgrey ?>','<? echo $votecolorgreen ?>','<? echo $votecolorgold ?>','<? echo $votecolorred ?>','<? echo $comgolden ?>','<? echo $styleset ?>')">
-                                                <img id="downvpic_<? echo $value['id'] ?>" src="<? echo $downpic ?>" />
-                                                <img src="<? echo $iconvotered ?>" />
+                                            <a class="votebutton" style="display:block" onclick="com_vote('0','<?php echo $value['id'] ?>','<?php echo $user->id ?>','<?php echo $user->ComSecret ?>','<?php echo $votecolorgrey ?>','<?php echo $votecolorgreen ?>','<?php echo $votecolorgold ?>','<?php echo $votecolorred ?>','<?php echo $comgolden ?>','<?php echo $styleset ?>')">
+                                                <img id="downvpic_<?php echo $value['id'] ?>" src="<?php echo $downpic ?>" />
+                                                <img src="<?php echo $iconvotered ?>" />
                                             </a>
-                                            <? } else { ?>
+                                            <?php } else { ?>
                                             <a class="basictooltip">
-                                                <img src="<? echo $iconvotedown ?>">
+                                                <img src="<?php echo $iconvotedown ?>">
                                                 <span class="custom">
-                                                    <b><? echo _("CM_ErrVNAcc"); ?> </b>
+                                                    <b><?php echo __("You must be logged in to vote on comments"); ?> </b>
                                                 </span>
                                             </a>
-                                            <? } ?>
+                                            <?php } ?>
                                         </td>
                                     </tr>
                                 </table>
@@ -1122,37 +1126,37 @@ if ($comments) {
                 </td>
 
                 <td rowspan="2" valign="top">
-                    <? if ($value['user'] != "0") { ?>
-                        <span class="username" rel="<? echo $value['user'] ?>" value="<? echo $user->id ?>">
-                    <? } ?>
-                    <img <? echo $value['icon'] ?> width="50" height="50" class="commentpic">
-                    <? if ($value['user'] != "0") { ?>
+                    <?php if ($value['user'] != "0") { ?>
+                        <span class="username" rel="<?php echo $value['user'] ?>" value="<?php echo $user->id ?>">
+                    <?php } ?>
+                    <img <?php echo $value['icon'] ?> width="50" height="50" class="commentpic">
+                    <?php if ($value['user'] != "0") { ?>
                         </span>
-                    <? } ?>
+                    <?php } ?>
                 </td>
 
                 <td width="100%" align="left" style="padding-left: 7px">
-                    <? if ($value['user'] == "0") { ?>
-                        <p class="<? echo $cheader." ".$value['rolecolor'] ?>"><? echo $value['name']." "._("FormComTitle")." ".$value['date']; ?>
-                    <? }
+                    <?php if ($value['user'] == "0") { ?>
+                        <p class="<?php echo $cheader." ".$value['rolecolor'] ?>"><?php echo $value['name']." ".__("wrote on")." ".$value['date']; ?>
+                    <?php }
                     else { ?>
-                        <p class="<? echo $cheader." ".$value['rolecolor'] ?>"><? if ($value['opcomment'] == "true") { echo "(OP) "; } ?> <span class="username" style="text-decoration: none" rel="<? echo $value['user'] ?>" value="<? echo $user->id ?>"><a target="_blank" href="?user=<? echo $value['user'] ?>" class="usernamelink <? echo $cheader." ".$value['rolecolor'] ?>"><? echo $value['name'] ?></a></span><p class="<? echo $cheader." ".$value['rolecolor'] ?>"><? echo " "._("FormComTitle")." ".$value['date']; ?>
-                    <? } ?>
+                        <p class="<?php echo $cheader." ".$value['rolecolor'] ?>"><?php if ($value['opcomment'] == "true") { echo "(OP) "; } ?> <span class="username" style="text-decoration: none" rel="<?php echo $value['user'] ?>" value="<?php echo $user->id ?>"><a target="_blank" href="?user=<?php echo $value['user'] ?>" class="usernamelink <?php echo $cheader." ".$value['rolecolor'] ?>"><?php echo $value['name'] ?></a></span><p class="<?php echo $cheader." ".$value['rolecolor'] ?>"><?php echo " ".__("wrote on")." ".$value['date']; ?>
+                    <?php } ?>
                 </td>
                 
                 
-                <td align="right" <? if ($value['editable'] != "true") { ?>colspan="3"<? } ?>>
-                    <a id="linkicon_<? echo $value['id'] ?>" class="alternativessmall" style="display:block" data-clipboard-text="https://wow-petguide.com/?Comment=<? echo $value['id'] ?>"><img height="18" src="<? echo $linkicon ?>" /></a>
+                <td align="right" <?php if ($value['editable'] != "true") { ?>colspan="3"<?php } ?>>
+                    <a id="linkicon_<?php echo $value['id'] ?>" class="alternativessmall" style="display:block" data-clipboard-text="https://wow-petguide.com/?Comment=<?php echo $value['id'] ?>"><img height="18" src="<?php echo $linkicon ?>" /></a>
                 </td>
-                <div class="remtt" style="display:none; right: 0px" id="link_copied_<? echo $value['id'] ?>">Link copied</div>
+                <div class="remtt" style="display:none; right: 0px" id="link_copied_<?php echo $value['id'] ?>">Link copied</div>
                 <script>
-                var btn = document.getElementById('linkicon_<? echo $value['id'] ?>');
+                var btn = document.getElementById('linkicon_<?php echo $value['id'] ?>');
                 var clipboard = new Clipboard(btn);
         
                 clipboard.on('success', function(e) {
                     console.log(e);
-                        $('#link_copied_<? echo $value['id'] ?>').delay(0).fadeIn(500);
-                        $('#link_copied_<? echo $value['id'] ?>').delay(1200).fadeOut(500);
+                        $('#link_copied_<?php echo $value['id'] ?>').delay(0).fadeIn(500);
+                        $('#link_copied_<?php echo $value['id'] ?>').delay(1200).fadeOut(500);
                     });
                 clipboard.on('error', function(e) {
                     console.log(e);
@@ -1164,10 +1168,10 @@ if ($comments) {
 
                 <td align="right">
                     
-                    <? if ($value['editable'] == "true") { ?>
-                    <a class="alternativessmall" data-remodal-target="modaledit_<? echo $value['id'] ?>" style="display:block"><img height="18" src="<? echo $editicon ?>" /></a>
+                    <?php if ($value['editable'] == "true") { ?>
+                    <a class="alternativessmall" data-remodal-target="modaledit_<?php echo $value['id'] ?>" style="display:block"><img height="18" src="<?php echo $editicon ?>" /></a>
 
-                   <div class="remodalcomments" data-remodal-id="modaledit_<? echo $value['id'] ?>">
+                   <div class="remodalcomments" data-remodal-id="modaledit_<?php echo $value['id'] ?>">
                         <table width="600" class="profile">
                             <tr class="profile">
                                 <th colspan="2" width="5" class="profile">
@@ -1183,7 +1187,7 @@ if ($comments) {
 
                             <tr class="profile">
                                 <td class="collectionbordertwo">
-                                   <textarea class="cominputbright" id="editcommentfield_<? echo $value['id'] ?>" style="height: 200px; width: 600px;" onkeyup="auto_adjust_textarea_size(this); count_remaining(this,'<? echo $value['id'] ?>','<? echo $sortingid ?>','edit','<? echo $natoren ?>')" maxlength="3000" required><? echo $value['contentedit'] ?></textarea>
+                                   <textarea class="cominputbright" id="editcommentfield_<?php echo $value['id'] ?>" style="height: 200px; width: 600px;" onkeyup="auto_adjust_textarea_size(this); count_remaining(this,'<?php echo $value['id'] ?>','<?php echo $sortingid ?>','edit','<?php echo $natoren ?>')" maxlength="3000" required><?php echo $value['contentedit'] ?></textarea>
                                 </td>
                             </tr>
 
@@ -1193,13 +1197,13 @@ if ($comments) {
                                         <tr>
                                             <td width="30%"></td>
                                             <td width="20%" style="padding-left: 12px;">
-                                                <input data-remodal-action="close" onclick="edit_comment('<? echo $value['id'] ?>','<? echo $user->id ?>','<? echo $user->ComSecret ?>')" type="submit" class="comedit" value="<? echo _("FormComButtonSavechange"); ?>">
+                                                <input data-remodal-action="close" onclick="edit_comment('<?php echo $value['id'] ?>','<?php echo $user->id ?>','<?php echo $user->ComSecret ?>')" type="submit" class="comedit" value="<?php echo __("Save changes"); ?>">
                                             </td>
                                             <td width="20%" style="padding-left: 15px;">
-                                                <input data-remodal-action="close" onclick="cancel_comment_edit('<? echo $value['id'] ?>')" type="submit" class="comdelete" value="<? echo _("FormButtonCancel"); ?>">
+                                                <input data-remodal-action="close" type="submit" class="comdelete" value="<?php echo __("Cancel"); ?>">
                                             </td>
                                             <td width="30%" align="right">
-                                                <span style="padding-right: 15px" class="<? echo $scombbcode ?>" id="com_remaining_<? echo $value['id']."_".$sortingid ?>_edit_<? echo $natoren ?>"></span>
+                                                <span style="padding-right: 15px" class="<?php echo $scombbcode ?>" id="com_remaining_<?php echo $value['id']."_".$sortingid ?>_edit_<?php echo $natoren ?>"></span>
                                             </td>
                                         </tr>
                                     </table>
@@ -1211,17 +1215,17 @@ if ($comments) {
                     var options = {
                         hashTracking: false
                     };
-                     $('[data-remodal-id=modaledit_<? echo $value['id'] ?>]').remodal(options);
+                     $('[data-remodal-id=modaledit_<?php echo $value['id'] ?>]').remodal(options);
                     </script>
 
-                    <? } ?>
+                    <?php } ?>
                 </td>
 
                 <td align="left">
-                    <? if ($value['deletable'] == "true") { ?>
-                    <a class="alternativessmall" data-remodal-target="modaldelete_<? echo $value['id'] ?>" style="display:block"><img height="18" src="<? echo $deleteicon ?>" /></a>
+                    <?php if ($value['deletable'] == "true") { ?>
+                    <a class="alternativessmall" data-remodal-target="modaldelete_<?php echo $value['id'] ?>" style="display:block"><img height="18" src="<?php echo $deleteicon ?>" /></a>
 
-                    <div class="remodalcomments" data-remodal-id="modaldelete_<? echo $value['id'] ?>">
+                    <div class="remodalcomments" data-remodal-id="modaldelete_<?php echo $value['id'] ?>">
                         <table width="300" class="profile">
                             <tr class="profile">
                                 <th colspan="2" width="5" class="profile">
@@ -1229,7 +1233,7 @@ if ($comments) {
                                         <tr>
                                             <td><img src="images/icon_x.png"></td>
                                             <td><img src="images/blank.png" width="5" height="1"></td>
-                                            <td><p class="blogodd"><b><? echo _("CM_DelConf"); ?></td>
+                                            <td><p class="blogodd"><b><?php echo __("Are you sure you want to delete this comment?"); ?></td>
                                         </tr>
                                     </table>
                                 </th>
@@ -1240,10 +1244,10 @@ if ($comments) {
                                     <table>
                                         <tr>
                                             <td style="padding-left: 12px;">
-                                                <input data-remodal-action="close" onclick="delete_comment('<? echo $value['id'] ?>','<? echo $value['type'] ?>','<? echo $sortingid ?>','<? echo $natoren ?>','<? echo $user->id ?>','<? echo $user->ComSecret ?>','<? echo $category ?>')" type="submit" class="comdelete" value="<? echo _("FormComButtonDelete"); ?>">
+                                                <input data-remodal-action="close" onclick="delete_comment('<?php echo $value['id'] ?>','<?php echo $value['type'] ?>','<?php echo $sortingid ?>','<?php echo $natoren ?>','<?php echo $user->id ?>','<?php echo $user->ComSecret ?>','<?php echo $category ?>')" type="submit" class="comdelete" value="<?php echo __("Delete"); ?>">
                                             </td>
                                             <td style="padding-left: 15px;">
-                                                <input data-remodal-action="close" type="submit" class="comedit" value="<? echo _("FormButtonCancel"); ?>">
+                                                <input data-remodal-action="close" type="submit" class="comedit" value="<?php echo __("Cancel"); ?>">
                                             </td>
                                         </tr>
                                     </table>
@@ -1255,41 +1259,41 @@ if ($comments) {
                     var options = {
                         hashTracking: false
                     };
-                     $('[data-remodal-id=modaldelete_<? echo $value['id'] ?>]').remodal(options);
+                     $('[data-remodal-id=modaldelete_<?php echo $value['id'] ?>]').remodal(options);
                     </script>
-                    <? } ?>
+                    <?php } ?>
                 </td>
             </tr>
 
 
             <tr>
                 <td width="100%" colspan="3" rowspan="2" align="left" valign="top" style="padding-left: 7px">
-                    <div <? echo $value['voteopacity'] ?> id="comcontent_<? echo $value['id'] ?>" class="<? echo $ccontent." ".$value['rolecolor'] ?>"><? echo $value['content'];
+                    <div <?php echo $value['voteopacity'] ?> id="comcontent_<?php echo $value['id'] ?>" class="<?php echo $ccontent." ".$value['rolecolor'] ?>"><?php echo $value['content'];
                     if ($value['edited'] == 1) { echo " <i>(edited)</i>"; } ?></div>
                 </td>
 
-                <td align="left" rowspan="2" valign="top" <? echo $value['voteopacity'] ?>>
+                <td align="left" rowspan="2" valign="top" <?php echo $value['voteopacity'] ?>>
                     
-                    <?  // If user already reported this comment, show error message:
+                    <?php  // If user already reported this comment, show error message:
                     if ($value['reportable'] == "didother") { ?>
-                        <a id="cant_report_<? echo $value['id'] ?>" class="basictooltip">
-                            <img height="18" src="<? echo $reporticon ?>" />
+                        <a id="cant_report_<?php echo $value['id'] ?>" class="basictooltip">
+                            <img height="18" src="<?php echo $reporticon ?>" />
                             <span class="custom">
-                                <b><? echo _("CM_RPDouble"); ?></b>
+                                <b><?php echo __("You already reported this comment."); ?></b>
                             </span>
                         </a>
-                    <? } ?>
+                    <?php } ?>
 
-                    <? // If user can report this comment, show report option:
+                    <?php // If user can report this comment, show report option:
                     if ($value['reportable'] == "") { ?>
-                    <a id="report_com_<? echo $value['id'] ?>" class="alternativessmall" data-remodal-target="modalreport_<? echo $value['id'] ?>" style="display:block; cursor: pointer"><img height="18" src="<? echo $reporticon ?>" /></a>
+                    <a id="report_com_<?php echo $value['id'] ?>" class="alternativessmall" data-remodal-target="modalreport_<?php echo $value['id'] ?>" style="display:block; cursor: pointer"><img height="18" src="<?php echo $reporticon ?>" /></a>
 
-                    <div class="remodalcomments" data-remodal-id="modalreport_<? echo $value['id'] ?>">
+                    <div class="remodalcomments" data-remodal-id="modalreport_<?php echo $value['id'] ?>">
                         <table width="600" class="profile">
                             <tr class="profile">
                                 <th colspan="2" width="5" class="profile">
                                   <img src="/images/icon_report.png" style="padding-right: 0.4em;">
-                                  <p class="blogodd"><b><? echo _("CM_RPInst"); ?>:</b></p>
+                                  <p class="blogodd"><b><?php echo __("Please describe what you want to report this comment for"); ?>:</b></p>
                                 </th>
                             </tr>
 
@@ -1300,40 +1304,40 @@ if ($comments) {
                                             <td style="width:1px">
                                                 <ul class="radios">
                                                     <li>
-                                                        <input class="red" type="radio" id="inappropriate_<? echo $value['id'] ?>" value="inappropriate" name="reportcom_<? echo $value['id'] ?>" checked>
-                                                        <label for="inappropriate_<? echo $value['id'] ?>"></label>
+                                                        <input class="red" type="radio" id="inappropriate_<?php echo $value['id'] ?>" value="inappropriate" name="reportcom_<?php echo $value['id'] ?>" checked>
+                                                        <label for="inappropriate_<?php echo $value['id'] ?>"></label>
                                                         <div class="check"></div>
                                                     </li>
                                                 </ul>
                                             </td>
                                             <td style="width:120px">
-                                                <p class="blogodd"><span style="white-space: nowrap;"><? echo _("CM_RPCInapp"); ?></span>
+                                                <p class="blogodd"><span style="white-space: nowrap;"><?php echo __("Inappropriate"); ?></span>
                                             </td>
 
                                             <td style="width:1px">
                                                 <ul class="radios">
                                                     <li>
-                                                        <input class="red" type="radio" id="spam_<? echo $value['id'] ?>" value="spam" name="reportcom_<? echo $value['id'] ?>">
-                                                        <label for="spam_<? echo $value['id'] ?>"></label>
+                                                        <input class="red" type="radio" id="spam_<?php echo $value['id'] ?>" value="spam" name="reportcom_<?php echo $value['id'] ?>">
+                                                        <label for="spam_<?php echo $value['id'] ?>"></label>
                                                         <div class="check"></div>
                                                     </li>
                                                 </ul>
                                             </td>
                                             <td style="width:120px">
-                                                <p class="blogodd"><span style="white-space: nowrap;"><? echo _("CM_RPCSpam"); ?></span>
+                                                <p class="blogodd"><span style="white-space: nowrap;"><?php echo __("Spam"); ?></span>
                                             </td>
 
                                             <td style="width:1px">
                                                 <ul class="radios">
                                                     <li>
-                                                        <input class="lightblue" type="radio" id="other_<? echo $value['id'] ?>" value="other" name="reportcom_<? echo $value['id'] ?>">
-                                                        <label for="other_<? echo $value['id'] ?>"></label>
+                                                        <input class="lightblue" type="radio" id="other_<?php echo $value['id'] ?>" value="other" name="reportcom_<?php echo $value['id'] ?>">
+                                                        <label for="other_<?php echo $value['id'] ?>"></label>
                                                         <div class="check"></div>
                                                     </li>
                                                 </ul>
                                             </td>
                                             <td style="width:120px">
-                                                <p class="blogodd"><span style="white-space: nowrap;"><? echo _("CM_RPCOther"); ?></span>
+                                                <p class="blogodd"><span style="white-space: nowrap;"><?php echo __("Other"); ?></span>
                                             </td>
                                         </tr>
                                     </table>
@@ -1343,14 +1347,14 @@ if ($comments) {
 
                             <tr class="profile">
                                 <td class="collectionbordertwo">
-                                   <textarea placeholder="Add short explanation (optional)" class="cominputbright" id="report_comment_field_<? echo $value['id'] ?>" style="height: 150px; width: 600px;" onkeyup="auto_adjust_textarea_size(this)"></textarea>
+                                   <textarea placeholder="Add short explanation (optional)" class="cominputbright" id="report_comment_field_<?php echo $value['id'] ?>" style="height: 150px; width: 600px;" onkeyup="auto_adjust_textarea_size(this)"></textarea>
                                 </td>
                             </tr>
 
                             <tr class="profile">
                                 <td class="collectionbordertwo" style="text-align:center">
-                                    <input data-remodal-action="close" onclick="report_comment('<? echo $value['id'] ?>','<? echo $value['type'] ?>','<? echo $sortingid ?>','<? echo $natoren ?>','<? echo $language ?>','<? echo $user->id ?>','<? echo $user->ComSecret ?>','<? echo $category ?>')" type="submit" class="comedit" value="<? echo _("CM_RPBTSend"); ?>">
-                                    <input style="margin-left: 2em" data-remodal-action="close" type="submit" class="comdelete" value="<? echo _("FormButtonCancel"); ?>">
+                                    <input data-remodal-action="close" onclick="report_comment('<?php echo $value['id'] ?>','<?php echo $value['type'] ?>','<?php echo $sortingid ?>','<?php echo $natoren ?>','<?php echo $language ?>','<?php echo $user->id ?>','<?php echo $user->ComSecret ?>','<?php echo $category ?>')" type="submit" class="comedit" value="<?php echo __("Send Report"); ?>">
+                                    <input style="margin-left: 2em" data-remodal-action="close" type="submit" class="comdelete" value="<?php echo __("Cancel"); ?>">
                                 </td>
                             </tr>
                         </table>
@@ -1359,34 +1363,34 @@ if ($comments) {
                     var options = {
                         hashTracking: false
                     };
-                     $('[data-remodal-id=modalreport_<? echo $value['id'] ?>]').remodal(options);
+                     $('[data-remodal-id=modalreport_<?php echo $value['id'] ?>]').remodal(options);
                     </script>
-                    <? } ?>
+                    <?php } ?>
                 </td>
             </tr>
 
             <tr></tr>
 
-            <? if ($value['showrespondfield'] == "true") { ?>
+            <?php if ($value['showrespondfield'] == "true") { ?>
                 <tr>
                     <td colspan="2">
                     </td>
                     <td colspan="3" style="padding-left: 7px">
-                        <div <? echo $value['voteopacity'] ?> class="respondbutton_<? echo $value['parent'] ?>"><button class="<? echo $cbutrespond ?>" onclick="show_respond_field('<? echo $sortingid ?>','<? echo $value['parent'] ?>','<? echo $language ?>','<? echo $user->id ?>','<? echo $category ?>','<? echo $visitorid ?>','<? echo $styleset ?>')">Respond</button></div>
+                        <div <?php echo $value['voteopacity'] ?> class="respondbutton_<?php echo $value['parent'] ?>"><button class="<?php echo $cbutrespond ?>" onclick="show_respond_field('<?php echo $sortingid ?>','<?php echo $value['parent'] ?>','<?php echo $language ?>','<?php echo $user->id ?>','<?php echo $category ?>','<?php echo $visitorid ?>','<?php echo $styleset ?>')">Respond</button></div>
                     </td>
                 </tr>
-            <? } ?>
+            <?php } ?>
 
         </table>
         </td>
         </tr>
 
-        <? if ($value['showrespondfield'] == "true") { ?>
+        <?php if ($value['showrespondfield'] == "true") { ?>
             <tr>
                 <td>
                 </td>
                 <td colspan="3" style="padding-left: 14px">
-                    <span id="respondfield_<? echo $value['parent'] ?>" style="display: none"></span>
+                    <span id="respondfield_<?php echo $value['parent'] ?>" style="display: none"></span>
                 </td>
             </tr>
         <?
@@ -1442,6 +1446,7 @@ function print_commentbox($category,$sortingid,$parent,$styleset,$header = "0",$
     $dbcon = $GLOBALS['dbcon'];
     $language = $GLOBALS['language'];
     $tlanguage = $GLOBALS['tcomlanguage'];
+    $ads_active = $GLOBALS['ads_active'];
     if ($tlanguage != "") {
         $language = $tlanguage;
     }
@@ -1465,7 +1470,7 @@ function print_commentbox($category,$sortingid,$parent,$styleset,$header = "0",$
             }
         }
     }
-
+    
 // ===== Definitions =====
 
 switch ($styleset) {
@@ -1502,11 +1507,11 @@ if (!$user) {
 <script type="text/javascript">
 $(document).ready(function() {
         var x_timer;
-        $("#username_<? echo $parent.'_'.$sortingid.'_'.$natoren ?>").keyup(function (e){
+        $("#username_<?php echo $parent.'_'.$sortingid.'_'.$natoren ?>").keyup(function (e){
                 clearTimeout(x_timer);
                 var user_name = $(this).val();
                 x_timer = setTimeout(function(){
-                        check_username_ajax(user_name,'<? echo $natoren ?>','<? echo $parent ?>','<? echo $sortingid ?>','<? echo $scomsubactive ?>','<? echo $scomsubinactive ?>','<? echo $serrortext ?>');
+                        check_username_ajax(user_name,'<?php echo $natoren ?>','<?php echo $parent ?>','<?php echo $sortingid ?>','<?php echo $scomsubactive ?>','<?php echo $scomsubinactive ?>','<?php echo $serrortext ?>');
                 }, 1000);
         });
 });
@@ -1529,13 +1534,13 @@ switch ($category) {
         break;
 }
 ?>
-<form action="<? echo $linkforward ?>" method="post">
-<input type="hidden" name="comcat" value="<? echo $category ?>">
-<input type="hidden" name="comsortid" value="<? echo $sortingid ?>">
-<input type="hidden" name="comparent" value="<? echo $parent ?>">
-<input type="hidden" name="visitorid" value="<? echo $visitorid ?>">
-<input type="hidden" name="comlanguage" value="<? echo $language ?>">
-<input type="hidden" name="comuserid" value="<? echo $user->id ?>">
+<form action="<?php echo $linkforward ?>" method="post">
+<input type="hidden" name="comcat" value="<?php echo $category ?>">
+<input type="hidden" name="comsortid" value="<?php echo $sortingid ?>">
+<input type="hidden" name="comparent" value="<?php echo $parent ?>">
+<input type="hidden" name="visitorid" value="<?php echo $visitorid ?>">
+<input type="hidden" name="comlanguage" value="<?php echo $language ?>">
+<input type="hidden" name="comuserid" value="<?php echo $user->id ?>">
 <input type="hidden" name="submitcomment" value="true">
 <input type="hidden" name="email" value="verifymail">
 <input type="hidden" name="e-mail" value="requiredfield">
@@ -1547,91 +1552,56 @@ switch ($category) {
     <tr>
         <td></td>
         <td colspan="2" style="padding-left: 7px;">
-            <p class="<? echo $scomheader ?>"><? if ($header == "1") { echo _("FormComNewComment"); } else if ($header == "2") { echo _("FormComFirstPost"); } ?>
+            <p class="<?php echo $scomheader ?>"><?php if ($header == "1") { echo __("New Comment:"); } else if ($header == "2") { echo __("Be the first to leave a comment:"); } ?>
         </td>
     </tr>
-    <? } ?>
+    <?php } ?>
 
     <tr>
         <td rowspan="4" valign="top">
-            <img <? if ($user) { echo $usericon; } else { echo 'src="images/pets/level.png"'; } ?> width="50" height="50" class="commentpic">
+            <img <?php if ($user) { echo $usericon; } else { echo 'src="images/pets/level.png"'; } ?> width="50" height="50" class="commentpic">
         </td>
 
-        <? if (!$user) { ?>
+        <?php if (!$user) { ?>
         <td valign="top" style="padding-left: 7px;">
-            <input class="<? echo $scominput ?>" name="comname" onkeyup="input_typing(this,'<? echo $natoren ?>','<? echo $parent ?>','<? echo $sortingid ?>','<? echo $scomsubactive ?>','<? echo $scomsubinactive ?>','<? echo $serrortext ?>')" type="text" id="username_<? echo $parent."_".$sortingid."_".$natoren ?>" placeholder="<? echo _("FormYourName"); ?>" maxlength="15" required>
+            <input class="<?php echo $scominput ?>" name="comname" onkeyup="input_typing(this,'<?php echo $natoren ?>','<?php echo $parent ?>','<?php echo $sortingid ?>','<?php echo $scomsubactive ?>','<?php echo $scomsubinactive ?>','<?php echo $serrortext ?>')" type="text" id="username_<?php echo $parent."_".$sortingid."_".$natoren ?>" placeholder="<?php echo __("Your Name:"); ?>" maxlength="15" required>
         </td>
         <td valign="top" style="padding-left: 15px;">
-            <input class="<? echo $scominput ?>" placeholder="<? echo _("FormComEmailPlaceholder"); ?>" type="text" maxlength="200" name="commail" size="35">
-        </td> <? } ?>
+            <input class="<?php echo $scominput ?>" placeholder="<?php echo __("Email (optional, will not be published)"); ?>" type="text" maxlength="200" name="commail" size="35">
+        </td> <?php } ?>
     </tr>
 
-    <? if (!$user) { ?>
+    <?php if (!$user) { ?>
     <tr>
         <td colspan="2" style="padding-left: 7px;">
-            <div class="registerError" id="comerror_<? echo $parent."_".$sortingid."_".$natoren ?>" style="display:none"></div>
+            <div class="registerError" id="comerror_<?php echo $parent."_".$sortingid."_".$natoren ?>" style="display:none"></div>
         </td>
     </tr>
-    <? } ?>
+    <?php } ?>
 
     <tr>
         <td colspan="2" style="padding-left: 7px;">
-            <textarea class="<? echo $scominput ?>" placeholder="<? echo _("FormComCommentPlaceholder"); ?>" <? if ($user) { echo 'style="height: 47px;"'; } else { echo 'onClick="auto_adjust_textarea_size(this)"'; } ?> name="comcontent" maxlength="3000" onkeyup="auto_adjust_textarea_size(this); count_remaining(this,'<? echo $parent ?>','<? echo $sortingid ?>','input','<? echo $natoren ?>')" required></textarea>
+            <textarea class="<?php echo $scominput ?>" placeholder="<?php echo __("Write your comment here"); ?>" <?php if ($user) { echo 'style="height: 47px;"'; } else { echo 'onClick="auto_adjust_textarea_size(this)"'; } ?> name="comcontent" maxlength="3000" onkeyup="auto_adjust_textarea_size(this); count_remaining(this,'<?php echo $parent ?>','<?php echo $sortingid ?>','input','<?php echo $natoren ?>')" required></textarea>
         </td>
     </tr>
 
     <tr>
         <td valign="top" style="padding-left: 7px;">
-            <input class="<? echo $scomsubactive ?>" id="comsubmit_<? echo $parent."_".$sortingid."_".$natoren ?>" type="submit" value="<? echo _("FormComButtonSubmit"); ?>">
+            <input class="<?php echo $scomsubactive ?>" id="comsubmit_<?php echo $parent."_".$sortingid."_".$natoren ?>" type="submit" value="<?php echo __("Submit"); ?>">
         </td>
 
         <td valign="top" style="padding-right: 5px;" align="right">
-            <span style="padding-right: 15px" class="<? echo $scombbcode ?>" id="com_remaining_<? echo $parent."_".$sortingid ?>_input_<? echo $natoren ?>"></span><p class="<? echo $scombbcode ?>">[b]<b><? echo _("FormComFormatBold") ?></b>[/b] - [i]<i><? echo _("FormComFormatItalic") ?></i>[/i] - [u]<u><? echo _("FormComFormatUnderline") ?></u>[/u]
+            <span style="padding-right: 15px" class="<?php echo $scombbcode ?>" id="com_remaining_<?php echo $parent."_".$sortingid ?>_input_<?php echo $natoren ?>"></span><p class="<?php echo $scombbcode ?>">[b]<b><?php echo __("bold") ?></b>[/b] - [i]<i><?php echo __("italic") ?></i>[/i] - [u]<u><?php echo __("underline") ?></u>[/u]
         </td>
     </tr>
 
 </table>
 </form>
-    <?  // Ad placement Venatus at bottom of comments  ?>
+    <?php  // Ad placement Venatus at bottom of comments  ?>
     <br>
-    <? if ($user->id != 2434) { ?> 
+    <?php if ($user->id != 2434) {
+        if ($ads_active == true) { ?> 
     <div class="vm-placement" data-id="5d790600da2de50943f0ef38"></div><br><br>
-    <? } ?>
-    <? /* Old google adsense code
-    else {
-    
-    
-    if ($category == "0" && $sortingid != "11" && !$parent) { ?>
-        <br>
-        <script type="text/javascript">
-            google_ad_client = "ca-pub-1844645922810044";
-            google_ad_slot = "4065590611";
-            google_ad_width = 728;
-            google_ad_height = 90;
-        </script>
-        <!-- BattlePages -->
-        <script type="text/javascript"
-        src="//pagead2.googlesyndication.com/pagead/show_ads.js">
-        </script>
-        <br><br>
-    <? }
-
-    if ($category == "2" && !$parent) { ?>
-        <br>
-        <script type="text/javascript">
-            google_ad_client = "ca-pub-1844645922810044";
-            google_ad_slot = "6352163018";
-            google_ad_width = 728;
-            google_ad_height = 90;
-        </script>
-        <!-- BattlePages -->
-        <script type="text/javascript"
-        src="//pagead2.googlesyndication.com/pagead/show_ads.js">
-        </script>
-        <br><br>
-    <? }
-   } */
-
-
-
+    <?php }
+    } 
 }

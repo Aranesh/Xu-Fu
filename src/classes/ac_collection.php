@@ -29,11 +29,11 @@ if ($command == "update") {
         $command = "";
         if ($getcol[1] == 'bnetcharincorrect' OR $getcol[1] == 'generic_import_error')
         {
-            echo '<script type="text/javascript">$.growl.error({ message: "'._("GR_ColUpdateError").'", duration: "10000", size: "large", location: "tc" });</script>';
+            echo '<script type="text/javascript">$.growl.error({ message: "'.__("There was an error updating your pet collection.<br>If this error persists, please check if your connected character is still valid and change it if necessary.").'", duration: "10000", size: "large", location: "tc" });</script>';
         }
         if ($getcol[1] == 'no_pets_in_import')
         {
-            echo '<script type="text/javascript">$.growl.error({ message: "'._("The data import worked but returned 0 pets. Either your account does not have any pets or there was an error on Blizzards side. Please try a different character or change the region of your account in the settings.").'", duration: "10000", size: "large", location: "tc" });</script>';
+            echo '<script type="text/javascript">$.growl.error({ message: "'.__("The data import worked but returned 0 pets. Either your account does not have any pets or there was an error on Blizzards side. Please try a different character or change the region of your account in the settings.").'", duration: "10000", size: "large", location: "tc" });</script>';
         }
     }
     else if ($getcol[0] == "success")
@@ -42,10 +42,10 @@ if ($command == "update") {
         if ($findcol != "No Collection") {
             $fp = fopen($findcol['Path'], 'r');
             $collection = json_decode(fread($fp, filesize($findcol['Path'])), true);
-            echo '<script type="text/javascript">$.growl.notice({ message: "'._("GR_ColUpdate").'", duration: "5000", size: "large", location: "tc" });</script>';
+            echo '<script type="text/javascript">$.growl.notice({ message: "'.__("Your pet collection was updated successfully.").'", duration: "5000", size: "large", location: "tc" });</script>';
         }
         else {
-            echo '<script type="text/javascript">$.growl.error({ message: "'._("GR_ColUpdateError").'", duration: "10000", size: "large", location: "tc" });</script>';
+            echo '<script type="text/javascript">$.growl.error({ message: "'.__("There was an error updating your pet collection.<br>If this error persists, please check if your connected character is still valid and change it if necessary.").'", duration: "10000", size: "large", location: "tc" });</script>';
         }
     }
 }
@@ -66,9 +66,9 @@ if ($command == "delete_collection") {
     <table width="100%" border="0" margin="0" cellpadding="0" cellspacing="0">
         <tr>
             <td><img src="images/blank.png" width="50" height="1" alt="" /></td>
-            <td><img class="ut_icon" width="84" height="84" <? echo $usericon ?>></td>
+            <td><img class="ut_icon" width="84" height="84" <?php echo $usericon ?>></td>
             <td><img src="images/blank.png" width="50" height="1" alt="" /></td>
-            <td width="100%"><h class="megatitle"><? echo _("UM_PetCollection") ?></h></td>
+            <td width="100%"><h class="megatitle"><?php echo __("Pet Collection") ?></h></td>
             <td><img src="images/main_bg02_2.png"></td>
         </tr>
     </table>
@@ -77,26 +77,26 @@ if ($command == "delete_collection") {
 
 
 
-<? // ============= Submenu with Collection selected  ============= ?>
+<?php // ============= Submenu with Collection selected  ============= ?>
 <div class="remodal-bg leftmenu">
-    <? print_profile_menu('col'); ?>
+    <?php print_profile_menu('col'); ?>
 
-    <? // ============= Page 1 - Pet Collection is found  ============= ?>
-    <? if ($collection) { ?>
+    <?php // ============= Page 1 - Pet Collection is found  ============= ?>
+    <?php if ($collection) { ?>
     <center>
 
-    <? // ============= Sub Menu Option: Show Last Update and Option to Refresh =============  ?>
+    <?php // ============= Sub Menu Option: Show Last Update and Option to Refresh =============  ?>
     <div class="profile">
-        <b><? echo _("PC_LastUpdate") ?>:</b>
-        <span name="time"><? echo $findcol['Date']; ?></span><br>
+        <b><?php echo __("Last update") ?>:</b>
+        <span name="time"><?php echo $findcol['Date']; ?></span><br>
         <form class="form-style-even" style="display: inline" action="index.php?page=collection" method="post">
             <input type="hidden" name="command" value="update">
-            <input type="submit" style="margin: 5 0 5 10;" value="Update Now">
+            <input type="submit" style="margin: 5 0 5 10;" value="<?php echo __("Update Now") ?>">
         </form>
     </div>
 
-    <? // ============= Connected Character =============  ?>
-    <? if (!$bnetuser OR $user->UseWoWForCol == 1) {
+    <?php // ============= Connected Character =============  ?>
+    <?php if (!$bnetuser OR $user->UseWoWForCol == 1) {
         $charstring = $user->CharName.' '.$user->CharRealmFull.'-'.strtoupper($user->CharRegion);
         $update_command = 'change_wow_char';
     }
@@ -109,19 +109,22 @@ if ($command == "delete_collection") {
         $charstring = $bnetuser->CharName.' '.$show_realm.'-'.strtoupper($bnetuser->Region);
     } ?>
     <div class="profile">
-        <b><? echo _("Connected Character") ?>:</b><br>
-        <? echo $charstring ?>
+        <b><?php echo __("Connected Character") ?>:</b><br>
+        <?php echo $charstring ?>
         <form class="form-style-even" style="display: inline" action="index.php?page=collection" method="post">
-            <input type="hidden" name="command" value="<? echo $update_command ?>">
-            <input type="submit" style="margin: 5 0 5 10;" value="Change character">
+            <input type="hidden" name="command" value="<?php echo $update_command ?>">
+            <input type="submit" style="margin: 5 0 5 10;" value="<?php echo __("Change character") ?>">
         </form>
     </div>
 
-    <? // =============  Sharing option ============= ?>
+    <?php // =============  Sharing option =============
+        if ($usersettings[7] != 0) {
+    
+    ?>
     <div class="profile">
-        <b>Share your collection:</b><br>
-        <a style="cursor: pointer" id="cb_share_profile" data-clipboard-text="https://wow-petguide.com?user=<? echo $user->id ?>&display=Collection"><img class="icon_share" src="images/icon_share.png"></a>
-        <div class="remtt" style="display:none;" id="cb_share_profile_conf"><? echo _("BattletableRematchStringConf") ?></div>
+        <b><?php echo __('Share your collection:'); ?></b><br>
+        <a style="cursor: pointer" id="cb_share_profile" data-clipboard-text="https://wow-petguide.com?user=<?php echo $user->id ?>&display=Collection"><img class="icon_share" src="images/icon_share.png"></a>
+        <div class="remtt" style="display:none;" id="cb_share_profile_conf"><?php echo __("Copied to clipboard!") ?></div>
         <script>
             var btn = document.getElementById('cb_share_profile');
             var clipboard = new Clipboard(btn);
@@ -137,20 +140,24 @@ if ($command == "delete_collection") {
             });
         </script>
     </div>
-
+    <?php }
+    
+    
+    // =============  Remove Collection ============= ?>
+    
     <div class="profile">
         <form class="form-style-even" style="display: inline" action="index.php?page=collection" method="post">
             <input type="hidden" name="command" value="delete_collection">
-            <button type="submit" style="margin: 5 0 5 10;" class="comdelete"><? echo _("Remove collection"); ?></button>
+            <button type="submit" style="margin: 5 0 5 10;" class="comdelete"><?php echo __("Remove collection"); ?></button>
         </form>
     </div>
     
 </div>
 
-    <? // =============  Display Collection ============= ?>
+    <?php // =============  Display Collection ============= ?>
 
    
-<? }
+<?php }
 echo '</div>';
 // END OF LEFT MENU
 
@@ -166,14 +173,14 @@ if (!$collection) {  ?>
     <div class="articlebottom"></div>
     
     
-    <? // Loading screen
+    <?php // Loading screen
     if ($command) { ?>
         <div id="loading" style="margin-left: 260px">
             <table style="width:480px; margin: 0 auto" class="profile">
                 <tr class="profile">
                     <td class="profile">
                         <p class="blogodd">
-                        <center><img src="images/loading.gif"><br><br><i><? echo _("Loading...") ?></i><br></center>
+                        <center><img src="images/loading.gif"><br><br><i><?php echo __("Loading...") ?></i><br></center>
                         <br><br>
                     </td>
                 </tr>
@@ -182,7 +189,7 @@ if (!$collection) {  ?>
             <br>
             <br>
         </div>
-    <? }
+    <?php }
 
     if ($command == 'retry_character' OR $command == 'set_character') {
         if ($command == 'set_character') {
@@ -223,7 +230,7 @@ if (!$collection) {  ?>
             $bnetdb = mysqli_query($dbcon, "SELECT * FROM UserBnet WHERE User = '$user->id' LIMIT 1");
             $bnetuser = mysqli_fetch_object($bnetdb);
             $charstring = $new_charname.' '.$new_charrealm.'-'.strtoupper($bnetuser->Region);
-            echo '<script type="text/javascript">$.growl.notice({ message: "'._("Character set to: ").$charstring.'", duration: "7000", size: "large", location: "tc" });</script>'; 
+            echo '<script type="text/javascript">$.growl.notice({ message: "'.__("Character set to: ").$charstring.'", duration: "7000", size: "large", location: "tc" });</script>'; 
         }
         
         $getcol = update_collection($user->id,"1");
@@ -295,7 +302,7 @@ if (!$collection) {  ?>
         }
         catch (\BattleNet\OAuthException $e) {
             $command = '';
-            echo '<script>$.growl.error({ message: "'._("There was a problem connecting to the Battle.net service. Please check your account is set to the correct region (-> Settings on the left) or try again later.").'", duration: "10000", size: "large", location: "tc" });</script>';
+            echo '<script>$.growl.error({ message: "'.__("There was a problem connecting to the Battle.net service. Please check your account is set to the correct region (-> Settings on the left) or try again later.").'", duration: "10000", size: "large", location: "tc" });</script>';
         }
         ?><script>document.getElementById('loading').style.display='none';</script><?
     }
@@ -369,7 +376,7 @@ if (!$collection) {  ?>
         }
         catch (\BattleNet\OAuthException $e) {
             $command = '';
-            echo '<script>$.growl.error({ message: "'._("There was a problem connecting to the Battle.net service. Please check your account is set to the correct region (-> Settings on the left) or try again later.").'", duration: "10000", size: "large", location: "tc" });</script>';
+            echo '<script>$.growl.error({ message: "'.__("There was a problem connecting to the Battle.net service. Please check your account is set to the correct region (-> Settings on the left) or try again later.").'", duration: "10000", size: "large", location: "tc" });</script>';
         }
         ?><script>document.getElementById('loading').style.display='none';</script><?
     }
@@ -456,7 +463,7 @@ if (!$collection) {  ?>
 
             if ($getcol[0] == "error")
             {
-                echo '<script type="text/javascript">$.growl.notice({ message: "'._("Character set to: ").$charstring.'", duration: "7000", size: "large", location: "tc" });</script>'; 
+                echo '<script type="text/javascript">$.growl.notice({ message: "'.__("Character set to: ").$charstring.'", duration: "7000", size: "large", location: "tc" });</script>'; 
                 $command = 'select_bnetchar';
                 $error_msg = 'generic_error';
                 if ($getcol[1] == 'no_pets_in_import')
@@ -475,7 +482,7 @@ if (!$collection) {  ?>
         }
         catch (\BattleNet\OAuthException $e) {
             $command = '';
-            echo '<script>$.growl.error({ message: "'._("There was a problem connecting to the Battle.net service. Please check your account is set to the correct region (-> Settings on the left) or try again later.").'", duration: "10000", size: "large", location: "tc" });</script>';
+            echo '<script>$.growl.error({ message: "'.__("There was a problem connecting to the Battle.net service. Please check your account is set to the correct region (-> Settings on the left) or try again later.").'", duration: "10000", size: "large", location: "tc" });</script>';
         }
         ?><script>document.getElementById('loading').style.display='none';</script><?
     }
@@ -509,7 +516,7 @@ if (!$collection) {  ?>
                                                 <tr>
                                                     <td><img src="images/userdd_settings_grey.png"></td>
                                                     <td><img src="images/blank.png" width="5" height="1"></td>
-                                                    <td><p class="blogodd"><b><? echo _("Connect a character") ?></td>
+                                                    <td><p class="blogodd"><b><?php echo __("Connect a character") ?></td>
                                                 </tr>
                                             </table>
                                         </th>
@@ -521,22 +528,22 @@ if (!$collection) {  ?>
                                                 if ($error_msg) {
                                                     switch ($error_msg) {
                                                         case "zero_pets":
-                                                            echo '<br><b><font color="#c70200">=> '._("The import with your connected character worked fine but the collection contained zero pets.").'</font></b>';
-                                                            echo '<br><br>'._("Here are a few things you can try:");
-                                                            echo '<br><br>- '._("Go back and try again later, it could be a temporary issue.");
-                                                            echo '<br>- '._("Check in the settings on the left that your account is set to the correct region.");
-                                                            echo '<br>- '._("Pick a different character below to connect and try the import again.").'<br><br>';
+                                                            echo '<br><b><font color="#c70200">=> '.__("The import with your connected character worked fine but the collection contained zero pets.").'</font></b>';
+                                                            echo '<br><br>'.__("Here are a few things you can try:");
+                                                            echo '<br><br>- '.__("Go back and try again later, it could be a temporary issue.");
+                                                            echo '<br>- '.__("Check in the settings on the left that your account is set to the correct region.");
+                                                            echo '<br>- '.__("Pick a different character below to connect and try the import again.").'<br><br>';
                                                             break;
                                                         case "generic_error":
-                                                            echo '<br><b><font color="#c70200">=> '._("Importing your collection unfortunately did not work. The reason was not given.").'</font></b>';
-                                                            echo '<br><br>'._("Please try again later or select a different character from the list below.").'<br><br>';
+                                                            echo '<br><b><font color="#c70200">=> '.__("Importing your collection unfortunately did not work. The reason was not given.").'</font></b>';
+                                                            echo '<br><br>'.__("Please try again later or select a different character from the list below.").'<br><br>';
                                                             break;
                                                     }  
 
                                                 }
                                                 else {
-                                                    echo _("Importing your collection works through the armory and needs a specific character to be set.");
-                                                    echo '<br>'._("The currently connected character is:").'<b> '.$charstring.'</b><br>';
+                                                    echo __("Importing your collection works through the armory and needs a specific character to be set.");
+                                                    echo '<br>'.__("The currently connected character is:").'<b> '.$charstring.'</b><br>';
                                                 }
                                       
                                                 ?>
@@ -546,11 +553,11 @@ if (!$collection) {  ?>
                                                 <table id="t1" style="border-collapse: collapse;" class="example table-autosort table-autofilter table-autopage:0 table-page-number:t1page table-page-count:t1pages table-filtered-rowcount:t1filtercount table-rowcount:t1allcount">
                                                 <thead>
                                                     <tr>
-                                                        <th class="petlistheaderfirst table-sortable:alphabetic"><p class="blogodd">Name</th>
-                                                        <th class="petlistheaderfirst table-sortable:alphabetic"><p class="blogodd">Realm</th>
-                                                        <th class="petlistheaderfirst table-sortable:numeric"><p class="blogodd">Level</th>
-                                                        <th class="petlistheaderfirst table-sortable:alphabetic"><p class="blogodd">Race</th>
-                                                        <th class="petlistheaderfirst table-sortable:alphabetic"><p class="blogodd">Class</th>
+                                                        <th class="petlistheaderfirst table-sortable:alphabetic"><p class="blogodd"><?php echo __('Name'); ?></th>
+                                                        <th class="petlistheaderfirst table-sortable:alphabetic"><p class="blogodd"><?php echo __('Realm'); ?></th>
+                                                        <th class="petlistheaderfirst table-sortable:numeric"><p class="blogodd"><?php echo __('Level'); ?></th>
+                                                        <th class="petlistheaderfirst table-sortable:alphabetic"><p class="blogodd"><?php echo __('Race'); ?></th>
+                                                        <th class="petlistheaderfirst table-sortable:alphabetic"><p class="blogodd"><?php echo __('Class'); ?></th>
                                                         <th class="petlistheaderfirst"></th>
                                                     </tr>
 
@@ -563,7 +570,7 @@ if (!$collection) {  ?>
                                                         </th>
                                                         <th class="petlistheadersecond">
                                                             <select class="petselect" style="width:100px;" onchange="Table.filter(this,this)">
-                                                                <option class="petselect" value=""><? echo _("All") ?></option>
+                                                                <option class="petselect" value=""><?php echo __("All") ?></option>
                                                                 <option class="petselect" value="120">120</option>
                                                                 <option class="petselect" value="function(val){return parseFloat(val)>=110;}">>= 110</option>
                                                                 <option class="petselect" value="function(val){return parseFloat(val)>=100;}">>= 100</option>
@@ -572,22 +579,22 @@ if (!$collection) {  ?>
                                                         </th>
                                                         <th class="petlistheadersecond">
                                                             <select class="petselect" style="width:150px;" onchange="Table.filter(this,this)">
-                                                                <option class="petselect" value=""><? echo _("All") ?></option>
+                                                                <option class="petselect" value=""><?php echo __("All") ?></option>
                                                                 <?
                                                                 asort($show_races);
                                                                 foreach ($show_races as $race) { ?>
-                                                                    <option class="petselect" value="<? echo $race; ?>"><? echo $race; ?></option>
-                                                                <? } ?>
+                                                                    <option class="petselect" value="<?php echo $race; ?>"><?php echo $race; ?></option>
+                                                                <?php } ?>
                                                             </select>
                                                         </th>
                                                         <th class="petlistheadersecond">
                                                             <select class="petselect" style="width:150px;" onchange="Table.filter(this,this)">
-                                                                <option class="petselect" value=""><? echo _("All") ?></option>
+                                                                <option class="petselect" value=""><?php echo __("All") ?></option>
                                                                 <?
                                                                 asort($show_classes);
                                                                 foreach ($show_classes as $class) { ?>
-                                                                    <option class="petselect" value="<? echo $class; ?>"><? echo $class; ?></option>
-                                                                <? } ?>
+                                                                    <option class="petselect" value="<?php echo $class; ?>"><?php echo $class; ?></option>
+                                                                <?php } ?>
                                                             </select>
                                                         </th>
                                                         <th class="petlistheadersecond"></th>
@@ -595,7 +602,7 @@ if (!$collection) {  ?>
                                                     </thead>
                                                     
                                                     <tbody>
-                                                    <? foreach ($all_chars as $char) {
+                                                    <?php foreach ($all_chars as $char) {
                                                         $connected_char = false;
                                                         if ($char['Name'] == $bnetuser->CharName && $char['Realm'] == $bnetuser->CharRealmFull && $char['Level'] == $bnetuser->CharLevel) {
                                                             $connected_char = true;
@@ -620,12 +627,12 @@ if (!$collection) {  ?>
                                                         echo '<td class="petlist"><p class="blogodd">'.lookup_char_class($char['Class']).'</td>';
                                                         echo '<td class="petlist">';
                                                         if ($connected_char == false) {
-                                                            echo '<button type="submit" style="margin: 0" class="comsubmit">'._("Set and import").'</button>';
+                                                            echo '<button type="submit" style="margin: 0" class="comsubmit">'.__("Set and import").'</button>';
                                                             echo '<input type="hidden" name="command" value="set_character">';
                                                         }
                                                         else {
                                                             echo '<input type="hidden" name="command" value="retry_character">';
-                                                            echo '<button type="submit" style="margin: 0" class="comedit">'._("Retry").'</button>';
+                                                            echo '<button type="submit" style="margin: 0" class="comedit">'.__("Retry").'</button>';
                                                         }
                                                         echo '</form></td></tr>';
                                                     } ?>
@@ -642,7 +649,7 @@ if (!$collection) {  ?>
             </tr>
         </table>
         <br><br><br><br>
-    <? }
+    <?php }
 
     
     
@@ -659,10 +666,11 @@ if (!$collection) {  ?>
         $chardata_summary_source = blizzard_api_character_summary($region, $realm, $name, $language);
 
         if ($chardata_summary_source == "error") {
+
             $import_from_char_error = TRUE;
             if ($command == 'import_from_char') $command = '';
             if ($command == 'change_char') $command = 'change_wow_char';
-            echo '<script type="text/javascript">$.growl.error({ message: "'._("There was an error importing the pets through your character. Please check if you selected the correct realm (and region) and try again. You can use any character from your account to import your pets.").'", duration: "10000", size: "large", location: "tc" });</script>';
+            echo '<script type="text/javascript">$.growl.error({ message: "'.__("There was an error importing the pets through your character. Please check if you selected the correct realm (and region) and try again. You can use any character from your account to import your pets.").'", duration: "10000", size: "large", location: "tc" });</script>';
         }
         else {
             $chardata_summary = json_decode($chardata_summary_source, TRUE);
@@ -706,11 +714,11 @@ if (!$collection) {  ?>
                 $import_from_char_error = TRUE;
                 if ($getcol[1] == 'bnetcharincorrect' OR $getcol[1] == 'generic_import_error')
                 {
-                    echo '<script type="text/javascript">$.growl.error({ message: "'._("There was an error importing the pets through your character. Please check if you selected the correct realm (and region) and try again. You can use any character from your account to import your pets.").'", duration: "10000", size: "large", location: "tc" });</script>';
+                    echo '<script type="text/javascript">$.growl.error({ message: "'.__("There was an error importing the pets through your character. Please check if you selected the correct realm (and region) and try again. You can use any character from your account to import your pets.").'", duration: "10000", size: "large", location: "tc" });</script>';
                 }
                 if ($getcol[1] == 'no_pets_in_import')
                 {
-                    echo '<script type="text/javascript">$.growl.error({ message: "'._("The data import worked but returned 0 pets. Either your account does not have any pets or there was an error on Blizzards side. Please try a different character or change the region of your account in the settings.").'", duration: "10000", size: "large", location: "tc" });</script>';
+                    echo '<script type="text/javascript">$.growl.error({ message: "'.__("The data import worked but returned 0 pets. Either your account does not have any pets or there was an error on Blizzards side. Please try a different character or change the region of your account in the settings.").'", duration: "10000", size: "large", location: "tc" });</script>';
                 }
             }
             else if ($getcol[0] == "success")
@@ -747,7 +755,7 @@ if (!$collection) {  ?>
                                                 <tr>
                                                     <td><img src="images/userdd_settings_grey.png"></td>
                                                     <td><img src="images/blank.png" width="5" height="1"></td>
-                                                    <td><p class="blogodd"><b><? echo _("Change connected character") ?></td>
+                                                    <td><p class="blogodd"><b><?php echo __("Change connected character") ?></td>
                                                 </tr>
                                             </table>
                                         </th>
@@ -758,7 +766,7 @@ if (!$collection) {  ?>
 
                                                 <br>
                                                     <p class="blogodd">
-                                                    <? echo _("Enter the details of a valid character below to change to it and import your pets anew."); ?>
+                                                    <?php echo __("Enter the details of a valid character below to change to it and import your pets anew."); ?>
                                                     <br>
                                                     <form action="index.php?page=collection" method="post" style="display: inline">
                                                     <input type="hidden" name="command" value="change_char">
@@ -766,10 +774,10 @@ if (!$collection) {  ?>
                                                     <table style="margin: 10 0 0 20">
                                                         <tr>
                                                             <td>
-                                                                <select width="330" data-placeholder="<? echo _("Realm") ?>" name="realm" class="chosen-select" tabindex="1" required>
+                                                                <select width="330" data-placeholder="<?php echo __("Realm") ?>" name="realm" class="chosen-select" tabindex="1" required>
                                                                     <option value=""></option>
-                                                                        <optgroup label="<? echo _("FormSelectRealmUS") ?>">
-                                                                            <? foreach($realmsus as $key => $value) {
+                                                                        <optgroup label="<?php echo __("United States") ?>">
+                                                                            <?php foreach($realmsus as $key => $value) {
                                                                                 $thisrealm = explode("|",$value);
                                                                                 if ($splits[0]."|".$splits[1] == "us|".$thisrealm[0]) {
                                                                                     echo '<option selected value="us|'.$thisrealm[0].'">'.$thisrealm[1].'</option>';
@@ -780,7 +788,7 @@ if (!$collection) {  ?>
                                                                             }
                                                                             ?>
                                                                         </optgroup>
-                                                                        <optgroup label="<? echo _("FormSelectRealmEU") ?>">
+                                                                        <optgroup label="<?php echo __("Europe") ?>">
                                                                             <?
                                                                             foreach($realmseu as $key => $value) {
                                                                                 $thisrealm = explode("|",$value);
@@ -793,7 +801,7 @@ if (!$collection) {  ?>
                                                                             }
                                                                             ?>
                                                                         </optgroup>
-                                                                        <optgroup label="<? echo _("FormSelectRealmKR") ?>">
+                                                                        <optgroup label="<?php echo __("Korea") ?>">
                                                                             <?
                                                                             foreach($realmskr as $key => $value) {
                                                                                 $thisrealm = explode("|",$value);
@@ -806,7 +814,7 @@ if (!$collection) {  ?>
                                                                             }
                                                                             ?>
                                                                         </optgroup>
-                                                                        <optgroup label="<? echo _("FormSelectRealmTW") ?>">
+                                                                        <optgroup label="<?php echo __("Taiwan") ?>">
                                                                             <?
                                                                             foreach($realmstw as $key => $value) {
                                                                                 $thisrealm = explode("|",$value);
@@ -824,16 +832,16 @@ if (!$collection) {  ?>
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <input value="<? echo ucfirst(htmlentities($name, ENT_QUOTES, "UTF-8")); ?>" class="petselect" name="charname" tabindex="2" placeholder="<? echo _("FormSelectCharName") ?>" style="width: 330px;" required>
+                                                                <input value="<?php echo ucfirst(htmlentities($name, ENT_QUOTES, "UTF-8")); ?>" class="petselect" name="charname" tabindex="2" placeholder="<?php echo __("Character name") ?>" style="width: 330px;" required>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td style="max-width: 230; font-size: 14px; color: #831010; font-weight: bold">
-                                                                <? echo $char1_errmsg; ?>
+                                                                <?php echo $char1_errmsg; ?>
                                                             </td>
                                                         </tr>
                                                     </table>
-                                                    <button tabindex="15" style="margin: 5 0 30 25" type="submit" class="bnetlogin"><? echo _("Import collection"); ?></button>
+                                                    <button tabindex="15" style="margin: 5 0 30 25" type="submit" class="bnetlogin"><?php echo __("Import collection"); ?></button>
                                                     </form>
                                                     
                                                     <script type = "text/javascript">
@@ -854,7 +862,7 @@ if (!$collection) {  ?>
                                                 
                                                 
         
-    <? }
+    <?php }
     
     
     
@@ -889,7 +897,7 @@ if (!$collection) {  ?>
                                                 <tr>
                                                     <td><img src="images/userdd_settings_grey.png"></td>
                                                     <td><img src="images/blank.png" width="5" height="1"></td>
-                                                    <td><p class="blogodd"><b><? echo _("Your Pet Collection") ?></td>
+                                                    <td><p class="blogodd"><b><?php echo __("Your Pet Collection") ?></td>
                                                 </tr>
                                             </table>
                                         </th>
@@ -897,37 +905,35 @@ if (!$collection) {  ?>
                                     <tr class="profile">
                                         <td class="profile">
                                             <p class="blogodd">
-                                                <? echo _("Importing your pet collection is very easy and unlocks the true power of Xu-Fu's. Strategies will then be sorted
-                                                          based on your available pets and those you can follow directly are shown first, alongside some other features only available with
-                                                          a saved collection."); ?>
+                                                <?php echo __("Importing your pet collection is very easy and unlocks the true power of Xu-Fu's. Strategies will then be sorted based on your available pets and those you can follow directly are shown first, alongside some other features only available with a saved collection."); ?>
                                                 <br>
-                                                <? echo _("And on top, Xu-Fu will keep your collection updated."); ?>                                        
+                                                <?php echo __("And on top, Xu-Fu will keep your collection updated."); ?>                                        
                                                 <br><br>
-                                                <? echo _("There are two options how to import your collection:"); ?>
+                                                <?php echo __("There are two options how to import your collection:"); ?>
                                                 <br>
 
                                                 <div style="margin: 10 0 10 20; padding: 10px; width: 450px; border: 5px solid grey; float: left">
                                                     <p class="blogodd">
-                                                    <b><? echo _("Option 1: Import through Battle.net"); ?></b><br>
+                                                    <b><?php echo __("Option 1: Import through Battle.net"); ?></b><br>
                                                     
-                                                    <? if (!$bnetuser) { ?>
+                                                    <?php if (!$bnetuser) { ?>
                                                         <br>
-                                                        <? echo _("Connect your Battle.net account. With this option you can then also log into your Xu-Fu account."); ?>
+                                                        <?php echo __("Connect your Battle.net account. With this option you can then also log into your Xu-Fu account."); ?>
                                                         <br>
-                                                        <? echo _("You will be redirected to Battle.net and then back here. The page will refresh several times."); ?>
+                                                        <?php echo __("You will be redirected to Battle.net and then back here. The page will refresh several times."); ?>
                                                         <form name="loginform" action="index.php?page=settings" method="post" style="margin: 10 0 0 0">
                                                         <input type="hidden" name="settingspage" value="addbnet">
                                                         <input type="hidden" name="source" value="collection">
-                                                        <button tabindex="15" style="margin: 5 0 0 25" type="submit" class="bnetlogin" name="page" value="settings"><? echo _("Connect Battle.net Account"); ?></button>
+                                                        <button tabindex="15" style="margin: 5 0 0 25" type="submit" class="bnetlogin" name="page" value="settings"><?php echo __("Connect Battle.net Account"); ?></button>
                                                         </form>
-                                                    <? } ?>
+                                                    <?php } ?>
 
-                                                    <? if ($bnetuser) { ?>
+                                                    <?php if ($bnetuser) { ?>
                                                         <form name="loginform" action="index.php?page=collection" method="post" style="margin: 10 0 0 10">
                                                         <input type="hidden" name="command" value="import_from_bnet">
-                                                        <button tabindex="15" style="margin: 5 0 0 25" type="submit" class="bnetlogin"><? echo _("Import collection automatically"); ?></button>
+                                                        <button tabindex="15" style="margin: 5 0 0 25" type="submit" class="bnetlogin"><?php echo __("Import collection automatically"); ?></button>
                                                         </form>
-                                                    <? } ?>
+                                                    <?php } ?>
                                                 </div>
 
 
@@ -936,9 +942,9 @@ if (!$collection) {  ?>
                                                 if ($import_from_char_error == true) echo 'border: 5px solid #c45858; ';
                                                 else echo 'border: 5px solid grey; '; ?> float: left">
                                                     <p class="blogodd">
-                                                    <b><? echo _("Option 2: Import via character"); ?></b><br>
+                                                    <b><?php echo __("Option 2: Import via character"); ?></b><br>
                                                     <br>
-                                                    <? echo _("Enter the details of a valid character below to import your collection from the armory."); ?>
+                                                    <?php echo __("Enter the details of a valid character below to import your collection from the armory."); ?>
                                                     <br>
                                                     <form action="index.php?page=collection" method="post" style="display: inline">
                                                     <input type="hidden" name="command" value="import_from_char">
@@ -946,10 +952,10 @@ if (!$collection) {  ?>
                                                     <table style="margin: 10 0 0 20">
                                                         <tr>
                                                             <td>
-                                                                <select width="330" data-placeholder="<? echo _("Realm") ?>" name="realm" class="chosen-select" tabindex="1" required>
+                                                                <select width="330" data-placeholder="<?php echo __("Realm") ?>" name="realm" class="chosen-select" tabindex="1" required>
                                                                     <option value=""></option>
-                                                                        <optgroup label="<? echo _("FormSelectRealmUS") ?>">
-                                                                            <? foreach($realmsus as $key => $value) {
+                                                                        <optgroup label="<?php echo __("United States") ?>">
+                                                                            <?php foreach($realmsus as $key => $value) {
                                                                                 $thisrealm = explode("|",$value);
                                                                                 if ($splits[0]."|".$splits[1] == "us|".$thisrealm[0]) {
                                                                                     echo '<option selected value="us|'.$thisrealm[0].'">'.$thisrealm[1].'</option>';
@@ -960,7 +966,7 @@ if (!$collection) {  ?>
                                                                             }
                                                                             ?>
                                                                         </optgroup>
-                                                                        <optgroup label="<? echo _("FormSelectRealmEU") ?>">
+                                                                        <optgroup label="<?php echo __("Europe") ?>">
                                                                             <?
                                                                             foreach($realmseu as $key => $value) {
                                                                                 $thisrealm = explode("|",$value);
@@ -973,7 +979,7 @@ if (!$collection) {  ?>
                                                                             }
                                                                             ?>
                                                                         </optgroup>
-                                                                        <optgroup label="<? echo _("FormSelectRealmKR") ?>">
+                                                                        <optgroup label="<?php echo __("Korea") ?>">
                                                                             <?
                                                                             foreach($realmskr as $key => $value) {
                                                                                 $thisrealm = explode("|",$value);
@@ -986,7 +992,7 @@ if (!$collection) {  ?>
                                                                             }
                                                                             ?>
                                                                         </optgroup>
-                                                                        <optgroup label="<? echo _("FormSelectRealmTW") ?>">
+                                                                        <optgroup label="<?php echo __("Taiwan") ?>">
                                                                             <?
                                                                             foreach($realmstw as $key => $value) {
                                                                                 $thisrealm = explode("|",$value);
@@ -1004,16 +1010,16 @@ if (!$collection) {  ?>
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <input value="<? echo ucfirst(htmlentities($name, ENT_QUOTES, "UTF-8")); ?>" class="petselect" name="charname" tabindex="2" placeholder="<? echo _("FormSelectCharName") ?>" style="width: 330px;" required>
+                                                                <input value="<?php echo ucfirst(htmlentities($name, ENT_QUOTES, "UTF-8")); ?>" class="petselect" name="charname" tabindex="2" placeholder="<?php echo __("Character name") ?>" style="width: 330px;" required>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td style="max-width: 230; font-size: 14px; color: #831010; font-weight: bold">
-                                                                <? echo $char1_errmsg; ?>
+                                                                <?php echo $char1_errmsg; ?>
                                                             </td>
                                                         </tr>
                                                     </table>
-                                                    <button tabindex="15" style="margin: 5 0 0 25" type="submit" class="bnetlogin"><? echo _("Import collection"); ?></button>
+                                                    <button tabindex="15" style="margin: 5 0 0 25" type="submit" class="bnetlogin"><?php echo __("Import collection"); ?></button>
                                                     </form>
                                                     
                                                     <script type = "text/javascript">
@@ -1032,7 +1038,7 @@ if (!$collection) {  ?>
         <br><br><br><br>
         
         
-    <? }
+    <?php }
     
     
     
@@ -1062,18 +1068,23 @@ if ($collection) { ?>
                             <td style="width: 100%">
                                 <table style="width: 100%" cellspacing="0" cellpadding="0" class="profile">
                                     <tr class="profile">
+                                        <th colspan="3" class="profile" style="padding-bottom: 20px">
+                                            <img src="images/icon_warning_red.png" style="width: 20px; margin-right: 10px"><p class="blogodd">Collections are not updating since Shadowlands Pre-Patch. This is an issue on Blizzards side and is being worked on.</p>
+                                        </th>
+                                    </tr>
+                                    <tr class="profile">
                                         <td class="profile" style="width: 1;">
-                                            <img style="height: 40px; width: 40px; border-radius: 10px;" <? echo $usericon ?>>
+                                            <img style="height: 40px; width: 40px; border-radius: 10px;" <?php echo $usericon ?>>
                                         </td>
                                         <td style="align:left;padding-left:10px;width:600px">
-                                            <h3 class="collection"><? echo _("ColTableTitleNName"); ?>
+                                            <h3 class="collection"><?php echo __("Your Pet Collection"); ?>
                                         </td>
                                         <td align="right" style="padding: 0 25 7 0">
                                             <?
                                             $langpieces = decode_language($language);
                                             ?>
-                                            <a href="classes/export_collection_xlsx.php?user=<? echo $user->id ?>&language=<? echo $langpieces['short']; ?>" target="_blank">
-                                                <button style="margin-left: 15px; white-space:nowrap;" type="submit" tabindex="4" class="bnetlogin">Export to Excel</button>
+                                            <a href="classes/export_collection_xlsx.php?user=<?php echo $user->id ?>&language=<?php echo $langpieces['short']; ?>" target="_blank">
+                                                <button style="margin-left: 15px; white-space:nowrap;" type="submit" tabindex="4" class="bnetlogin"><?php echo __('Export to Excel'); ?></button>
                                             </a>
                                         </td>
                                     </tr>
@@ -1082,7 +1093,7 @@ if ($collection) { ?>
                         </tr>
                         <tr>
                             <td>
-                                <? print_collection($collection, '1'); ?>
+                                <?php print_collection($collection, '1'); ?>
                             </td>
                         </tr>
                     </table>
@@ -1093,17 +1104,17 @@ if ($collection) { ?>
     </div>
 
 
-<? }
+<?php }
 
 // Toasts:
 $sendtoast = \HTTP\argument_GET_or_default ('sendtoast', FALSE);
 
 switch ($sendtoast) {
     case "import_success":
-        echo '<script type="text/javascript">$.growl.notice({ message: "'._("The import of your pet collection was successful.").'", duration: "7000", size: "large", location: "tc" });</script>';
+        echo '<script type="text/javascript">$.growl.notice({ message: "'.__("The import of your pet collection was successful.").'", duration: "7000", size: "large", location: "tc" });</script>';
         break;
     case "wrong_bnet":
-        echo '<script type="text/javascript">$.growl.error({ message: "'._("You seem to be logged into a different Battle.net account on Blizzards web pages than the one you used to log into Xu-Fu. Please head over to Battle.net and make sure you log into the correct Battle.net account before trying again.").'", duration: "7000", size: "large", location: "tc" });</script>';
+        echo '<script type="text/javascript">$.growl.error({ message: "'.__("You seem to be logged into a different Battle.net account on Blizzards web pages than the one you used to log into Xu-Fu. Please head over to Battle.net and make sure you log into the correct Battle.net account before trying again.").'", duration: "7000", size: "large", location: "tc" });</script>';
         break;
 }
 // echo '<script>window.history.replaceState("object or string", "Title", "?page=collection");</script>';

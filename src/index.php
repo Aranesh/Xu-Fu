@@ -1,12 +1,15 @@
-<?php require_once ($_SERVER['DOCUMENT_ROOT'] . '/preamble.php');
+<?php
+ini_set ('display_errors', 0);
 
+require_once ($_SERVER['DOCUMENT_ROOT'] . '/preamble.php');
 require_once ("data/dbconnect.php");
 require_once ("classes/functions.php");
 require_once ("classes/com_functions.php");
 require_once ("classes/BBCode2.php");
 require_once ('data/blizzard_api.php');
 require_once ('config.php');
-
+require_once ("thirdparty/motranslator/vendor/autoload.php");
+PhpMyAdmin\MoTranslator\Loader::loadFunctions();
 require_once ('BattleNet.php');
 require_once ('HTML.php');
 require_once ('HTTP.php');
@@ -15,6 +18,7 @@ require_once ('Strategy.php');
 require_once ('TopMenu.php');
 require_once ('User.php');
 
+$ads_active = TRUE;
 // =================== TRACK VISITOR IP ===================
 
 if (isset($_SERVER['HTTP_CLIENT_IP'])) {
@@ -26,6 +30,7 @@ $user_ip_adress = $_SERVER['HTTP_X_FORWARDED_FOR'];
 else {
 $user_ip_adress = $_SERVER['REMOTE_ADDR'];
 }
+
 
 // =================== ANTI SPAM-TRAFFIC SYSTEM ===================
 
@@ -40,7 +45,6 @@ if ($antispam > "0"){
     $update = mysqli_query($dbcon, "UPDATE Blacklist SET `Lastupdate` = '$spamtime' WHERE IP = '$user_ip_adress'");
     die;
 }
-
 
 // =================== IMPORT SETTINGS ===================
 
@@ -76,12 +80,13 @@ if ($viewuser == ""){
 }
 $strategy = $_GET['Strategy'];
 if ($strategy == ""){
-    $strategy = $_POST['strategy'];
+    $strategy = $_GET['strategy'];
+    if ($strategy == ""){
+        $strategy = $_POST['strategy'];
+    }
 }
 
-
 $searchstring = $_POST['petsearch'];
-$alternative = $_GET['a'];
 $news_article_id = $_GET['News'];
 $news_article = null;
 
@@ -92,7 +97,7 @@ $sendtoast = $_POST['sendtoast'];
 if ($sendtoast == "") {
     $sendtoast = $_GET['sendtoast'];
 }
-
+$command = $_POST['command'];
 
 // INITIALIZE SESSION
 
@@ -503,22 +508,6 @@ else {
 }
 }
 
-// INIITIALIZE GETTEXT AND PULL LANGUAGE FILE
-putenv("LANG=".$language.".UTF-8");
-setlocale(LC_ALL, $language.".UTF-8");
-
-$domain = "messages";
-bindtextdomain($domain, "Locale");
-textdomain($domain);
-
-set_language_vars($language);
-
-
-
-
-
-
-
 
 
 
@@ -551,7 +540,7 @@ if(mysqli_num_rows($main_results) > 0 AND mysqli_num_rows($subtitle_results) == 
 $foundentry = mysqli_fetch_object($main_results);
 
 ?>
-<META HTTP-EQUIV="refresh" CONTENT="0; URL=https://www.wow-petguide.com/index.php?m=<? echo $foundentry->URLName ?>">
+<META HTTP-EQUIV="refresh" CONTENT="0; URL=https://www.wow-petguide.com/index.php?m=<?php echo $foundentry->URLName ?>">
 <?
 die;
 }
@@ -559,14 +548,13 @@ die;
 if(mysqli_num_rows($main_results) == 0 AND mysqli_num_rows($subtitle_results) > 0){
 $foundentry = mysqli_fetch_object($subtitle_results);
 ?>
-<META HTTP-EQUIV="refresh" CONTENT="0; URL=https://www.wow-petguide.com/index.php?m=<? echo $foundentry->Main ?>&s=<? echo $foundentry->id ?>">
+<META HTTP-EQUIV="refresh" CONTENT="0; URL=https://www.wow-petguide.com/index.php?m=<?php echo $foundentry->Main ?>&s=<?php echo $foundentry->id ?>">
 <?
 die;
 }
 }
 }
 }
-
 
 
 
@@ -576,6 +564,12 @@ die;
 
 // ======================= USER LOGIN AND REGISTRATION PROCESS =========================
 
+// INIIIALIZE GETTEXT AND PULL LANGUAGE FILE FIRST TIME FOR UNREGISTERED PROCESSES
+  _setlocale(LC_MESSAGES, $language);
+  _textdomain('messages');
+  _bindtextdomain('messages', __DIR__ . '/Locale/');
+  _bind_textdomain_codeset('messages', 'UTF-8');
+    set_language_vars($language);
 
 // Option 1: Battle.net Login
 
@@ -615,21 +609,21 @@ $usernum = mysqli_num_rows($userdb);
 if ($usernum > "0") {
 $regnameerror = "true";
 $regerror = "true";
-$regnameprob = _("UR_ErrNameDupe");
+$regnameprob = __("This name is already in use.");
 }
 
 if (mb_strlen($subname) > "15"){
 $regnameerror = "true";
 $regerror = "true";
 if ($regnameprob != "" ){ $regnameprob = $regnameprob."<br>"; }
-$regnameprob = $regnameprob.""._("UR_ErrNameLength");
+$regnameprob = $regnameprob."".__("This username is too long. Please do not use more than 15 characters.");
 }
 
 if (mb_strlen($subname) < "2" && $firstclick != "true" && $directload != "true"){
 $regnameerror = "true";
 $regerror = "true";
 if ($regnameprob != "" ){ $regnameprob = $regnameprob."<br>"; }
-$regnameprob = $regnameprob.""._("UR_ErrNameShort");
+$regnameprob = $regnameprob."".__("This name is too short. Please use at least 2 characters.");
 }
 
 if (preg_match('/[\'\/#\$\{\}\[\ \]\|\<\>\?\"\\\]/', $subname))
@@ -637,13 +631,13 @@ if (preg_match('/[\'\/#\$\{\}\[\ \]\|\<\>\?\"\\\]/', $subname))
 $regnameerror = "true";
 $regerror = "true";
 if ($regnameprob != "" ){ $regnameprob = $regnameprob."<br>"; }
-$regnameprob = $regnameprob.""._("UR_ErrNameChars")."<br># < > [ ] | { } \" ' / \ $ ?";
+$regnameprob = $regnameprob."".__("Please do not use empty spaces or any of these characters:")."<br># < > [ ] | { } \" ' / \ $ ?";
 }
 
 if (filter_var($subname, FILTER_VALIDATE_EMAIL)) {
 $regnameerror = "true";
 $regerror = "true";
-$regnameprob = _("UR_ErrNameIsMail");
+$regnameprob = __("Please do not use an email address as your login name.");
 }
 
 
@@ -654,17 +648,17 @@ $regnameprob = _("UR_ErrNameIsMail");
 if (mb_strlen($subpass) < "6" && $firstclick != "true" && $directload != "true"){
 $regpasserror = "true";
 $regerror = "true";
-$regpassprob = _("UR_ErrPassShort");
+$regpassprob = __("Your password must be at least 6 characters long.");
 }
 if ($subpass != $subpassrep){
 $regpasserror = "true";
 $regerror = "true";
-$regpassprob = _("UR_ErrPassNomatch");
+$regpassprob = __("The two entries did not match. Please type in your preferred password again.");
 }
 if ($subpass == $subname && $firstclick != "true" && $directload != "true"){
 $regpasserror = "true";
 $regerror = "true";
-$regpassprob = _("UR_ErrPassIsName");
+$regpassprob = __("Your password cannot be identical to your username.");
 }
 
 
@@ -678,14 +672,14 @@ $usernum = mysqli_num_rows($userdb);
 if ($usernum > "0") {
 $regmailerror = "true";
 $regerror = "true";
-$regmailprob = _("UR_ErrMailDupe");
+$regmailprob = __("This email address is already registered to another account.");
 }
 
 
 if (!filter_var($submail, FILTER_VALIDATE_EMAIL)) {
 $regmailerror = "true";
 $regerror = "true";
-$regmailprob = _("UR_ErrMailInvalid");
+$regmailprob = __("The email address you entered is not valid.");
 }
 
 }
@@ -715,13 +709,13 @@ $comsecret = rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,
 
 mysqli_query($dbcon, "INSERT INTO Users (`Name`, `Hash`, `ComSecret`, `Email`, `regip`, `Icon`, `Language`) VALUES ('$subname', '$hash', '$comsecret', '$submail', '$user_ip_adress', '$randomicon', '$language')") OR die(mysqli_error($dbcon));
 $newuserid = mysqli_insert_id($dbcon);
-$wlcmsgsub = _("UM_WelcSubject");
-$wlcmsgmsg = _("UM_WelcContent");
+$wlcmsgsub = __("Welcome to Xu-Fu's Pet Guides!");
+$wlcmsgmsg = __("Thank you for signing up with Xu-Fu's Pet Guides!<br><br>There are many new options available to you now, most of which you can find in your account area right here.<br>I suggest going to your Pet Collection first to make sure your pet library has been imported correctly. This will power a lot of the more advanced features here!<br><br>If you go to My Profile, you can select what other battlers see when clicking on your profile. Maybe leave them a little introduction about yourself? Or just turn off all areas if you prefer a bit more privacy.<br><br>You might also want to check out the Settings. There you can not only change your profile picture but also find options for your saved email, password or preferred language.<br><br>I hope you have a pleasant stay here and wish you all the best in your battles!<br><br>Yours,<br>Xu-Fu");
 $wlcmsgmsg = preg_replace('#<br\s*/?>#i', "\n", $wlcmsgmsg);
 $wlcmsgsub = mysqli_real_escape_string($dbcon, $wlcmsgsub);
 $wlcmsgmsg = mysqli_real_escape_string($dbcon, $wlcmsgmsg);
 mysqli_query($dbcon, "INSERT INTO UserMessages (`Sender`, `Receiver`, `Subject`, `Content`, `Type`, `Growl`) VALUES ('1', '$newuserid', '$wlcmsgsub', '$wlcmsgmsg', '1', '9')") OR die(mysqli_error($dbcon));
-mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`, `Main`, `Sub`, `Alternative`) VALUES ('$newuserid', '$user_ip_adress', '0', 'Registration completed', 'Normal Registration', '$mainselector', '$subselector', '$strategy')") OR die(mysqli_error($dbcon));
+mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$newuserid', '$user_ip_adress', 0, 'Registration completed', 'Normal Registration')") OR die(mysqli_error($dbcon));
 
 
 // Fetch data for Login page to process again
@@ -732,7 +726,6 @@ $sendtoast = "registersuccess";
 
 }
 }
-
 
 
 
@@ -765,11 +758,11 @@ if ($page == "setpw" AND $pwstring) {
 
         if (mysqli_num_rows($userprotdb) < "1") {
             $resetpage = "invalid";
-            $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$checkuser->id', '$user_ip_adress', '0', 'PW Reset Link clicked - expired', '$pwstring')") OR die(mysqli_error($dbcon));
+            $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$checkuser->id', '$user_ip_adress', 0, 'PW Reset Link clicked - expired', '$pwstring')") OR die(mysqli_error($dbcon));
         }
         else {
             $resetpage = "enterpw";
-            $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$checkuser->id', '$user_ip_adress', '0', 'PW Reset Link clicked - valid', '$pwstring')") OR die(mysqli_error($dbcon));
+            $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$checkuser->id', '$user_ip_adress', 0, 'PW Reset Link clicked - valid', '$pwstring')") OR die(mysqli_error($dbcon));
         }
     }
 
@@ -783,15 +776,15 @@ if ($page == "setpw" AND $pwstring) {
 
         if (mb_strlen($subpass) < "6"){
             $setpasserror = "true";
-            $setpassprob = _("UR_ErrPassShort");
+            $setpassprob = __("Your password must be at least 6 characters long.");
         }
         if ($subpass != $subpassrep){
             $setpasserror = "true";
-            $setpassprob = _("UR_ErrPassNomatch");
+            $setpassprob = __("The two entries did not match. Please type in your preferred password again.");
         }
         if ($subpass == $checkuser->Name){
             $setpasserror = "true";
-            $setpassprob = _("UR_ErrPassIsName");;
+            $setpassprob = __("Your password cannot be identical to your username.");;
         }
 
         // Password entered is valid and user is logged in
@@ -831,7 +824,7 @@ if ($page == "login") {
     if ($usernum < "1" && $usermailnum < "1") {
         $loginfail = "true";
         $loginnamefail = "true";
-        $loginnamefailreason = _("UL_ErrUserUnknown");
+        $loginnamefailreason = __("No user with that name or email address found.");
     }
 
     // Name check was positive, there is a user with that name or email address in the DB:
@@ -846,21 +839,21 @@ if ($page == "login") {
 
         // Check if account is locked by admin
         if ($usercheck->locked > "0") {
-            $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`,`Main`, `Sub`, `Alternative`) VALUES ('$usercheck->id', '$user_ip_adress', '1', 'Failed Login Attempt', 'Account Locked by Admin', '$mainselector', '$subselector', '$strategy')") OR die(mysqli_error($dbcon));
+            $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$usercheck->id', '$user_ip_adress', '1', 'Failed Login Attempt', 'Account Locked by Admin')") OR die(mysqli_error($dbcon));
             $loginfail = "true";
             $loginlocked = "true";
             $loginnamefail = "true";
-            $loginnamefailreason = _("UL_ErrAccLocked");
+            $loginnamefailreason = __("Your account is locked. Please contact a site admin for help.");
         }
 
         // Check if account is locked from further logins
         $lockdb = mysqli_query($dbcon, "SELECT * FROM UserProtocol WHERE User = '$usercheck->id' AND Activity = 'Account Locked' AND Comment = 'Too often incorrect password' AND  Date >= NOW()- INTERVAL 5 MINUTE");
         if (mysqli_num_rows($lockdb) > "0") {
-            $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`,`Main`, `Sub`, `Alternative`) VALUES ('$usercheck->id', '$user_ip_adress', '1', 'Failed Login Attempt', 'Account Temp-Locked', '$mainselector', '$subselector', '$strategy')") OR die(mysqli_error($dbcon));
+            $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$usercheck->id', '$user_ip_adress', '1', 'Failed Login Attempt', 'Account Temp-Locked')") OR die(mysqli_error($dbcon));
             $loginfail = "true";
             $loginlocked = "true";
             $loginnamefail = "true";
-            $loginnamefailreason = _("UL_ErrTempLock");
+            $loginnamefailreason = __("Your account is temporarily locked because of too many failed login attempts.<br> Please try again in 10 minutes.");
         }
 
         // User exists and entry is fetched successfully, login process (unless account is locked)
@@ -875,7 +868,6 @@ if ($page == "login") {
             $_SESSION["userid"] = $usercheck->id;
             $language = $usercheck->Language;
             $user = $usercheck;
-
             // Set cookies depending on login flag (30 day remember yes / no)
             if ($loginremember == "true") {
                 if ($user->Email){
@@ -889,10 +881,10 @@ if ($page == "login") {
                 setcookie('language_delimiter', base64_encode($user->id), time() + (86400 * 30), "/", ".wow-petguide.com"); // 86400 = 1 day
                 setcookie('language_stock', $cookiehash, time() + (86400 * 30), "/", ".wow-petguide.com"); // 86400 = 1 day
                 $update = mysqli_query($dbcon, "UPDATE Users SET `CHash` = '$cookiehash' WHERE id = '$user->id'");
-                $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`, `Main`, `Sub`, `Alternative`) VALUES ('$user->id', '$user_ip_adress', '1', 'Successful Login', 'Cookie Selected', '$mainselector', '$subselector', '$strategy')") OR die(mysqli_error($dbcon));
+                $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$user->id', '$user_ip_adress', '1', 'Successful Login', 'Cookie Selected')") OR die(mysqli_error($dbcon));
             }
             else {
-                $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`,`Main`, `Sub`, `Alternative`) VALUES ('$user->id', '$user_ip_adress', '1', 'Successful Login', 'No Cookie Selected', '$mainselector', '$subselector', '$strategy')") OR die(mysqli_error($dbcon));
+                $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$user->id', '$user_ip_adress', '1', 'Successful Login', 'No Cookie Selected')") OR die(mysqli_error($dbcon));
             }
         }
 
@@ -901,20 +893,20 @@ if ($page == "login") {
             // Enter unsuccessfull attempt into database
             $loginfail = "true";
             $loginpassfail = "true";
-            $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`,`Main`, `Sub`, `Alternative`) VALUES ('$usercheck->id', '$user_ip_adress', '0', 'Failed Login Attempt', 'Incorrect Password', '$mainselector', '$subselector', '$strategy')") OR die(mysqli_error($dbcon));
+            $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$usercheck->id', '$user_ip_adress', '0', 'Failed Login Attempt', 'Incorrect Password')") OR die(mysqli_error($dbcon));
 
             // Check unsuccessful logins (wrong password) of last 5 minutes
             $loginsdb = mysqli_query($dbcon, "SELECT * FROM UserProtocol WHERE User = '$usercheck->id' AND Activity = 'Failed Login Attempt' AND Comment = 'Incorrect Password' AND  Date >= NOW()- INTERVAL 5 MINUTE");
 
             if (mysqli_num_rows($loginsdb) < "3") {
-                $loginpassreason = _("AC_PWWrong1");
+                $loginpassreason = __("Submitted password was not correct.");
             }
             if (mysqli_num_rows($loginsdb) >= "3" AND mysqli_num_rows($loginsdb) < "5") {
-                $loginpassreason = _("AC_PWWrong2");
+                $loginpassreason = __("Submitted password incorrect. <br>Your account will be temporarily locked if you enter a wrong password too often.");
             }
             if (mysqli_num_rows($loginsdb) >= "5") {
-                $loginpassreason = _("AC_PWWrong3");
-                $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`,`Main`, `Sub`, `Alternative`) VALUES ('$usercheck->id', '$user_ip_adress', '0', 'Account Locked', 'Too often incorrect password', '$mainselector', '$subselector', '$strategy')") OR die(mysqli_error($dbcon));
+                $loginpassreason = __("Incorrect password. <br>Your account has been temporarily locked. <br>Please try again in 10 minutes.");
+                $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$usercheck->id', '$user_ip_adress', '0', 'Account Locked', 'Too often incorrect password')") OR die(mysqli_error($dbcon));
             }
         }
     }
@@ -933,7 +925,7 @@ if (!$user AND $_SESSION["logged_in"] == "true") {
         $language = $user->Language;
         $_SESSION["lang"] = $language;
         $protcomment = "User data was saved in Session - Page: ".$page;
-        $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`,`Main`, `Sub`, `Alternative`) VALUES ('$user->id', '$user_ip_adress', '2', 'Regular User Visit', '$protcomment', '$mainselector', '$subselector', '$strategy')") OR die(mysqli_error($dbcon));
+        mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$user->id', '$user_ip_adress', '2', 'Regular User Visit', '$protcomment')") OR die(mysqli_error($dbcon));
     }
     else {
         if ($sendtoast != "accdeleted") {
@@ -966,7 +958,7 @@ if ($_SESSION["logged_in"] != "true" && $_COOKIE["language_delimiter"]){
             $language = $cookieuser->Language;
             $user = $cookieuser;
             $protcomment = "User data was saved in Cookie - Page: ".$page;
-            $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`,`Main`, `Sub`, `Alternative`) VALUES ('$user->id', '$user_ip_adress', '2', 'Regular User Visit', '$protcomment', '$mainselector', '$subselector', '$strategy')") OR die(mysqli_error($dbcon));
+            $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$user->id', '$user_ip_adress', '2', 'Regular User Visit', '$protcomment')") OR die(mysqli_error($dbcon));
         }
     }
 }
@@ -976,7 +968,9 @@ if ($_SESSION["logged_in"] != "true" && $_COOKIE["language_delimiter"]){
 
 if ($page == "logout" OR $sendtoast == "accdeleted"){
     if ($_SESSION["logged_in"] == "true") {
-        $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Main`, `Sub`, `Alternative`) VALUES ('$user->id', '$user_ip_adress', '1', 'User Logout', '$mainselector', '$subselector', '$strategy')") OR die(mysqli_error($dbcon));
+        if (!$user) $userid = 0;
+        else $userid = $user->id;
+        $eintragen = mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`) VALUES ('$userid', '$user_ip_adress', '1', 'User Logout')") OR die(mysqli_error($dbcon));
         $_SESSION["logged_in"] = "false";
         session_destroy();
         setcookie("language_delimiter", "", time()-60*60*24*365, "/", ".wow-petguide.com");
@@ -985,11 +979,19 @@ if ($page == "logout" OR $sendtoast == "accdeleted"){
     }
 }
 
-    // if ($user && $user->id == 6302)
-    // {
-    //     error_reporting (E_ALL | E_WARNINGS);
-    //     ini_set ('display_errors', 1);
-    // }
+  // Hacky language selector for user Inovindil
+  if ($user->id == 19733 && $page == 'make_de') {
+    $update = mysqli_query($dbcon, "UPDATE Users SET `Language` = 'de_DE' WHERE id = '$user->id'");
+    $userdb = mysqli_query($dbcon, "SELECT * FROM Users WHERE id = '$user->id'");
+    $user = mysqli_fetch_object($userdb);
+  }
+  if ($user->id == 19733 && $page == 'make_en') {
+    $update = mysqli_query($dbcon, "UPDATE Users SET `Language` = 'en_US' WHERE id = '$user->id'");
+    $userdb = mysqli_query($dbcon, "SELECT * FROM Users WHERE id = '$user->id'");
+    $user = mysqli_fetch_object($userdb);
+  }
+  // End of hack
+
 
 // ======================= USER PROFILE PAGE VERIFICATION ETC =========================
 
@@ -1007,7 +1009,7 @@ if (($page == "register" OR $page == "setpw" OR $page == "pwrecover" OR $page ==
 }
 
 // Add here ALL pages that need to be excluded from redirecting to main
-if ($page == "adm_menu" OR $page == "adm_images" OR $page == "compare" OR $page == "petlist" OR $page == "strategies" OR $page == "settings" OR $page == "admin"  OR $page == "adm_comreports" OR $page == "adm_petimport" OR $page == "adm_peticons" OR $page == "adm_breeds" OR $page == "profile" OR $page == "collection" OR $page == "icon" OR $page == "tooltip" OR $page == "messages" OR $page == "sentmsgs" OR $page == "mycomments" OR $page == "writemsg"){
+if ($page == "404" OR $page == "adm_menu" OR $page == "adm_images" OR $page == "compare" OR $page == "petlist" OR $page == "strategies" OR $page == "settings" OR $page == "admin"  OR $page == "adm_comreports" OR $page == "adm_petimport" OR $page == "adm_peticons" OR $page == "adm_breeds" OR $page == "profile" OR $page == "collection" OR $page == "icon" OR $page == "tooltip" OR $page == "messages" OR $page == "sentmsgs" OR $page == "mycomments" OR $page == "writemsg"){
     $skipurlchange = true;
     $urlchanger = "";
 }
@@ -1061,21 +1063,13 @@ if ($viewuser){
 if ($_SESSION["logged_in"] == "true") {
     $language = $user->Language;
 }
-
-// INIITIALIZE GETTEXT AND PULL LANGUAGE FILE
-putenv("LANG=".$language.".UTF-8");
-setlocale(LC_ALL, $language.".UTF-8");
-
-$domain = "messages";
-bindtextdomain($domain, "Locale");
-textdomain($domain);
-
+// INIITIALIZE GETTEXT AND PULL LANGUAGE FILE AGAIN
+_setlocale(LC_MESSAGES, $language);
 set_language_vars($language);
-
 
 // ======================= Create Array of All Pets =========================
 // Can only be done here because only now the language is set
-$all_pets = get_all_pets($petnext); 
+$all_pets = get_all_pets($petnext);
 
 // ======================= Create Array of All Tags =========================
 $all_tags = get_all_tags();
@@ -1585,15 +1579,23 @@ if ($strategy != ""){
         if (mysqli_num_rows($stratcheckdb) > "0"){                                        // Strategy is present in DB
             $stratcheck = mysqli_fetch_object($stratcheckdb);
             if ($stratcheck->Published == "1" OR $userrights['EditStrats'] == "yes" OR $stratcheck->User == $user->id) {
-                $mainselector = $stratcheck->Main;
-                $subselector = $stratcheck->Sub;
-                if ($urlchanged != true) {
-                    $urlchanger = "?Strategy=".$strategy;
+                if ($stratcheck->Deleted == 1 && $userrights['EditStrats'] != "yes") {
+                    $mainselector = "";
+                    $urlchanger = "index.php";                                                    // Defaulting to Landing Page
+                    $sendtoast = "strathidden";
+                    $strategy = "";  
                 }
-                $directstrat = true;
-                $maincheckdb = mysqli_query($dbcon, "SELECT * FROM Main WHERE id = '$mainselector'");
-                $mainentry = mysqli_fetch_object($maincheckdb);
-                $mainshow = $mainentry->URLName;
+                if ($stratcheck->Deleted == 0 OR $userrights['EditStrats'] == "yes") {
+                    $mainselector = $stratcheck->Main;
+                    $subselector = $stratcheck->Sub;
+                    if ($urlchanged != true) {
+                        $urlchanger = "?Strategy=".$strategy;
+                    }
+                    $directstrat = true;
+                    $maincheckdb = mysqli_query($dbcon, "SELECT * FROM Main WHERE id = '$mainselector'");
+                    $mainentry = mysqli_fetch_object($maincheckdb);
+                    $mainshow = $mainentry->URLName;
+                }
             }
             else {
                 $mainselector = "";
@@ -1624,14 +1626,14 @@ if (!$directstrat && $subselector != "") {
     }
     else {
         if ($userrights['EditStrats'] == "yes") {
-            $allstratsdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE Sub = $subselector")or die("None");
+            $allstratsdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE Sub = $subselector AND Deleted = '0'")or die("None");
         }
         else {
             if ($user) {
-                $allstratsdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE (Sub = $subselector AND Published = '1') OR (Sub = $subselector AND User = '$user->id')") OR die(mysqli_error($dbcon));
+                $allstratsdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE Deleted = '0' AND ((Sub = $subselector AND Published = '1') OR (Sub = $subselector AND User = '$user->id'))") OR die(mysqli_error($dbcon));
             }
             else {
-                $allstratsdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE Sub = $subselector AND Published = '1'") OR die(mysqli_error($dbcon));
+                $allstratsdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE Sub = $subselector AND Published = '1' AND Deleted = '0'") OR die(mysqli_error($dbcon));
             }
         }
         if (mysqli_num_rows($allstratsdb) == "1") {
@@ -1645,13 +1647,16 @@ if (!$directstrat && $subselector != "") {
         else if (mysqli_num_rows($allstratsdb) > "1") {  // Select which strategy should be the first one to be shown
             $strategydb = mysqli_fetch_object($allstratsdb);
             $allstrats = calc_strats_rating($strategydb->id, $language, $user);
+            $strategy = $allstrats[0]->id;
             if ($urlchanged != true) {
-                $urlchanger = "?Strategy=".$allstrats[0]->id;
+                $urlchanger = "?Strategy=".$strategy;
+                $directstrat = TRUE;
+                $stratcheckdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE id = '$strategy'");
+                $stratcheck = mysqli_fetch_object($stratcheckdb);
                 $mainselector = $strategydb->Main;
                 $maincheckdb = mysqli_query($dbcon, "SELECT * FROM Main WHERE id = '$mainselector'");
                 $mainentry = mysqli_fetch_object($maincheckdb);
             }
-            $strategy = $allstrats[0]->id;
         }
     }
 }
@@ -1721,7 +1726,7 @@ if ($mainselector == "42"){
 
 // #8 BfA Family Battler settings
 
-if ($mainselector == "54"){
+if ($mainselector == 54){
 
     if (!$subselector){
         $subselector = "";
@@ -1757,6 +1762,7 @@ if ($mainselector == "54"){
 // Lil Tommy Newcomer
 if ($mainselector == "4"){
     $subselector = "79";
+    $sendtoast = "";
 }
 // Crysa
 if ($mainselector == "32"){
@@ -1780,6 +1786,7 @@ if ($cmd == "sendmsg") {
         $sendto = $_POST['recipient'];
         $delimiter = $_POST['delimiter'];
         $msgcontent = $_POST['msgcontent'];
+        $msgcontent = remove_emojis($msgcontent);
         if (!$sendto OR !$delimiter OR $msgcontent == "" OR $delimiter != $user->ComSecret OR mb_strlen($msgcontent) > "10100") {
             $rsperror = "true";
         }
@@ -1952,7 +1959,7 @@ if ($user) {
 
             // Add first message to messages array
             if ($thread->Sender == $user->id) {                                                   // add sender info
-                $msgs[$thread->id][0]['sendername'] = "You";
+                $msgs[$thread->id][0]['sendername'] = $user->Name;
                 $msgs[$thread->id][0]['senderid'] = $user->id;
                 $msgs[$thread->id][0]['sendericon'] = $usericon;
                 $msgs[$thread->id][0]['direction'] = "out";
@@ -1999,7 +2006,7 @@ if ($user) {
                     $threads[$threadscounter]['lastmsgdate'] = format_date($submsg->Date);          // Update date of last message initially
 
                     if ($submsg->Sender == $user->id) {                                                   // add sender info
-                        $msgs[$thread->id][$submscgcounter]['sendername'] = "You";
+                        $msgs[$thread->id][$submscgcounter]['sendername'] = $user->Name;
                         $msgs[$thread->id][$submscgcounter]['senderid'] = $user->id;
                         $msgs[$thread->id][$submscgcounter]['sendericon'] = $usericon;
                         $msgs[$thread->id][$submscgcounter]['direction'] = "out";
@@ -2028,10 +2035,16 @@ if ($user) {
 }
 
 
+// ================ mark all new comments on strategies as read ======================
+
+if ($user && $command == 'markall' && $page == 'strategies') {
+    mysqli_query($dbcon, "UPDATE Alternatives SET NewComs = 0 WHERE User = '$user->id'") OR die(mysqli_error($dbcon));
+}
+
 // ================ Check if new comments have been written on strategies this user owns ======================
 
 if ($user) {
-    $stratcomsdb = mysqli_query($dbcon, "SELECT SUM(NewComs) as Total FROM Alternatives WHERE User = '$user->id'")or die("None");
+    $stratcomsdb = mysqli_query($dbcon, "SELECT SUM(NewComs) as Total FROM Alternatives WHERE User = '$user->id' AND Deleted = '0'")or die("None");
     $stratcoms = mysqli_fetch_object($stratcomsdb);
     if ($stratcoms->Total > "0") {
         $stratcomstotal = "(".$stratcoms->Total.")";
@@ -2049,8 +2062,8 @@ if ($user->id != "2" && $user->id != "2198"){
 include("maintenance.php");
 die;
 }
-*/
 
+*/
 
 
 
@@ -2080,33 +2093,11 @@ die;
 
 // News Articles - Full View:
     if (!$page && $news_article) {
+        $enr_url = "https://wow-petguide.com/?News=".$news_article->id;
         $enr_title = "Xu-Fu's Pet News: ".stripslashes(htmlentities($news_article->Title_en_US, ENT_QUOTES, "UTF-8"));
-        $enr_description = stripslashes(htmlentities($news_article->Content_en_US, ENT_QUOTES, "UTF-8"));
-        $enr_description = str_replace("[b]","",$enr_description);
-        $enr_description = str_replace("[/b]","",$enr_description);
-        $enr_description = str_replace("[h1]","",$enr_description);
-        $enr_description = str_replace("[/h1]","",$enr_description);
-        $enr_description = str_replace("[h2]","",$enr_description);
-        $enr_description = str_replace("[/h2]","",$enr_description);
-        $enr_description = str_replace("[i]","",$enr_description);
-        $enr_description = str_replace("[/i]","",$enr_description);
-        $enr_description = str_replace("[u]","",$enr_description);
-        $enr_description = str_replace("[/u]","",$enr_description);
-        $enr_description = str_replace("[s]","",$enr_description);
-        $enr_description = str_replace("[/s]","",$enr_description);
-        $enr_description = str_replace("[large]","",$enr_description);
-        $enr_description = str_replace("[/large]","",$enr_description);
-        $enr_description = str_replace("[small]","",$enr_description);
-        $enr_description = str_replace("[/small]","",$enr_description);
-        $enr_description = str_replace("[bl]","",$enr_description);
-        $enr_description = str_replace("[/bl]","",$enr_description);
-        $enr_description = str_replace("[qt]","",$enr_description);
-        $enr_description = str_replace("[/qt]","",$enr_description);
-        $enr_description = str_replace("[bluepost]","",$enr_description);
-        $enr_description = str_replace("[/bluepost]","",$enr_description);
-        $enr_description = str_replace("[code]","",$enr_description);
-        $enr_description = str_replace("[/code]","",$enr_description);
-        $enr_description = str_replace("[/hr]","",$enr_description);
+        $enr_description = \BBCode\bbremove_code($news_article->Content_en_US);    
+        $enr_description = stripslashes(htmlentities($enr_description, ENT_QUOTES, "UTF-8"));
+
         if (strlen($enr_description) > "280") {
         $enr_description = substr($enr_description, 0, 280);
         $cutter = "279";
@@ -2124,23 +2115,169 @@ die;
         }
     }
 
+    
+
+// A direct strategy has been selected 
+if ($directstrat == TRUE) {
+    $enr_url = "https://wow-petguide.com/?Strategy=".$stratcheck->id;
+    if (file_exists('images/fights/m'.$mainselector.'_s'.$subselector.'.jpg')) {
+        $enr_image = 'https://www.wow-petguide.com/images/fights/m'.$mainselector.'_s'.$subselector.'.jpg';
+    }
+    $subnamedb = mysqli_query($dbcon, "SELECT * FROM Sub WHERE id = $subselector LIMIT 1");
+    $thissub = mysqli_fetch_object($subnamedb);
+    if ($thissub->Parent != "0") {
+        $subnamedb = mysqli_query($dbcon, "SELECT * FROM Sub WHERE id = $thissub->Parent");
+        $thissub = mysqli_fetch_object($subnamedb);
+    }
+    $subnname = stripslashes(htmlentities($thissub->Name, ENT_QUOTES, "UTF-8"));
+    $enr_title = "Xu-Fu Strategy vs. ".$subnname;
 
 
 
+    if ($stratcheck->User != "0") {
+        $stratuserdb = mysqli_query($dbcon, "SELECT * FROM Users WHERE id = '$stratcheck->User'");
+        if (mysqli_num_rows($stratuserdb) > "0") {
+            $stratuser = mysqli_fetch_object($stratuserdb);
+            $stratuser_name = $stratuser->Name;
+        }
+    }
+    if ($stratcheck->User == "0" && $stratcheck->CreatedBy != "") {
+        $stratuser_name = $stratuser->CreatedBy;
+    }
+    $pets = array();
+	while ($i < "4") {
+		switch ($i) {
+			case "1":
+				$fetchpet = $stratcheck->PetID1;
+				if ($fetchpet <= 20 || $stratcheck->SkillPet11 == "0") { $skill1 = "*"; $skillwildcards++; $skill1nb = "*";}
+				else if ($stratcheck->SkillPet11 == "1") { $skill1 = $all_pets[$fetchpet]['Skill1']; $skill1nb = "1"; }
+				else if ($stratcheck->SkillPet11 == "2") { $skill1 = $all_pets[$fetchpet]['Skill4']; $skill1nb = "2"; }
+				if ($fetchpet <= 20 || $stratcheck->SkillPet12 == "0") { $skill2 = "*"; $skillwildcards++; $skill2nb = "*";}
+				else if ($stratcheck->SkillPet12 == "1") { $skill2 = $all_pets[$fetchpet]['Skill2']; $skill2nb = "1"; }
+				else if ($stratcheck->SkillPet12 == "2") { $skill2 = $all_pets[$fetchpet]['Skill5']; $skill2nb = "2"; }
+				if ($fetchpet <= 20 || $stratcheck->SkillPet13 == "0") { $skill3 = "*"; $skillwildcards++; $skill3nb = "*";}
+				else if ($stratcheck->SkillPet13 == "1") { $skill3 = $all_pets[$fetchpet]['Skill3']; $skill3nb = "1"; }
+				else if ($stratcheck->SkillPet13 == "2") { $skill3 = $all_pets[$fetchpet]['Skill6']; $skill3nb = "2"; }
+                $reqlevel = $stratcheck->PetLevel1;
+				break;
+			case "2":
+				$fetchpet = $stratcheck->PetID2;
+				if ($fetchpet <= 20 || $stratcheck->SkillPet21 == "0") { $skill1 = "*"; $skillwildcards++; $skill1nb = "*";}
+				else if ($stratcheck->SkillPet21 == "1") { $skill1 = $all_pets[$fetchpet]['Skill1']; $skill1nb = "1"; }
+				else if ($stratcheck->SkillPet21 == "2") { $skill1 = $all_pets[$fetchpet]['Skill4']; $skill1nb = "2"; }
+				if ($fetchpet <= 20 || $stratcheck->SkillPet22 == "0") { $skill2 = "*"; $skillwildcards++; $skill2nb = "*";}
+				else if ($stratcheck->SkillPet22 == "1") { $skill2 = $all_pets[$fetchpet]['Skill2']; $skill2nb = "1"; }
+				else if ($stratcheck->SkillPet22 == "2") { $skill2 = $all_pets[$fetchpet]['Skill5']; $skill2nb = "2"; }
+				if ($fetchpet <= 20 || $stratcheck->SkillPet23 == "0") { $skill3 = "*"; $skillwildcards++; $skill3nb = "*";}
+				else if ($stratcheck->SkillPet23 == "1") { $skill3 = $all_pets[$fetchpet]['Skill3']; $skill3nb = "1"; }
+				else if ($stratcheck->SkillPet23 == "2") { $skill3 = $all_pets[$fetchpet]['Skill6']; $skill3nb = "2"; }
+                $reqlevel = $stratcheck->PetLevel2;
+				break;
+			case "3":
+				$fetchpet = $stratcheck->PetID3;
+				if ($fetchpet <= 20 || $stratcheck->SkillPet31 == "0") { $skill1 = "*"; $skillwildcards++; $skill1nb = "*";}
+				else if ($stratcheck->SkillPet31 == "1") { $skill1 = $all_pets[$fetchpet]['Skill1']; $skill1nb = "1"; }
+				else if ($stratcheck->SkillPet31 == "2") { $skill1 = $all_pets[$fetchpet]['Skill4']; $skill1nb = "2"; }
+				if ($fetchpet <= 20 || $stratcheck->SkillPet32 == "0") { $skill2 = "*"; $skillwildcards++; $skill2nb = "*";}
+				else if ($stratcheck->SkillPet32 == "1") { $skill2 = $all_pets[$fetchpet]['Skill2']; $skill2nb = "1"; }
+				else if ($stratcheck->SkillPet32 == "2") { $skill2 = $all_pets[$fetchpet]['Skill5']; $skill2nb = "2"; }
+				if ($fetchpet <= 20 || $stratcheck->SkillPet33 == "0") { $skill3 = "*"; $skillwildcards++; $skill3nb = "*";}
+				else if ($stratcheck->SkillPet33 == "1") { $skill3 = $all_pets[$fetchpet]['Skill3']; $skill3nb = "1"; }
+				else if ($stratcheck->SkillPet33 == "2") { $skill3 = $all_pets[$fetchpet]['Skill6']; $skill3nb = "2"; }
+                $reqlevel = $stratcheck->PetLevel3;
+				break;
+		}
+        if ($fetchpet == 0) { // Level  pet
+            if ($reqlevel == ""){
+               $reqlevel = "1+";
+            }
+            $reqlevelpieces = explode("+", $reqlevel);
+            $displayreqlvl = $reqlevelpieces[0]."+";
+            $pets[$i] = __("Any Level")." ".$displayreqlvl." ".__("Pet");
+        }
+        if ($fetchpet == 1) { // Any pet
+            $reqlevelpieces = explode("+", $reqlevel);
+            $displayreqlvl = $reqlevelpieces[0]."+";
+            if ($reqlevel == "" OR $reqlevelpieces[0] == "1") {
+                $pets[$i] = __("Any Pet");
+            }
+            else {
+                 $pets[$i] = __("Any Level")." ".$displayreqlvl." ".__("Pet");
+            }
+        }
+
+        if ($fetchpet > "10" && $fetchpet <= "20") { // Family pet
+            switch ($fetchpet) {
+               case "11":
+                  $famname = __("Humanoid");
+               break;
+               case "12":
+                  $famname = __("Magic");
+               break;
+               case "13":
+                  $famname = __("Elemental");
+               break;
+               case "14":
+                  $famname = __("Undead");
+               break;
+               case "15":
+                  $famname = __("Mechanical");
+               break;
+               case "16":
+                  $famname = __("Flying");
+               break;
+               case "17":
+                  $famname = __("Critter");
+               break;
+               case "18":
+                  $famname = __("Aquatic");
+               break;
+               case "19":
+                  $famname = __("Beast");
+               break;
+               case "20":
+                  $famname = __("Dragonkin");
+               break;
+            }
+            $reqlevelpieces = explode("+", $reqlevel);
+            $displayreqlvl = $reqlevelpieces[0]."+";
+            if ($reqlevel == "" OR $reqlevelpieces[0] == "1") {
+                $pets[$i] = __("Any")." ".$famsuffix;
+            }
+            else {
+                 $pets[$i] = __("Any Level")." ".$displayreqlvl." ".$famsuffix;
+            }
+        }
+        if ($fetchpet > "20" ) { // regular pet
+            $pets[$i] = $all_pets[$fetchpet]['Name'].' ('.$skill1nb.$skill2nb.$skill3nb.')';
+        }
+        $i++;
+    }
+
+    if ($stratuser_name) {
+        $enr_description = "Strategy by ".$stratuser_name;
+    }
+    else {
+        $enr_description = "Strategy";
+    }
+    $enr_description = $enr_description." vs. ".$subnname." using: ".$pets[1].", ".$pets[2]." and ".$pets[3].".";
+}
 
 
-
+    
+    
+    
 $mtime = microtime(true);
 
 ?>
 <!DOCTYPE html5>
 <html>
 <head>
-    <? if ($user->id != 2434) { ?> 
+    <?php if ($user->id != 2434) { ?> 
     <script src="https://hb.vntsm.com/v3/live/ad-manager.min.js" type="text/javascript" data-site-id="5d78f6ac71d1621a68eb8f02" data-mode="scan" async></script>
     <script data-ad-client="ca-pub-1844645922810044" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <? } ?>
-<?  // Deactivated google analytics ?>
+    <?php } ?>
+<?php  /*/* Deactivated google analytics ?>
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-62324188-1"></script>
         <script>
@@ -2149,13 +2286,13 @@ $mtime = microtime(true);
           gtag('js', new Date());
           gtag('config', 'UA-62324188-1');
         </script>
- <? ?>
+ <?php */ ?>
     
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xu-Fu's Pet Battle Strategies</title>
-    <meta name="Description" content="<? echo _("PageDescription") ?>" />
-    <meta name="Keywords" content="<? echo _("PageKeywords") ?>" />
+    <title><?php echo $enr_title ?></title>
+    <meta name="Description" content="<?php echo __("World of Warcraft Pet Battle guides - your one-stop place for strategies to beat all WoW pet battle quests, achievements and opponents!") ?>" />
+    <meta name="Keywords" content="<?php echo __("warcraft pets, warcraftpets, wow vanity pets, wow battle pets, wow companions") ?>" />
     <link rel="alternate" type="application/rss+xml" title="Xu-Fu's Pet Battles" href="/rss_feed.php">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
         <link rel="alternate" href="https://www.wow-petguide.com" hreflang="x-default" />
@@ -2170,13 +2307,13 @@ $mtime = microtime(true);
         <link rel="alternate" hreflang="ko" href="https://ko.wow-petguide.com/">
         <meta property="fb:app_id" content="1146631942116322"/>
         <meta property="og:type"          content="Website" />
-        <meta property="og:url"           content="<? echo $enr_url ?>" />
-        <meta property="og:title"         content="<? echo $enr_title ?>" />
-        <meta property="og:description"   content="<? echo $enr_description ?>" />
-        <meta property="og:image"         content="<? echo $enr_image ?>" />
-    <link rel="stylesheet" type="text/css" href="data/style.css?v=2.6<?php if ($user->Role == "99") {echo $mtime; }?>">
-    <link rel="stylesheet" type="text/css" href="data/news_article.css?v=1<?php if ($user->Role == "99") {echo $mtime; }?>">
-    <link rel="stylesheet" type="text/css" href="data/battletable.css?v=2.0<?php if ($user->Role == "99") {echo $mtime; }?>">
+        <meta property="og:url"           content="<?php echo $enr_url ?>" />
+        <meta property="og:title"         content="<?php echo $enr_title ?>" />
+        <meta property="og:description"   content="<?php echo $enr_description ?>" />
+        <meta property="og:image"         content="<?php echo $enr_image ?>" />
+    <link rel="stylesheet" type="text/css" href="data/style.css?v=2.81<?php if ($user->Role == "99") {echo $mtime; }?>">
+    <link rel="stylesheet" type="text/css" href="data/news_article.css?v=2<?php if ($user->Role == "99") {echo $mtime; }?>">
+    <link rel="stylesheet" type="text/css" href="data/battletable.css?v=2.11<?php if ($user->Role == "99") {echo $mtime; }?>">
     <link rel="stylesheet" href="data/remodal.css">
     <link rel="stylesheet" href="data/remodal-default-theme.css">
     <link rel="stylesheet" href="data/jquery.growl.css">
@@ -2188,7 +2325,7 @@ $mtime = microtime(true);
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="data/jquery.capslockstate.js"></script>
     <script src="data/jquery.waypoints.min.js"></script>
-    <script src="data/functions.js?v=2.4<?php if ($user->Role == "99") {echo $mtime; }?>"></script>
+    <script src="data/functions.js?v=2.6<?php if ($user->Role == "99") {echo $mtime; }?>"></script>
     <script src="data/jquery.growl.js"></script>
     <script src="data/tooltipster.bundle.min.js"></script>
     <script src="data/table.js"></script>
@@ -2196,7 +2333,11 @@ $mtime = microtime(true);
     <script src="data/remodal.min-2.js"></script>
     <script src="data/jquery.canvasjs.min.js"></script>
     <script src="data/chosen.jquery.min.js"></script>
-    <? /* Cookie consent thingy - removed at the moment
+    <?php if ($userrights['Edit_Home_Leveling'] == true) { ?>
+        <script src="data/jquery-ui.min.js"></script>
+        <link rel="stylesheet" href="data/jquery-ui.min.css">
+    <?php } ?>
+    <?php /* Cookie consent thingy - removed at the moment
     <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
     <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
     <script>
@@ -2218,7 +2359,7 @@ $mtime = microtime(true);
     })});
     </script>
     */ ?>
-    <script>var current_language = "<? echo urlencode($language); ?>";</script>
+    <script>var current_language = "<?php echo urlencode($language); ?>";</script>
     
 </head>
 
@@ -2227,8 +2368,13 @@ $mtime = microtime(true);
 
 <body> 
 
-<? if ($newmsggrowl && $page != "messages" && $page != "sentmsgs" && $page != "writemsg") {
-    echo '<script>$.growl.notice({ message: "'._("GR_NewMessage").'", duration: "5000", size: "large" });</script>';
+
+
+
+<?php
+
+if ($newmsggrowl && $page != "messages" && $page != "sentmsgs" && $page != "writemsg") {
+    echo '<script>$.growl.notice({ message: "'.__("You have unread messages. Click <a href='index.php?page=messages' class='growl'>here</a> to read them.").'", duration: "5000", size: "large" });</script>';
     foreach ($newmsgarr as $key => $value) {
         mysqli_query($dbcon, "UPDATE UserMessages SET Growl = Growl + 1 WHERE id = '$value'") OR die(mysqli_error($dbcon));
     }
@@ -2244,83 +2390,92 @@ function build_menu ($user)
   $userrights = format_userrights($user->Rights);
   $menus = TopMenu_MenuBuilder::begin();
 
-  $menu = $menus->top ('Info', 'blog');
+  $menu = $menus->top (Localization_string ('Info'), 'blog');
   $menu->sub (Localization_category (46, 'Development Notes'), 'DevLog');
   $menu->sub (Localization_category (47, 'Data Protection'), 'DataPrivacy');
   $menu->sub (Localization_category (63, 'Rules'), 'Rules');
   
-  $menu = $menus->top ('Tools', 'tools', 'Tools');
-  $menu->sub (Localization_string ('MainbarColViewer'), 'Collection');
+  $menu = $menus->top (Localization_string ('Tools'), 'tools', 'Tools');
+  $menu->sub (Localization_string ("Xu-Fu's Pet Collection Viewer"), "Collection");
   $menu->sub (Localization_string ('Collection Comparator'), 'Compare');
   $menu->sub ('Magpie', 'https://magpie.wow-petguide.com');
   if ($user && $userrights['EditStrats'] == "yes")
   {
     $menu->sub (Localization_category (65, 'Competitions'), 'Competitions');
   }
+  if ($user->id == 2)
+  {
+    $menu->sub (Localization_category (71, 'Most Used Pets'), 'TopPets');
+  }
   
-  $menu = $menus->top ('Guides', 'guides');
+  $menu = $menus->top (Localization_string ('Guides'), 'guides');
   /*
   if ($user && ($userrights[EditBeginnerGuide] == "yes" OR $userrights[EditGuides] == "yes"))
   {
     $menu->sub (Localization_category (64, 'Beginners Guide'), 'BeginnersGuide');
   }
   */
+  $menu->sub (Localization_category (45, 'Getting Started'), 'GettingStarted');
   $menu->sub (Localization_category (44, 'Powerleveling Pets'), 'Powerleveling');
   $menu->sub (Localization_category (58, 'Most Used Pets'), 'MostUsedPets');
-
+  $menu->sub (Localization_category (69, 'Recommended Addons'), 'RecommendedAddons');
   $menu->sub (Localization_category (59, 'Using TD Scripts'), 'UsingTDScripts');
   $menu->sub (Localization_category (43, 'TD Scripts'), 'TDScripts');
-  if ($user && ($userrights['EditGuides'] == "yes" OR $userrights['LocArticles'] == "yes"))
-  {
-    $menu->sub (Localization_category (45, 'Pet Addons'), 'AddonGuide');
-  }
   $menu->sub (Localization_category (50, 'Strategy Creation Guide'), 'StratCreationGuide');
   if ($user && $userrights['EditTestpage'] == "yes")
   {
     $menu->sub (Localization_category (68, 'Test Page'), 'Test');
   }
-  $menu = $menus->top ('BfA', 'bfa');
+  
+    $menu = $menus->top (Localization_string ('Shadowlands'), 'SL');
+    $menu->sub (Localization_category (70, 'World Quests'), 'ShadowlandsWQs');
+    if ($user->id == 2) {
+    $menu->sub (Localization_category (73, 'Family Exorcist'), 'FamilyExorcist');
+    }
+    $menu->sub (Localization_category (72, 'Abhorrent Adversaries'), 'AbhorrentAdversaries');
+  
+  $menu = $menus->top (Localization_string ('BfA'), 'bfa');
   $menu->sub (Localization_category (51, 'World Quests'), 'BattleforAzeroth');
   $menu->sub (Localization_category (54, 'Family Battler'), 'FamilyBattler');
   $menu->sub (Localization_category (61, 'Mechagon'), 'Mechagon');
   $menu->sub (Localization_category (62, 'Nazjatar'), 'Nazjatar');
   $menu->sub (Localization_category (52, 'Baal'), 'Baal');
 
-  $menu = $menus->top (Localization_string ('MainbarLegion'), 'legion');
+  $menu = $menus->top (Localization_string ('Legion'), 'legion');
   $menu->sub (Localization_category (16, 'Legion World Quests'), 'LegionWQ');
   $menu->sub (Localization_category (17, 'Family Familiar'), 'FamilyFamiliar');
   $menu->sub (Localization_category (35, 'Falcosaur Team Rumble'), 'Falcosaur');
   $menu->sub (Localization_category (28, 'Sternfathoms Pet Journal'), 'Sternfathom');
-  $menu->sub (Localization_string ('MainbarLegionReady'), 'LegionChecker');
+  // $menu->sub (Localization_string ('Legion Ready-Checker'), 'LegionChecker');
   $menu->sub (Localization_category (42, 'Anomalous Animals of Argus'), 'Argus');
 
-  $menu = $menus->top (Localization_string ('MainBarDraenor'), 'draenor');
+  $menu = $menus->top (Localization_string ('Draenor'), 'draenor');
   $menu->sub (Localization_category (2, 'The Pet Menagerie'), 'Menagerie');
   $menu->sub (Localization_category (5, 'Draenor Master Tamers'), 'Draenor');
   $menu->sub (Localization_category (9, 'Tanaan Jungle'), 'Tanaan');
 
-  $menu = $menus->top (Localization_string ('MainbarPandaria'), 'pandaria');
+  $menu = $menus->top (Localization_string ('Pandaria'), 'pandaria');
   $menu->sub (Localization_category (3, 'Pandarias Master Tamers'), 'Pandaria');
   $menu->sub (Localization_category (6, 'Pandaren Spirit Tamers'), 'PandaSpirits');
   $menu->sub (Localization_category (10, 'The Beasts of Fable'), 'Fable');
   $menu->sub (Localization_fight (4, 'Little Tommy Newcomer'), 'TommyNewcomer&s=79');
 
-  $menu = $menus->top (Localization_string ('MainbarDungeons'), 'dungeons');
+  $menu = $menus->top (Localization_string ('Dungeons'), 'dungeons');
   $menu->sub (Localization_category (66, 'Blackrock Depths'), 'BlackrockDepths');
   $menu->sub (Localization_category (60, 'Stratholme'), 'Stratholme');
   $menu->sub (Localization_category (53, 'Gnomeregan'), 'Gnomeregan');
   $menu->sub (Localization_category (36, 'The Deadmines'), 'Deadmines');
   $menu->sub (Localization_category (33, 'Wailing Caverns'), 'WailingCritters');
-  $menu->sub (Localization_string ('MainbarCelestialTournament'), 'CelestialTournament');
+  $menu->sub (Localization_string ('The Celestial Tournament'), 'CelestialTournament');
 
-  $menu = $menus->top ('Misc', 'misc');
+  $menu = $menus->top (Localization_string ('Misc'), 'misc');
   $menu->sub (Localization_category (7, 'The Darkmoon Faire'), 'Darkmoon');
   $menu->sub (Localization_category (12, 'The Elekk Plushie'), 'Elekk');
   $menu->sub (Localization_category (31, 'Algalon the Observer'), 'Algalon');
   $menu->sub (Localization_fight (32, 'Crysa'), 'Crysa&s=343');
   $menu->sub (Localization_fight (41, 'Environeer Bert'), 'Bert&s=466');
 
-  $menu = $menus->top ('PvP', 'pvp');
+  $menu = $menus->top (Localization_string ('PvP'), 'pvp');
   $menu->sub (Localization_category (48, 'Introduction'), 'PvPIntro');
   if ($user && ($userrights['EditPvP'] == "yes" OR $userrights['LocArticles'] == "yes"))
   {
@@ -2361,6 +2516,10 @@ include 'classes/ac_retrieve.php';
 }
 if ($page == "profile") {
 include 'classes/ac_profile.php';
+}
+if ($page == "404") {
+include 'errordocs/404.php';
+die;
 }
 if ($page == "settings") {
 include 'classes/ac_settings.php';
@@ -2437,7 +2596,7 @@ if ($donate == "success"){
 <table width="100%" margin="0" cellpadding="0" cellspacing="0">
 <tr>
 <td><img src="https://www.wow-petguide.com/images/main_bg02_1.png"></td>
-<td width="100%"><center><h class="megatitle"><? echo _("DonationReceived"); ?></h></td>
+<td width="100%"><center><h class="megatitle"><?php echo __("Donation Received"); ?></h></td>
 <td><img src="https://www.wow-petguide.com/images/main_bg02_2.png"></td>
 </tr>
 </table>
@@ -2455,7 +2614,7 @@ if ($donate == "success"){
 <center>
 <img src="https://www.wow-petguide.com//images/xufu_small.png">
 <br><br>
-<p class="blogodd"><b><? echo _("DonationThanks"); ?>
+<p class="blogodd"><b><?php echo __("Thank You!<br><br>Your contribution is much appreciated and will go towards the server costs."); ?>
 <br><br><br><br>
 
 <br><br><center>
@@ -2479,22 +2638,12 @@ die;
 
 
 
-// ==================== SPECIAL PAGES SELECTION (CHANGELOG, STATS ETC.)=========================
+// ==================== SPECIAL PAGES SELECTION =========================
 
 // Home
-if ($mainselector == "") {
+if ($mainselector == "" OR $mainselector == 11) {
     include 'classes/home.php';
 }
-
-// Legion Ready-Checker
-// if ($mainselector == "29"){
-// include 'classes/checker.php';
-// }
-
-// Celestial Tournament
-// if ($mainselector == "8"){
-// include 'classes/ct.php';
-// }
 
 // Tools: Pet Collection Viewer
 if ($mainselector == "40"){
@@ -2506,6 +2655,11 @@ if ($mainselector == "67"){
     include 'classes/collection_comparisor.php';
 }
 
+// Tools: Pet Collection Viewer
+if ($mainselector == "71"){
+    include 'classes/most_used_pets.php';
+}
+
 
 
 
@@ -2515,14 +2669,19 @@ if ($mainselector == "67"){
 
 if ($mainentry->Type != "1" && $mainselector != ""){           // Show fight menu only for articles that have strategies
 
+
     // Calculation of Garrison Pet Menagerie Fight
-    $eustart = strtotime("2017-01-28 08:00:00");                                             // Starting with Fight 1 - Deebs Tyri Puzzle
     $end = strtotime(date('Y-m-d H:i:s'));
+    
+    $eustart = strtotime("2017-01-28 08:00:00"); // Starting with Fight 1 - Deebs Tyri Puzzle
     $eudiff = ((($end-$eustart)/86400) % 15)+1;
 
-    $usstart = strtotime("2017-02-02 16:00:00");                                             // Starting with Fight 1 - Deebs Tyri Puzzle
-    $usdiff = (($end-$usstart)/86400) % 15;
+    $usstart = strtotime("2017-02-03 16:00:00");  
+    $usdiff = (($end-$usstart)/86400) % 15+1;
 
+    $twstart = strtotime("2020-09-25 01:00:00"); 
+    $twdiff = (($end-$twstart)/86400) % 15+1;
+    
     // ===== REGULAR SUB MENU ======
 
     if (!preg_match("/^[1234567890]*$/is", $subselector)) {                                   // Tampering protection
@@ -2540,7 +2699,7 @@ if ($mainentry->Type != "1" && $mainselector != ""){           // Show fight men
         }
 
         echo "<div class=\"remodal-bg leftmenu\"><ul class=\"vertical-list\">";
-        echo "<li><a class=\"articleactivebutton\" href=\"index.php?m=".$mainshow."\">"._("MainArticle")."</a></li>";
+        echo "<li><a class=\"articleactivebutton\" href=\"index.php?m=".$mainshow."\">".__("Main Article")."</a></li>";
         echo "<br>";
     }
 
@@ -2554,7 +2713,7 @@ else if ($subselector != ""){
         }
 
         echo "<div class=\"remodal-bg leftmenu\"><ul class=\"vertical-list\">";
-        echo "<li><a class=\"articlebutton\" href=\"index.php?m=".$mainshow."\" >"._("MainArticle")."</a></li>";
+        echo "<li><a class=\"articlebutton\" href=\"index.php?m=".$mainshow."\" >".__("Main Article")."</a></li>";
         echo "<br>";
 
         if ($mainselector >= "18" AND $mainselector <= "27"){
@@ -2573,79 +2732,79 @@ else if ($subselector != ""){
 if ($mainselector == "42"){ ?>
 
     <br>
-    <? if ($subfamily == "0") { ?>
-    <li><a class="articleactivebutton" href="index.php?s=<? echo $subselector ?>"><? echo _("SideBarRegularStrat") ?></a></li>
-    <? }
+    <?php if ($subfamily == "0") { ?>
+    <li><a class="articleactivebutton" href="index.php?s=<?php echo $subselector ?>"><?php echo __("Regular strategies") ?></a></li>
+    <?php }
     else { ?>
-    <li><a class="articlebutton" href="?m=Argus&s=<? echo $normtarget ?>"><? echo _("SideBarRegularStrat") ?></a></li>
-    <? } ?>
+    <li><a class="articlebutton" href="?m=Argus&s=<?php echo $normtarget ?>"><?php echo __("Regular strategies") ?></a></li>
+    <?php } ?>
     <br>
 
     <link rel="stylesheet" type="text/css" href="data/fflegion.css">
     <table><tr>
     <td>
-    <? if ($subfamily == "1")
+    <?php if ($subfamily == "1")
     {
-    echo '<a class="fffamtt" href="?m=Argus&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffhumanoida.png"><span class="custom"><b>'._("FF_Humanoid").'</b></span></a>';
-    } else { echo '<a class="ffhumanoid fffamtt" href="?m=Argus&s='.$humatarget.'"><span class="custom"><b>'._("FF_Humanoid").'</b></span></a>'; } ?>
+    echo '<a class="fffamtt" href="?m=Argus&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffhumanoida.png"><span class="custom"><b>'.__("Humanoid Havoc").'</b></span></a>';
+    } else { echo '<a class="ffhumanoid fffamtt" href="?m=Argus&s='.$humatarget.'"><span class="custom"><b>'.__("Humanoid Havoc").'</b></span></a>'; } ?>
     </td>
 
     <td>
-    <? if ($subfamily == "2")
-    { echo '<a class="fffamtt" href="?m=Argus&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffdragonkina.png"><span class="custom"><b>'._("FF_Dragon").'</b></span></a>';
-    } else { echo '<a class="ffdragonkin fffamtt" href="?m=Argus&s='.$dragtarget.'"><span class="custom"><b>'._("FF_Dragon").'</b></span></a>'; } ?>
+    <?php if ($subfamily == "2")
+    { echo '<a class="fffamtt" href="?m=Argus&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffdragonkina.png"><span class="custom"><b>'.__("Draconic Destruction").'</b></span></a>';
+    } else { echo '<a class="ffdragonkin fffamtt" href="?m=Argus&s='.$dragtarget.'"><span class="custom"><b>'.__("Draconic Destruction").'</b></span></a>'; } ?>
     </td>
 
 
     <td>
-    <? if ($subfamily == "3")
-    { echo '<a class="fffamtt" href="?m=Argus&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffflyinga.png"><span class="custom"><b>'._("FF_Flying").'</b></span></a>';
-    } else { echo '<a class="ffflying fffamtt" href="?m=Argus&s='.$flyitarget.'"><span class="custom"><b>'._("FF_Flying").'</b></span></a>'; } ?>
+    <?php if ($subfamily == "3")
+    { echo '<a class="fffamtt" href="?m=Argus&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffflyinga.png"><span class="custom"><b>'.__("Fierce Fliers").'</b></span></a>';
+    } else { echo '<a class="ffflying fffamtt" href="?m=Argus&s='.$flyitarget.'"><span class="custom"><b>'.__("Fierce Fliers").'</b></span></a>'; } ?>
     </td>
 
     <td>
-    <? if ($subfamily == "4")
-    { echo '<a class="fffamtt" href="?m=Argus&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffundeada.png"><span class="custom"><b>'._("FF_Undead").'</b></span></a>';
-    } else { echo '<a class="ffundead fffamtt" href="?m=Argus&s='.$undetarget.'"><span class="custom"><b>'._("FF_Undead").'</b></span></a>'; } ?>
+    <?php if ($subfamily == "4")
+    { echo '<a class="fffamtt" href="?m=Argus&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffundeada.png"><span class="custom"><b>'.__("Unstoppable Undead").'</b></span></a>';
+    } else { echo '<a class="ffundead fffamtt" href="?m=Argus&s='.$undetarget.'"><span class="custom"><b>'.__("Unstoppable Undead").'</b></span></a>'; } ?>
     </td>
 
     <td>
-    <? if ($subfamily == "5")
-    { echo '<a class="fffamtt" href="?m=Argus&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffcrittera.png"><span class="custom"><b>'._("FF_Critter").'</b></span></a>';
-    } else { echo '<a class="ffcritter fffamtt" href="?m=Argus&s='.$crittarget.'"><span class="custom"><b>'._("FF_Critter").'</b></span></a>'; } ?>
+    <?php if ($subfamily == "5")
+    { echo '<a class="fffamtt" href="?m=Argus&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffcrittera.png"><span class="custom"><b>'.__("Critical Critters").'</b></span></a>';
+    } else { echo '<a class="ffcritter fffamtt" href="?m=Argus&s='.$crittarget.'"><span class="custom"><b>'.__("Critical Critters").'</b></span></a>'; } ?>
     </td>
 
     </tr>
     <tr>
 
     <td>
-    <? if ($subfamily == "6")
-    { echo '<a class="fffamtt" href="?m=Argus&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffmagica.png"><span class="custom"><b>'._("FF_Magic").'</b></span></a>';
-    } else { echo '<a class="ffmagic fffamtt" href="?m=Argus&s='.$magitarget.'"><span class="custom"><b>'._("FF_Magic").'</b></span></a>'; } ?>
+    <?php if ($subfamily == "6")
+    { echo '<a class="fffamtt" href="?m=Argus&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffmagica.png"><span class="custom"><b>'.__("Magical Mayhem").'</b></span></a>';
+    } else { echo '<a class="ffmagic fffamtt" href="?m=Argus&s='.$magitarget.'"><span class="custom"><b>'.__("Magical Mayhem").'</b></span></a>'; } ?>
     </td>
 
     <td>
-    <? if ($subfamily == "7")
-    { echo '<a class="fffamtt" href="?m=Argus&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffelementala.png"><span class="custom"><b>'._("FF_Elemental").'</b></span></a>';
-    } else { echo '<a class="ffelemental fffamtt" href="?m=Argus&s='.$elemtarget.'"><span class="custom"><b>'._("FF_Elemental").'</b></span></a>'; } ?>
+    <?php if ($subfamily == "7")
+    { echo '<a class="fffamtt" href="?m=Argus&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffelementala.png"><span class="custom"><b>'.__("Elemental Escalation").'</b></span></a>';
+    } else { echo '<a class="ffelemental fffamtt" href="?m=Argus&s='.$elemtarget.'"><span class="custom"><b>'.__("Elemental Escalation").'</b></span></a>'; } ?>
     </td>
 
     <td>
-    <? if ($subfamily == "8")
-    { echo '<a class="fffamtt" href="?m=Argus&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffbeasta.png"><span class="custom"><b>'._("FF_Beast").'</b></span></a>';
-    } else { echo '<a class="ffbeast fffamtt" href="?m=Argus&s='.$beastarget.'"><span class="custom"><b>'._("FF_Beast").'</b></span></a>'; } ?>
+    <?php if ($subfamily == "8")
+    { echo '<a class="fffamtt" href="?m=Argus&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffbeasta.png"><span class="custom"><b>'.__("Beast Blitz").'</b></span></a>';
+    } else { echo '<a class="ffbeast fffamtt" href="?m=Argus&s='.$beastarget.'"><span class="custom"><b>'.__("Beast Blitz").'</b></span></a>'; } ?>
     </td>
 
     <td>
-    <? if ($subfamily == "9")
-    { echo '<a class="fffamtt" href="?m=Argus&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffaquatica.png"><span class="custom"><b>'._("FF_Aqua").'</b></span></a>';
-    } else { echo '<a class="ffaquatic fffamtt" href="?m=Argus&s='.$aquatarget.'"><span class="custom"><b>'._("FF_Aqua").'</b></span></a>'; } ?>
+    <?php if ($subfamily == "9")
+    { echo '<a class="fffamtt" href="?m=Argus&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffaquatica.png"><span class="custom"><b>'.__("Aquatic Assault").'</b></span></a>';
+    } else { echo '<a class="ffaquatic fffamtt" href="?m=Argus&s='.$aquatarget.'"><span class="custom"><b>'.__("Aquatic Assault").'</b></span></a>'; } ?>
     </td>
 
     <td>
-    <? if ($subfamily == "10")
-    { echo '<a class="fffamtt" href="?m=Argus&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffmechanica.png"><span class="custom"><b>'._("FF_Mech").'</b></span></a>';
-    } else { echo '<a class="ffmechanical fffamtt" href="?m=Argus&s='.$mechtarget.'"><span class="custom"><b>'._("FF_Mech").'</b></span></a>'; } ?>
+    <?php if ($subfamily == "10")
+    { echo '<a class="fffamtt" href="?m=Argus&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffmechanica.png"><span class="custom"><b>'.__("Mechanical Melee").'</b></span></a>';
+    } else { echo '<a class="ffmechanical fffamtt" href="?m=Argus&s='.$mechtarget.'"><span class="custom"><b>'.__("Mechanical Melee").'</b></span></a>'; } ?>
     </td>
 
 
@@ -2664,67 +2823,67 @@ if ($mainselector >= "17" AND $mainselector <= "27"){
 <link rel="stylesheet" type="text/css" href="data/fflegion.css">
 <table><tr>
 <td>
-<? if ($mainselector == "24")
-{ echo '<a class="fffamtt" href="index.php?m=LHumanoid&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffhumanoida.png"><span class="custom"><b>'._("FFHumanoid").'</b></span></a>';
-} else { echo '<a class="ffhumanoid fffamtt" href="index.php?m=LHumanoid&s='.$humatarget.'"><span class="custom"><b>'._("FFHumanoid").'</b></span></a>'; } ?>
+<?php if ($mainselector == "24")
+{ echo '<a class="fffamtt" href="index.php?m=LHumanoid&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffhumanoida.png"><span class="custom"><b>'.__("Murlocs, Harpies, and Wolvar, Oh My!").'</b></span></a>';
+} else { echo '<a class="ffhumanoid fffamtt" href="index.php?m=LHumanoid&s='.$humatarget.'"><span class="custom"><b>'.__("Murlocs, Harpies, and Wolvar, Oh My!").'</b></span></a>'; } ?>
 </td>
 
 <td>
-<? if ($mainselector == "21")
-{ echo '<a class="fffamtt" href="index.php?m=LDragonkin&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffdragonkina.png"><span class="custom"><b>'._("FFDragonkin").'</b></span></a>';
-} else { echo '<a class="ffdragonkin fffamtt" href="index.php?m=LDragonkin&s='.$dragtarget.'"><span class="custom"><b>'._("FFDragonkin").'</b></span></a>'; } ?>
+<?php if ($mainselector == "21")
+{ echo '<a class="fffamtt" href="index.php?m=LDragonkin&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffdragonkina.png"><span class="custom"><b>'.__("Dragons!").'</b></span></a>';
+} else { echo '<a class="ffdragonkin fffamtt" href="index.php?m=LDragonkin&s='.$dragtarget.'"><span class="custom"><b>'.__("Dragons!").'</b></span></a>'; } ?>
 </td>
 
 
 <td>
-<? if ($mainselector == "23")
-{ echo '<a class="fffamtt" href="index.php?m=LFlying&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffflyinga.png"><span class="custom"><b>'._("FFFlying").'</b></span></a>';
-} else { echo '<a class="ffflying fffamtt" href="index.php?m=LFlying&s='.$flyitarget.'"><span class="custom"><b>'._("FFFlying").'</b></span></a>'; } ?>
+<?php if ($mainselector == "23")
+{ echo '<a class="fffamtt" href="index.php?m=LFlying&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffflyinga.png"><span class="custom"><b>'.__("Flock Together").'</b></span></a>';
+} else { echo '<a class="ffflying fffamtt" href="index.php?m=LFlying&s='.$flyitarget.'"><span class="custom"><b>'.__("Flock Together").'</b></span></a>'; } ?>
 </td>
 
 <td>
-<? if ($mainselector == "27")
-{ echo '<a class="fffamtt" href="index.php?m=LUndead&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffundeada.png"><span class="custom"><b>'._("FFUndead").'</b></span></a>';
-} else { echo '<a class="ffundead fffamtt" href="index.php?m=LUndead&s='.$undetarget.'"><span class="custom"><b>'._("FFUndead").'</b></span></a>'; } ?>
+<?php if ($mainselector == "27")
+{ echo '<a class="fffamtt" href="index.php?m=LUndead&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffundeada.png"><span class="custom"><b>'.__("The Lil' Necromancer").'</b></span></a>';
+} else { echo '<a class="ffundead fffamtt" href="index.php?m=LUndead&s='.$undetarget.'"><span class="custom"><b>'.__("The Lil' Necromancer").'</b></span></a>'; } ?>
 </td>
 
 <td>
-<? if ($mainselector == "20")
-{ echo '<a class="fffamtt" href="index.php?m=LCritter&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffcrittera.png"><span class="custom"><b>'._("FFCritter").'</b></span></a>';
-} else { echo '<a class="ffcritter fffamtt" href="index.php?m=LCritter&s='.$crittarget.'"><span class="custom"><b>'._("FFCritter").'</b></span></a>'; } ?>
+<?php if ($mainselector == "20")
+{ echo '<a class="fffamtt" href="index.php?m=LCritter&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffcrittera.png"><span class="custom"><b>'.__("Mousing Around").'</b></span></a>';
+} else { echo '<a class="ffcritter fffamtt" href="index.php?m=LCritter&s='.$crittarget.'"><span class="custom"><b>'.__("Mousing Around").'</b></span></a>'; } ?>
 </td>
 
 </tr>
 <tr>
 
 <td>
-<? if ($mainselector == "25")
-{ echo '<a class="fffamtt" href="index.php?m=LMagic&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffmagica.png"><span class="custom"><b>'._("FFMagic").'</b></span></a>';
-} else { echo '<a class="ffmagic fffamtt" href="index.php?m=LMagic&s='.$magitarget.'"><span class="custom"><b>'._("FFMagic").'</b></span></a>'; } ?>
+<?php if ($mainselector == "25")
+{ echo '<a class="fffamtt" href="index.php?m=LMagic&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffmagica.png"><span class="custom"><b>'.__("Master of Magic").'</b></span></a>';
+} else { echo '<a class="ffmagic fffamtt" href="index.php?m=LMagic&s='.$magitarget.'"><span class="custom"><b>'.__("Master of Magic").'</b></span></a>'; } ?>
 </td>
 
 <td>
-<? if ($mainselector == "22")
-{ echo '<a class="fffamtt" href="index.php?m=LElemental&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffelementala.png"><span class="custom"><b>'._("FFElemental").'</b></span></a>';
-} else { echo '<a class="ffelemental fffamtt" href="index.php?m=LElemental&s='.$elemtarget.'"><span class="custom"><b>'._("FFElemental").'</b></span></a>'; } ?>
+<?php if ($mainselector == "22")
+{ echo '<a class="fffamtt" href="index.php?m=LElemental&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffelementala.png"><span class="custom"><b>'.__("Ragnaros, Watch and Learn").'</b></span></a>';
+} else { echo '<a class="ffelemental fffamtt" href="index.php?m=LElemental&s='.$elemtarget.'"><span class="custom"><b>'.__("Ragnaros, Watch and Learn").'</b></span></a>'; } ?>
 </td>
 
 <td>
-<? if ($mainselector == "19")
-{ echo '<a class="fffamtt" href="index.php?m=LBeast&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffbeasta.png"><span class="custom"><b>'._("FFBeast").'</b></span></a>';
-} else { echo '<a class="ffbeast fffamtt" href="index.php?m=LBeast&s='.$beastarget.'"><span class="custom"><b>'._("FFBeast").'</b></span></a>'; } ?>
+<?php if ($mainselector == "19")
+{ echo '<a class="fffamtt" href="index.php?m=LBeast&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffbeasta.png"><span class="custom"><b>'.__("Best of Beasts").'</b></span></a>';
+} else { echo '<a class="ffbeast fffamtt" href="index.php?m=LBeast&s='.$beastarget.'"><span class="custom"><b>'.__("Best of Beasts").'</b></span></a>'; } ?>
 </td>
 
 <td>
-<? if ($mainselector == "18")
-{ echo '<a class="fffamtt" href="index.php?m=LAquatic&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffaquatica.png"><span class="custom"><b>'._("FFAquatic").'</b></span></a>';
-} else { echo '<a class="ffaquatic fffamtt" href="index.php?m=LAquatic&s='.$aquatarget.'"><span class="custom"><b>'._("FFAquatic").'</b></span></a>'; } ?>
+<?php if ($mainselector == "18")
+{ echo '<a class="fffamtt" href="index.php?m=LAquatic&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffaquatica.png"><span class="custom"><b>'.__("Aquatic Acquiescence").'</b></span></a>';
+} else { echo '<a class="ffaquatic fffamtt" href="index.php?m=LAquatic&s='.$aquatarget.'"><span class="custom"><b>'.__("Aquatic Acquiescence").'</b></span></a>'; } ?>
 </td>
 
 <td>
-<? if ($mainselector == "26")
-{ echo '<a class="fffamtt" href="index.php?m=LMechanical&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffmechanica.png"><span class="custom"><b>'._("FFMechanical").'</b></span></a>';
-} else { echo '<a class="ffmechanical fffamtt" href="index.php?m=LMechanical&s='.$mechtarget.'"><span class="custom"><b>'._("FFMechanical").'</b></span></a>'; } ?>
+<?php if ($mainselector == "26")
+{ echo '<a class="fffamtt" href="index.php?m=LMechanical&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffmechanica.png"><span class="custom"><b>'.__("Roboteer").'</b></span></a>';
+} else { echo '<a class="ffmechanical fffamtt" href="index.php?m=LMechanical&s='.$mechtarget.'"><span class="custom"><b>'.__("Roboteer").'</b></span></a>'; } ?>
 </td>
 
 
@@ -2740,73 +2899,73 @@ if ($mainselector >= "17" AND $mainselector <= "27"){
 
 // Generate submenu for BfA Family Battler achievement
 
-if ($mainselector == "54"){ ?>
+if ($mainselector == 54){ ?>
 
     <link rel="stylesheet" type="text/css" href="data/fflegion.css">
     <table><tr>
     <td>
-    <? if ($subfamily == "1")
+    <?php if ($subfamily == "1")
     {
-    echo '<a class="fffamtt" href="?m=FamilyBattler&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffhumanoida.png"><span class="custom"><b>'._("FF_Humanoid").'</b></span></a>';
-    } else { echo '<a class="ffhumanoid fffamtt" href="?m=FamilyBattler&s='.$humatarget.'"><span class="custom"><b>Human Resources</b></span></a>'; } ?>
+    echo '<a class="fffamtt" href="?m=FamilyBattler&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffhumanoida.png"><span class="custom"><b>'.__("Human Resources").'</b></span></a>';
+    } else { echo '<a class="ffhumanoid fffamtt" href="?m=FamilyBattler&s='.$humatarget.'"><span class="custom"><b>'.__("Human Resources").'</b></span></a>'; } ?>
     </td>
 
     <td>
-    <? if ($subfamily == "2")
-    { echo '<a class="fffamtt" href="?m=FamilyBattler&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffdragonkina.png"><span class="custom"><b>'._("FF_Dragon").'</b></span></a>';
-    } else { echo '<a class="ffdragonkin fffamtt" href="?m=FamilyBattler&s='.$dragtarget.'"><span class="custom"><b>Dragons Make Everything Better</b></span></a>'; } ?>
+    <?php if ($subfamily == "2")
+    { echo '<a class="fffamtt" href="?m=FamilyBattler&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffdragonkina.png"><span class="custom"><b>'.__("Dragons Make Everything Better").'</b></span></a>';
+    } else { echo '<a class="ffdragonkin fffamtt" href="?m=FamilyBattler&s='.$dragtarget.'"><span class="custom"><b>'.__("Dragons Make Everything Better").'</b></span></a>'; } ?>
     </td>
 
 
     <td>
-    <? if ($subfamily == "3")
-    { echo '<a class="fffamtt" href="?m=FamilyBattler&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffflyinga.png"><span class="custom"><b>'._("FF_Flying").'</b></span></a>';
-    } else { echo '<a class="ffflying fffamtt" href="?m=FamilyBattler&s='.$flyitarget.'"><span class="custom"><b>Fun With Flying</b></span></a>'; } ?>
+    <?php if ($subfamily == "3")
+    { echo '<a class="fffamtt" href="?m=FamilyBattler&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffflyinga.png"><span class="custom"><b>'.__("Fun With Flying").'</b></span></a>';
+    } else { echo '<a class="ffflying fffamtt" href="?m=FamilyBattler&s='.$flyitarget.'"><span class="custom"><b>'.__("Fun With Flying").'</b></span></a>'; } ?>
     </td>
 
     <td>
-    <? if ($subfamily == "4")
-    { echo '<a class="fffamtt" href="?m=FamilyBattler&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffundeada.png"><span class="custom"><b>'._("FF_Undead").'</b></span></a>';
-    } else { echo '<a class="ffundead fffamtt" href="?m=FamilyBattler&s='.$undetarget.'"><span class="custom"><b>Not Quite Dead Yet</b></span></a>'; } ?>
+    <?php if ($subfamily == "4")
+    { echo '<a class="fffamtt" href="?m=FamilyBattler&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffundeada.png"><span class="custom"><b>'.__("Not Quite Dead Yet").'</b></span></a>';
+    } else { echo '<a class="ffundead fffamtt" href="?m=FamilyBattler&s='.$undetarget.'"><span class="custom"><b>'.__("Not Quite Dead Yet").'</b></span></a>'; } ?>
     </td>
 
     <td>
-    <? if ($subfamily == "5")
-    { echo '<a class="fffamtt" href="?m=FamilyBattler&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffcrittera.png"><span class="custom"><b>'._("FF_Critter").'</b></span></a>';
-    } else { echo '<a class="ffcritter fffamtt" href="?m=FamilyBattler&s='.$crittarget.'"><span class="custom"><b>Critters With Huge Teeth</b></span></a>'; } ?>
+    <?php if ($subfamily == "5")
+    { echo '<a class="fffamtt" href="?m=FamilyBattler&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffcrittera.png"><span class="custom"><b>'.__("Critters With Huge Teeth").'</b></span></a>';
+    } else { echo '<a class="ffcritter fffamtt" href="?m=FamilyBattler&s='.$crittarget.'"><span class="custom"><b>'.__("Critters With Huge Teeth").'</b></span></a>'; } ?>
     </td>
 
     </tr>
     <tr>
 
     <td>
-    <? if ($subfamily == "6")
-    { echo '<a class="fffamtt" href="?m=FamilyBattler&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffmagica.png"><span class="custom"><b>'._("FF_Magic").'</b></span></a>';
-    } else { echo '<a class="ffmagic fffamtt" href="?m=FamilyBattler&s='.$magitarget.'"><span class="custom"><b>Magicians Secret</b></span></a>'; } ?>
+    <?php if ($subfamily == "6")
+    { echo '<a class="fffamtt" href="?m=FamilyBattler&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffmagica.png"><span class="custom"><b>'.__("Magicians Secret").'</b></span></a>';
+    } else { echo '<a class="ffmagic fffamtt" href="?m=FamilyBattler&s='.$magitarget.'"><span class="custom"><b>'.__("Magicians Secret").'</b></span></a>'; } ?>
     </td>
 
     <td>
-    <? if ($subfamily == "7")
-    { echo '<a class="fffamtt" href="?m=FamilyBattler&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffelementala.png"><span class="custom"><b>'._("FF_Elemental").'</b></span></a>';
-    } else { echo '<a class="ffelemental fffamtt" href="?m=FamilyBattler&s='.$elemtarget.'"><span class="custom"><b>Element of Success</b></span></a>'; } ?>
+    <?php if ($subfamily == "7")
+    { echo '<a class="fffamtt" href="?m=FamilyBattler&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffelementala.png"><span class="custom"><b>'.__("Element of Success").'</b></span></a>';
+    } else { echo '<a class="ffelemental fffamtt" href="?m=FamilyBattler&s='.$elemtarget.'"><span class="custom"><b>'.__("Element of Success").'</b></span></a>'; } ?>
     </td>
 
     <td>
-    <? if ($subfamily == "8")
-    { echo '<a class="fffamtt" href="?m=FamilyBattler&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffbeasta.png"><span class="custom"><b>'._("FF_Beast").'</b></span></a>';
-    } else { echo '<a class="ffbeast fffamtt" href="?m=FamilyBattler&s='.$beastarget.'"><span class="custom"><b>Beast Mode</b></span></a>'; } ?>
+    <?php if ($subfamily == "8")
+    { echo '<a class="fffamtt" href="?m=FamilyBattler&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffbeasta.png"><span class="custom"><b>'.__("Beast Mode").'</b></span></a>';
+    } else { echo '<a class="ffbeast fffamtt" href="?m=FamilyBattler&s='.$beastarget.'"><span class="custom"><b>'.__("Beast Mode").'</b></span></a>'; } ?>
     </td>
 
     <td>
-    <? if ($subfamily == "9")
-    { echo '<a class="fffamtt" href="?m=FamilyBattler&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffaquatica.png"><span class="custom"><b>'._("FF_Aqua").'</b></span></a>';
-    } else { echo '<a class="ffaquatic fffamtt" href="?m=FamilyBattler&s='.$aquatarget.'"><span class="custom"><b>Hobbyist Aquarist</b></span></a>'; } ?>
+    <?php if ($subfamily == "9")
+    { echo '<a class="fffamtt" href="?m=FamilyBattler&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffaquatica.png"><span class="custom"><b>'.__("Hobbyist Aquarist").'</b></span></a>';
+    } else { echo '<a class="ffaquatic fffamtt" href="?m=FamilyBattler&s='.$aquatarget.'"><span class="custom"><b>'.__("Hobbyist Aquarist").'</b></span></a>'; } ?>
     </td>
 
     <td>
-    <? if ($subfamily == "10")
-    { echo '<a class="fffamtt" href="?m=FamilyBattler&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffmechanica.png"><span class="custom"><b>'._("FF_Mech").'</b></span></a>';
-    } else { echo '<a class="ffmechanical fffamtt" href="?m=FamilyBattler&s='.$mechtarget.'"><span class="custom"><b>Machine Learning</b></span></a>'; } ?>
+    <?php if ($subfamily == "10")
+    { echo '<a class="fffamtt" href="?m=FamilyBattler&s='.$subselector.'"><img src="https://www.wow-petguide.com/images/ffmechanica.png"><span class="custom"><b>'.__("Machine Learning").'</b></span></a>';
+    } else { echo '<a class="ffmechanical fffamtt" href="?m=FamilyBattler&s='.$mechtarget.'"><span class="custom"><b>'.__("Machine Learning").'</b></span></a>'; } ?>
     </td>
 
 
@@ -2829,11 +2988,9 @@ if ($subfamily OR $subfamily == "0" OR $mainselector == "42") {
 else {
     $subdb = mysqli_query($dbcon, "SELECT * FROM Sub WHERE Main = $dbmainselector OR Sec_Main = $dbmainselector ORDER BY Prio");
 }
-$subentries = mysqli_num_rows($subdb);
-$subcounter = "0";
-    while ($subcounter < $subentries) {
-        $subentry = mysqli_fetch_object($subdb);
 
+    while ($subentry = mysqli_fetch_object($subdb)) {
+ 
         if ($subentry->Parent != "0") {
             $subparentdb = mysqli_query($dbcon, "SELECT * FROM Sub WHERE id = '$subentry->Parent'");
             $showsubentry = mysqli_fetch_object($subparentdb);
@@ -2841,157 +2998,182 @@ $subcounter = "0";
         else {
             $showsubentry = $subentry;
         }
-
-        if (!isset($showsubentry->{$subnameext}) || $showsubentry->{$subnameext} == ""){
-        $thisentryname = $showsubentry->Name;
-        $thisentryname = stripslashes(htmlentities($thisentryname, ENT_QUOTES, "UTF-8"));
+        
+        
+        
+        // Hacky exclusion of BfA fights that are NOT family battler relevant
+        // First part is hacky exclusion of broken Shadowlands fights
+        if ($mainselector != 51 && ($subentry->Parent == 716 OR $showsubentry->Name == "What Do You Mean, Mind Controlling Plants?" OR $showsubentry->Name == "Crawg in the Bog" OR $showsubentry->Name == "Unbreakable" OR $showsubentry->Name == "This Little Piggy Has Sharp Tusks")) {
+         // do nothing
         }
         else {
-        $thisentryname = $showsubentry->{$subnameext};
-        $thisentryname = stripslashes(htmlentities($thisentryname, ENT_QUOTES, "UTF-8"));
-        }
-
-        // Check if fight is Family Familiar
-        $itsff = "false";
-
-        switch ($subentry->id) {
-            case "145":
-                $itsff = "true";
-                break;
-            case "146":
-                $itsff = "true";
-                break;
-            case "148":
-                $itsff = "true";
-                break;
-            case "151":
-                $itsff = "true";
-                break;
-            case "156":
-                $itsff = "true";
-                break;
-            case "160":
-                $itsff = "true";
-                break;
-            case "165":
-                $itsff = "true";
-                break;
-            case "167":
-                $itsff = "true";
-                break;
-            case "168":
-                $itsff = "true";
-                break;
-            case "171":
-                $itsff = "true";
-                break;
-            case "175":
-                $itsff = "true";
-                break;
-            case "177":
-                $itsff = "true";
-                break;
-            case "181":
-                $itsff = "true";
-                break;
-            case "183":
-                $itsff = "true";
-                break;
-            case "184":
-                $itsff = "true";
-                break;
-        }
-
-
-
-        if ($showsubentry->Comment == "Placeholder" && $thisentryname == ""){
-        echo "<br>";
-        }
-        if ($showsubentry->Comment == "Placeholder" && $thisentryname != "" && $subentry->id != "179" && $subentry->id != "426"){
-        echo "<br><li class=\"placeholder\">".$thisentryname."</li>";
-        }
-        if ($showsubentry->Comment == "Placeholder" && $subentry->id == "179"){
-        echo "<a style=\"text-decoration: none;\" href=\"?m=LegionWQ&s=337\"><li class=\"beastbutton\">".$thisentryname.":</li></a>";
-        }
-        if ($showsubentry->Comment == "Placeholder" && $subentry->id == "426"){
-        echo "<a style=\"text-decoration: none;\" href=\"?m=LegionWQ&s=427\"><li class=\"beastbutton\">".$thisentryname.":</li></a>";
-        }
-
-
-        if ($showsubentry->Comment != "Placeholder" && $mainselector != "4" && $mainselector != "32" && $mainselector != "41")
-        {
-
-        echo "<li><a ";
-
-
-        if ($subentry->id == $subselector) {
-        echo "class=\"activebutton";
-        $thisentrylink = $subentry->Link;
-        $thisentryrematchid = $subentry->RematchID;
-        }
-        else {
-            if ($subentry->id == $eudiff OR $subentry->id == $usdiff){
-            $buttonstyle = "current";
+    
+            if (!isset($showsubentry->{$subnameext}) || $showsubentry->{$subnameext} == ""){
+            $thisentryname = $showsubentry->Name;
+            $thisentryname = stripslashes(htmlentities($thisentryname, ENT_QUOTES, "UTF-8"));
             }
             else {
-            $buttonstyle = "";
+            $thisentryname = $showsubentry->{$subnameext};
+            $thisentryname = stripslashes(htmlentities($thisentryname, ENT_QUOTES, "UTF-8"));
             }
-        echo "class=\"button".$buttonstyle;
+            $thisfam_battler = stripslashes(htmlentities($showsubentry->Family_Battler_Name, ENT_QUOTES, "UTF-8"));
+    
+            // Check if fight is Family Familiar
+            $itsff = "false";
+    
+            switch ($subentry->id) {
+                case "145":
+                    $itsff = "true";
+                    break;
+                case "146":
+                    $itsff = "true";
+                    break;
+                case "148":
+                    $itsff = "true";
+                    break;
+                case "151":
+                    $itsff = "true";
+                    break;
+                case "156":
+                    $itsff = "true";
+                    break;
+                case "160":
+                    $itsff = "true";
+                    break;
+                case "165":
+                    $itsff = "true";
+                    break;
+                case "167":
+                    $itsff = "true";
+                    break;
+                case "168":
+                    $itsff = "true";
+                    break;
+                case "171":
+                    $itsff = "true";
+                    break;
+                case "175":
+                    $itsff = "true";
+                    break;
+                case "177":
+                    $itsff = "true";
+                    break;
+                case "181":
+                    $itsff = "true";
+                    break;
+                case "183":
+                    $itsff = "true";
+                    break;
+                case "184":
+                    $itsff = "true";
+                    break;
+            }
+    
+    
+    
+            if ($showsubentry->Comment == "Placeholder" && $thisentryname == ""){
+            echo "<br>";
+            }
+            if ($showsubentry->Comment == "Placeholder" && $thisentryname != "" && $subentry->id != "179" && $subentry->id != "426"){
+            echo "<br><li class=\"placeholder\">".$thisentryname."</li>";
+            }
+            if ($showsubentry->Comment == "Placeholder" && $subentry->id == "179"){
+            echo "<a style=\"text-decoration: none;\" href=\"?m=LegionWQ&s=337\"><li class=\"beastbutton\">".$thisentryname.":</li></a>";
+            }
+            if ($showsubentry->Comment == "Placeholder" && $subentry->id == "426"){
+            echo "<a style=\"text-decoration: none;\" href=\"?m=LegionWQ&s=427\"><li class=\"beastbutton\">".$thisentryname.":</li></a>";
+            }
+    
+    
+            if ($showsubentry->Comment != "Placeholder" && $mainselector != "4" && $mainselector != "32" && $mainselector != "41")
+            {
+    
+            echo "<li><a ";
+    
+    
+            if ($subentry->id == $subselector) {
+            echo "class=\"activebutton";
+            $thisentrylink = $subentry->Link;
+            $thisentryrematchid = $subentry->RematchID;
+            }
+            else {
+                if ($subentry->id == $eudiff OR $subentry->id == $usdiff OR $subentry->id == $twdiff){
+                    $buttonstyle = "current";
+                }
+                else {
+                    $buttonstyle = "";
+                }
+            echo "class=\"button".$buttonstyle;
+            }
+            if ($subentry->FFAlternative != "" OR $mainentry->id == 54){
+                if ($ffresetback == "true"){
+                    $mainalt = $mainshow;
+                    $mainshow = "LHumanoid";
+                }
+                if ($mainentry->id != 54) {
+                    echo " fftooltip\" href=\"index.php?m=".$mainshow."&s=".$subentry->id."\" >".$thisentryname."<span class=\"custom\"><b>Quest:</b> ".$subentry->FFAlternative;
+                }
+                if ($mainentry->id == 54 AND $language == "en_US") {
+                    echo " fftooltip\" href=\"index.php?m=".$mainshow."&s=".$subentry->id."\" >".$thisfam_battler."<span class=\"custom\"><b>Quest:</b> ".$thisentryname;
+                }
+                if ($mainentry->id == 54 AND $language != "en_US") {
+                    echo " \" href=\"index.php?m=".$mainshow."&s=".$subentry->id."\" >".$thisentryname."<span style=\"display: none\"><b>Quest:</b> ".$thisentryname;
+                }
+                if ($subentry->Skull == "1"){
+                    echo "<br>".__("<b>Attention:</b>This is a tough fight with the chosen family.");
+                }
+                echo "</span>";
+                if ($ffresetback == "true") $mainshow = $mainalt;
+            }
+            else {
+                if ($itsff == "true"){
+                    echo " fftooltip\" href=\"index.php?m=".$mainshow."&s=".$subentry->id."\" >".$thisentryname."<span class=\"custom\"><b>".__("Family Familiar")."</b></span>";
+                }
+                else {
+                    echo "\" href=\"index.php?m=".$mainshow."&s=".$subentry->id."\" >".$thisentryname;
+                }
+            }
+    
+            // Skull for Legion Family Familiar
+            if ($subentry->Skull == "1"){
+            echo "<div class=\"ffskull\"><img src=\"https://www.wow-petguide.com/images/skull_s.png\"></div>";
+            }
+            // Paw for Family Familiar view
+            if ($itsff == "true"){
+            echo '<div class="ffskull"><img src="https://www.wow-petguide.com/images/petbattleicon.png" style="padding-left: 7px;" height="16" width="16"></div>';
+            }
+            // EU flag for Garrison
+            if ($subentry->id == $eudiff){
+            echo '<div class="ffskull"><img src="https://www.wow-petguide.com/images/eu.png" style="padding-left: 7px;" height="16" width="16"></div>';
+            }
+            // US flag for garrison
+            if ($subentry->id == $usdiff){
+            echo '<div class="ffskull"><img src="https://www.wow-petguide.com/images/us.png" style="padding-left: 5px;" height="16" width="18"></div>';
+            }
+            // TW flag for garrison
+            if ($subentry->id == $twdiff){
+            echo '<div class="ffskull"><img src="https://www.wow-petguide.com/images/tw.png" style="padding-left: 5px;" height="16" width="18"></div>';
+            }
+            echo "</a></li>";
+    
+            }
+        
         }
-        if ($subentry->FFAlternative != ""){
-
-        if ($ffresetback == "true"){
-        $mainalt = $mainshow;
-        $mainshow = "LHumanoid";
-        }
-        echo " fftooltip\" href=\"index.php?m=".$mainshow."&s=".$subentry->id."\" >".$thisentryname."<span class=\"custom\"><b>Quest:</b> ".$subentry->FFAlternative;
-        if ($subentry->Skull == "1"){
-        echo "<br>"._("FFWarningSmall");
-        }
-
-        echo "</span>";
-        if ($ffresetback == "true") $mainshow = $mainalt;
-        }
-        else {
-        if ($itsff == "true"){
-        echo " fftooltip\" href=\"index.php?m=".$mainshow."&s=".$subentry->id."\" >".$thisentryname."<span class=\"custom\"><b>"._("MainbarFF")."</b></span>";
-        }
-        else {
-        echo "\" href=\"index.php?m=".$mainshow."&s=".$subentry->id."\" >".$thisentryname;
-        }
-        }
-
-        // Skull for Legion Family Familiar
-        if ($subentry->Skull == "1"){
-        echo "<div class=\"ffskull\"><img src=\"https://www.wow-petguide.com/images/skull_s.png\"></div>";
-        }
-        // Paw for Family Familiar view
-        if ($itsff == "true"){
-        echo '<div class="ffskull"><img src="https://www.wow-petguide.com/images/petbattleicon.png" style="padding-left: 7px;" height="16" width="16"></div>';
-        }
-        // EU flag for Garrison
-        if ($subentry->id == $eudiff){
-        echo '<div class="ffskull"><img src="https://www.wow-petguide.com/images/eu.png" style="padding-left: 7px;" height="16" width="16"></div>';
-        }
-        // US flag for garrison
-        if ($subentry->id == $usdiff){
-        echo '<div class="ffskull"><img src="https://www.wow-petguide.com/images/us.png" style="padding-left: 5px;" height="16" width="18"></div>';
-        }
-        echo "</a></li>";
-
-        }
-        $subcounter++;
     }
     
     // Ad placement to left of battletable Venatus
     
     echo "</ul>";
-    if ((!$user OR $user->id == 2) && $subentries > 4) { // For fights and pages that have a menu on the left asdf ?>
-        <div class="vm-placement" data-id="5d790cccd6864139e1ce8025"></div>
-    <? }
-    if ((!$user OR $user->id == 2) && $subentries < 2) { // For fights that have no menu on the left, eg crysa ?>
-        <div class="vm-placement" style="position: absolute; left: -525px; top: 90px" data-id="5d790cccd6864139e1ce8025"></div>
-    <? }
+    if ((!$user OR $user->id == 2) && mysqli_num_rows($subdb) > 4) { // For fights and pages that have a menu on the left
+        if ($ads_active == true) { ?>
+            <div class="vm-placement" data-id="5d790cccd6864139e1ce8025"></div>
+        <?php }
+    }
+    if ((!$user OR $user->id == 2) && mysqli_num_rows($subdb) < 2) { // For fights that have no menu on the left, eg crysa
+        if ($ads_active == true) { ?>
+            <div class="vm-placement" style="position: absolute; left: -665px; top: 90px" data-id="5d790cccd6864139e1ce8025"></div>
+        <?php }
+    }
     echo "</div>";
 }
 
@@ -3011,7 +3193,7 @@ if ($subselector == "" AND $mainentry->Type != "2" AND $mainselector != ""){
 }
 
 // ====== PAGE: Battletable and Alternatives =======
-if ($subselector != "") {
+if ($subselector && $subselector != 0) {
 
     echo '<div class="remodal-bg battletable">';
 
@@ -3029,17 +3211,18 @@ if ($subselector != "") {
     }
 
     // Ad placement to right of battletable Venatus
-    if (!$user OR $user->id == 2) { ?>
+    if (!$user OR $user->id == 2) {
+        if ($ads_active == true) { ?>
         <script>
-        if ($(window).width() >1550) {
+        if ($(window).width() >4750) {
             document.write('<div style="position: absolute; left: 960px; top: 150px"><div class="vm-placement" data-id="5d7905e26f74dc4f153093d7"></div></div>');
         }
         </script>
-    <? }
+    <?php }
+    }
 
     $skipalts = false;
-    
-    
+
     include 'classes/strat_edit_process.php';
     include 'classes/battletable2.php';
     include 'classes/strat_edit.php';
@@ -3049,24 +3232,24 @@ if ($subselector != "") {
 
         if (!$allstratsdb) {
             if ($userrights['EditStrats'] == "yes") {
-                $allstratsdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE Sub = $subselector")or die("None");
+                $allstratsdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE Sub = $subselector AND Deleted = '0'")or die("None");
             }
             else {
                 if ($user) {
-                    $allstratsdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE (Sub = $subselector AND Published = '1') OR (Sub = $subselector AND User = '$user->id')") OR die(mysqli_error($dbcon));
+                    $allstratsdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE Deleted = '0' AND ((Sub = $subselector AND Published = '1') OR (Sub = $subselector AND User = '$user->id'))") OR die(mysqli_error($dbcon));
                 }
                 else {
-                    $allstratsdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE Sub = $subselector AND Published = '1'") OR die(mysqli_error($dbcon));
+                    $allstratsdb = mysqli_query($dbcon, "SELECT * FROM Alternatives WHERE Sub = $subselector AND Published = '1' AND Deleted = '0'") OR die(mysqli_error($dbcon));
                 }
             }
         }
         if (mysqli_num_rows($allstratsdb) > "1") {
             ?>
-                <div class="alt_tt_linkbox alternatives_tt" rel="<? echo $user->id ?>" value="<? echo $strategy ?>"></div>
+                <div class="alt_tt_linkbox alternatives_tt" rel="<?php echo $user->id ?>" value="<?php echo $strategy ?>"></div>
                 <div class="alt_tt_box_s"></div>
                 <div class="alt_tt_box"></div>
                 <div class="alt_tt_boxtext">
-                    <? echo mysqli_num_rows($allstratsdb); ?> Alternatives
+                    <?php echo mysqli_num_rows($allstratsdb); ?> Alternatives
                 </div>
             <?
         }
@@ -3083,6 +3266,9 @@ if ($subselector != "") {
             mysqli_query($dbcon, "INSERT INTO Comments (`User`, `Category`, `SortingID`, `Language`, `Comment`, `IP`) VALUES ('$int_com_user', '3', '$int_com_strategy', 'en_US', '$int_com_content', '$user_ip_adress')") OR die(mysqli_error($dbcon));
             $addedid = mysqli_insert_id($dbcon);
             mysqli_query($dbcon, "INSERT INTO UserProtocol (`User`, `IP`, `Priority`, `Activity`, `Comment`) VALUES ('$int_com_user', '$user_ip_adress', '1', 'Internal Note written by Curator', '$addedid')") OR die(mysqli_error($dbcon));
+            $updatetags = array();
+            $updatetags[29] = 1;
+            update_tags($int_com_strategy, $updatetags);
         }
         ?>
        
@@ -3096,7 +3282,7 @@ if ($subselector != "") {
         if (mysqli_num_rows($int_coms_db) > "0") { ?>
             <div class="internal_comment">
             <table>
-            <? 
+            <?php 
             while($int_com = mysqli_fetch_object($int_coms_db)) {
                 $output_intcom = stripslashes(htmlentities($int_com->Comment, ENT_QUOTES, "UTF-8"));
                 $output_intcom = str_replace(PHP_EOL, "<br>", $output_intcom);
@@ -3106,15 +3292,15 @@ if ($subselector != "") {
                 }
                 ?>
                 
-                <tr id="int_comment_box_<? echo $int_com->id ?>">
-                    <td class="internal_comment" style="background-color: #f0e6c5; margin-right: 5px;" valign="top"><span name="time"><? echo $int_com->Date; ?></span></td>
+                <tr id="int_comment_box_<?php echo $int_com->id ?>">
+                    <td class="internal_comment" style="background-color: #f0e6c5; margin-right: 5px;" valign="top"><span name="time"><?php echo $int_com->Date; ?></span></td>
                     <td class="internal_comment" style="background-color: #f0e6c5" valign="top">
-                         <span class="username" rel="<? echo $int_com->User ?>" value="<? echo $user->id ?>"><a class="creatorlink" style="color: #31445e; font-size: 14px" target="_blank" href="?user=<? echo $int_com->User ?>"><? echo $intcom_user->Name ?>:</a></span>
-                    <td class="internal_comment" valign="top" style="width: 100%"><? echo $output_intcom; ?></td>
+                         <span class="username" rel="<?php echo $int_com->User ?>" value="<?php echo $user->id ?>"><a class="creatorlink" style="color: #31445e; font-size: 14px" target="_blank" href="?user=<?php echo $int_com->User ?>"><?php echo $intcom_user->Name ?>:</a></span>
+                    <td class="internal_comment" valign="top" style="width: 100%"><?php echo $output_intcom; ?></td>
                     <td class="internal_comment" valign="top">
-                        <a style="cursor: pointer" data-remodal-target="modaldelete_<? echo $int_com->id ?>"><img height="12" src="https://www.wow-petguide.com/images/icon_x_bright.png" /></a>
+                        <a style="cursor: pointer" data-remodal-target="modaldelete_<?php echo $int_com->id ?>"><img height="12" src="https://www.wow-petguide.com/images/icon_x_bright.png" /></a>
                     
-                        <div class="remodalcomments" data-remodal-id="modaldelete_<? echo $int_com->id ?>">
+                        <div class="remodalcomments" data-remodal-id="modaldelete_<?php echo $int_com->id ?>">
                             <table width="300" class="profile">
                                 <tr class="profile">
                                     <th colspan="2" width="5" class="profile">
@@ -3122,7 +3308,7 @@ if ($subselector != "") {
                                             <tr>
                                                 <td><img src="images/icon_x.png"></td>
                                                 <td><img src="images/blank.png" width="5" height="1"></td>
-                                                <td><p class="blogodd"><b><? echo _("CM_DelConf"); ?></td>
+                                                <td><p class="blogodd"><b><?php echo __("Are you sure you want to delete this comment?"); ?></td>
                                             </tr>
                                         </table>
                                     </th>
@@ -3133,10 +3319,10 @@ if ($subselector != "") {
                                         <table>
                                             <tr>
                                                 <td style="padding-left: 12px;">
-                                                    <input data-remodal-action="close" onclick="delete_int_comment('<? echo $int_com->id ?>','<? echo $user->id ?>','<? echo $user->ComSecret ?>')" type="submit" class="comdelete" value="<? echo _("FormComButtonDelete"); ?>">
+                                                    <input data-remodal-action="close" onclick="delete_int_comment('<?php echo $int_com->id ?>','<?php echo $user->id ?>','<?php echo $user->ComSecret ?>')" type="submit" class="comdelete" value="<?php echo __("Delete"); ?>">
                                                 </td>
                                                 <td style="padding-left: 15px;">
-                                                    <input data-remodal-action="close" type="submit" class="comedit" value="<? echo _("FormButtonCancel"); ?>">
+                                                    <input data-remodal-action="close" type="submit" class="comedit" value="<?php echo __("Cancel"); ?>">
                                                 </td>
                                             </tr>
                                         </table>
@@ -3149,7 +3335,7 @@ if ($subselector != "") {
                         var options = {
                             hashTracking: false
                         };
-                         $('[data-remodal-id=modaldelete_<? echo $int_com->id ?>]').remodal(options);
+                         $('[data-remodal-id=modaldelete_<?php echo $int_com->id ?>]').remodal(options);
                         </script>
                     
                     
@@ -3157,14 +3343,14 @@ if ($subselector != "") {
                 </tr>
             
                 
-            <? } ?>
+            <?php } ?>
         </table></div>
-        <? } ?>
+        <?php } ?>
         
         <div class="internal_comment">
-            <form action="index.php?Strategy=<? echo $strat->id ?>" method="post">
-            <input type="hidden" name="int_com_user" value="<? echo $user->id ?>">
-            <input type="hidden" name="int_com_strategy" value="<? echo $strat->id ?>">
+            <form action="index.php?Strategy=<?php echo $strat->id ?>" method="post">
+            <input type="hidden" name="int_com_user" value="<?php echo $user->id ?>">
+            <input type="hidden" name="int_com_strategy" value="<?php echo $strat->id ?>">
             <input type="hidden" name="int_com_action" value="internal_comment">
                 <table>
                     <tr>
@@ -3178,7 +3364,7 @@ if ($subselector != "") {
                 </table>
             
         </div>
-     <? }
+     <?php }
          
     
     // ======================== Comment System 2.0 ==========================
@@ -3187,15 +3373,23 @@ if ($subselector != "") {
     $comstrat = $subselector;
     echo "<br>";
     // including the comments system:
-    if ($strategy)
-    {
+    if ($strategy) {
       print_comments_outer("2",$strategy,"dark");
     }
 
-    ?>
-    </div>
-    <?
-
+    echo '</div>';
+    
+    // Ad placement - Video Slider. Only on battletable. Only on specific cases and randomized for now. Venatus
+    if (!$user OR $user->id == 2) {
+        if ($ads_active == true) { ?>
+            <script>
+                if ($(window).width() >1550) {
+                    document.write('<div class="vm-placement" data-id="5d79066ce9f6e069bd0fd5da" style="display:none"></div>');
+                }
+            </script>
+            <?php 
+        }
+    }
 }
 
 // End of Regular fight menu!
@@ -3203,47 +3397,47 @@ if ($subselector != "") {
 
 switch ($sendtoast) {
     case "registersuccess":
-        echo '<script>$.growl.notice({ message: "'._("GR_SignupThx").'", duration: "7000", size: "large" });</script>';
+        echo '<script>$.growl.notice({ message: "'.__("Thanks for signing up!<br>Click on your name to access account settings.<br>I also sent you a <a href='?page=messages' class='growl'>welcome message</a> with more info.").'", duration: "7000", size: "large" });</script>';
         break;
     case "loginsuccess":
-        echo '<script>$.growl.notice({ message: "'._("GR_LoginConf").'", duration: "5000", size: "medium" });</script>';
+        echo '<script>$.growl.notice({ message: "'.__("You are now logged in.").'", duration: "5000", size: "medium" });</script>';
         break;
     case "pwchangesuccess":
-        echo '<script>$.growl.notice({ message: "'._("GR_PWChanged").'", duration: "5000", size: "medium" });</script>';
+        echo '<script>$.growl.notice({ message: "'.__("Your password has been changed. Welcome back!").'", duration: "5000", size: "medium" });</script>';
         break;
     case "linkerror":
-        echo '<script>$.growl.error({ message: "'._("GR_WrongLink").'", duration: "9000", size: "large", location: "tc" });</script>';
+        echo '<script>$.growl.error({ message: "'.__("The link you followed could not be read. <br>You were redirected to the front page. Sorry for the inconvenience.").'", duration: "9000", size: "large", location: "tc" });</script>';
         break;
     case "bnetregfail":
-        echo '<script>$.growl.error({ message: "'._("GR_BnetDecl").'", duration: "10000", size: "large", location: "tc" });</script>';
+        echo '<script>$.growl.error({ message: "'.__("The Battle.net authorization was declined. To login using your Battle.net Account please try again and authorize Xu-Fu.<br>Note: Your personal data (password, email address) will never be shared by Battle.net to authorized apps.").'", duration: "10000", size: "large", location: "tc" });</script>';
         break;
     case "bnetapierror":
-        echo '<script>$.growl.error({ message: "'._("GR_BnetFailed").'", duration: "10000", size: "large", location: "tc" });</script>';
+        echo '<script>$.growl.error({ message: "'.__("There was a problem with the Battle.net Account service, most likely a timeout or perhaps the servers are in maintenance. Please try again later.").'", duration: "10000", size: "large", location: "tc" });</script>';
         break;
     case "bnetregister":
         ?>
-            <script>$.growl.notice({ message: "<? echo _("GR_SignupBnet") ?>", duration: "7000", size: "large", location: "tc" });</script>
+            <script>$.growl.notice({ message: "<?php echo __("Thank you for signing up! You are now logged in. <br>Note: You can change your username by clicking on your name in the top right corner.") ?>", duration: "7000", size: "large", location: "tc" });</script>
             <script>
-                var userid = '<? echo $user->id ?>';
+                var userid = '<?php echo $user->id ?>';
                 $.post('classes/ajax/ac_update_col_on_reg.php', {'userid':userid}, function(data) {
                 });
             </script>
         <?
         break;
     case "namechanged":
-        echo '<script>$.growl.notice({ message: "'._("GR_NameChanged").'", duration: "5000", size: "large", location: "tc" });</script>';
+        echo '<script>$.growl.notice({ message: "'.__("Your Username was changed successfully.").'", duration: "5000", size: "large", location: "tc" });</script>';
         break;
     case "pwadded":
-        echo '<script>$.growl.notice({ message: "'._("GR_PassChanged").'", duration: "5000", size: "large", location: "tc" });</script>';
+        echo '<script>$.growl.notice({ message: "'.__("Your password was saved.").'", duration: "5000", size: "large", location: "tc" });</script>';
         break;
     case "tokeninactive":
-        echo '<script>$.growl.error({ message: "'._("GR_AuthFailed").'", fixed: "true", duration: "99999999", size: "large", location: "tc" });</script>';
+        echo '<script>$.growl.error({ message: "'.__("The connection to your Battle.net Account is disrupted.<br>Please visit the <a class='growl' href='index.php?page=settings'>Account settings</a> to fix this problem.").'", fixed: "true", duration: "99999999", size: "large", location: "tc" });</script>';
         break;
     case "accdeleted":
-        echo '<script>$.growl.notice({ message: "'._("GR_AccDeleted").'", duration: "5000", size: "large", location: "tc" });</script>';
+        echo '<script>$.growl.notice({ message: "'.__("Your account has been deleted. <br>Thank you for your time with Xu-Fu!").'", duration: "5000", size: "large", location: "tc" });</script>';
         break;
     case "comsubmiterror":
-        echo '<script>$.growl.error({ message: "'._("GR_CommError").'", duration: "15000", size: "large", location: "tc" });</script>';
+        echo '<script>$.growl.error({ message: "'.__("There was a problem with processing your comment. I am sorry, please try again. If this error persists, please contact <a href='mailto:xufu@wow-petguide.com?subject=Problem with comment system' class='growl'>Aranesh</a>").'", duration: "15000", size: "large", location: "tc" });</script>';
         break;
     case "erroraddingstrat":
         echo '<script>$.growl.error({ message: "There was a problem adding your strategy. Please try again. If this error persists, please contact Aranesh.", duration: "15000", size: "large", location: "tc" });</script>';
@@ -3276,7 +3470,7 @@ if ($jumpto ){ ?>
         $(window).load(function(){
         $(function(){
             $('html, body').animate({
-                scrollTop: $('.anchor<? echo $jumpto ?>').offset().top-150
+                scrollTop: $('.anchor<?php echo $jumpto ?>').offset().top-150
             }, 800);
             return false;
         });

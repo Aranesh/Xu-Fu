@@ -19,24 +19,44 @@ require_once ('Database.php');
   Database_UPDATE
     ( 'Comments '
     , [ 'Closed' => 1
-      , 'CloseType' => '"Strategy Deleted by Creator"'
+      , 'CloseType' => '"Strategy Deleted"'
       , 'ClosedOn' => 'NOW()'
       , 'Deleted' => 1
       , 'NewActivity' => 0
       , 'ForReview' => 0
-      , 'ClosedBy' => '"Strategy Creator"'
+      , 'ClosedBy' => '"Strategy Creator or Curator"'
       ]
     , 'WHERE Category = 2 AND SortingID = ?'
     , 'i'
     , $strat->id
     );
-
-  Database_DELETE ('Strategy', 'WHERE SortingID = ?', 'i', $strat->id);
-  Database_DELETE ('UserAttempts', 'WHERE Strategy = ?', 'i', $strat->id);
+  Database_UPDATE
+    ( 'Comments '
+    , [ 'Closed' => 1
+      , 'CloseType' => '"Strategy Deleted"'
+      , 'ClosedOn' => 'NOW()'
+      , 'Deleted' => 1
+      , 'NewActivity' => 0
+      , 'ForReview' => 0
+      , 'ClosedBy' => '"Strategy Creator or Curator"'
+      ]
+    , 'WHERE Category = 3 AND SortingID = ?'
+    , 'i'
+    , $strat->id
+    );
+  Database_UPDATE
+    ( 'Alternatives '
+    , [ 'Deleted' => 1]
+    , 'WHERE id = ?'
+    , 'i'
+    , $strat->id
+    );
+  // Database_DELETE ('Strategy', 'WHERE SortingID = ?', 'i', $strat->id);
+  // Database_DELETE ('UserAttempts', 'WHERE Strategy = ?', 'i', $strat->id);
   Database_DELETE ('UserFavStrats', 'WHERE Strategy = ?', 'i', $strat->id);
-  Database_DELETE ('UserStratRating', 'WHERE Strategy = ?', 'i', $strat->id);
-  Database_DELETE ('Alternatives', 'WHERE id = ?', 'i', $strat->id);
-  Database_DELETE ('Strategy_x_Tags', 'WHERE Strategy = ?', 'i', $strat->id);
+  // Database_DELETE ('UserStratRating', 'WHERE Strategy = ?', 'i', $strat->id);
+  // Database_DELETE ('Alternatives', 'WHERE id = ?', 'i', $strat->id);
+  // Database_DELETE ('Strategy_x_Tags', 'WHERE Strategy = ?', 'i', $strat->id);
 
   return [$strat->Main, $strat->Sub];
 }

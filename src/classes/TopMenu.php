@@ -102,7 +102,7 @@ function TopMenu_append_bnet_login_form ($where, $action_suffix)
   $input->setAttribute ('value', 'standard');
   $input->setAttribute ('checked', '');
   HTML_append_paragraph_text
-    (HTML_append_label ($item, 'bnet_region_standard'), _ ('UL_RegionsW'));
+    (HTML_append_label ($item, 'bnet_region_standard'), __('US/EU/KR/TW'));
   HTML_append_element ($item, 'div')->setAttribute ('class', 'check');
 
   $item = HTML_append_element ($list, 'li');
@@ -113,7 +113,7 @@ function TopMenu_append_bnet_login_form ($where, $action_suffix)
   $input->setAttribute ('name', 'regionselect');
   $input->setAttribute ('value', 'china');
   HTML_append_paragraph_text
-    (HTML_append_label ($item, 'bnet_region_china'), _ ('UL_RegionsC'));
+    (HTML_append_label ($item, 'bnet_region_china'), __('China'));
   HTML_append_element ($item, 'div')->setAttribute ('class', 'check');
 
   $button = HTML_append_element ($form, 'button');
@@ -121,7 +121,7 @@ function TopMenu_append_bnet_login_form ($where, $action_suffix)
   $button->setAttribute ('class', 'bnetlogin');
   $button->setAttribute ('type', 'submit');
   $button->setAttribute ('onclick', 'loadingbnetlogin()');
-  HTML_append_text ($button, _ ('UL_LogBnet'));
+  HTML_append_text ($button, __('Login with Battle.net'));
 }
 
 //! \todo Clean up this mess.
@@ -141,7 +141,7 @@ function TopMenu_append_normal_login_form ($where, $action_suffix)
   $x->setAttribute ('valign', 'bottom');
   $y = HTML_append_element ($x, 'p');
   $y->setAttribute ('class', 'blogeven');
-  HTML_append_text ($y, _ ('UL_LogName') . ':');
+  HTML_append_text ($y, __('Name or email') . ':');
 
   HTML_append_spacer_image ($t, ['td'], 5, 1);
 
@@ -157,7 +157,7 @@ function TopMenu_append_normal_login_form ($where, $action_suffix)
   HTML_append_element ($t, 'td')
     ->setAttribute ('colspan', 2);
   HTML_append_link_with_text ( HTML_append_element ($t, 'td')
-                               , _ ('UL_ForgUsername')
+                               , __('Forgot your username?')
                              , '/index.php?page=acretrieve&' . $action_suffix
                              )
     ->setAttribute ('class', 'loginbright');
@@ -174,7 +174,7 @@ function TopMenu_append_normal_login_form ($where, $action_suffix)
   $x->setAttribute ('valign', 'bottom');
   $y = HTML_append_element ($x, 'p');
   $y->setAttribute ('class', 'blogeven');
-  HTML_append_text ($y, _ ('UL_LogPass') . ':');
+  HTML_append_text ($y, __('Password') . ':');
 
   HTML_append_spacer_image ($t, ['td'], 5, 1);
 
@@ -199,7 +199,7 @@ function TopMenu_append_normal_login_form ($where, $action_suffix)
   HTML_append_element ($t, 'td')
     ->setAttribute ('colspan', 2);
   HTML_append_link_with_text ( HTML_append_element ($t, 'td')
-                             , _ ('UL_ForgPass')
+                             , __('Forgot your password?')
                              , '/index.php?page=pwrecover&' . $action_suffix
                              )
     ->setAttribute ('class', 'loginbright');
@@ -223,7 +223,7 @@ function TopMenu_append_normal_login_form ($where, $action_suffix)
   $z->setAttribute ('name', 'remember');
   $z->setAttribute ('value', 'true');
   $z->setAttribute ('checked', '');
-  HTML_append_text ($y, _ ('UL_RemLogin'));
+  HTML_append_text ($y, __('Remember login for 30 days'));
 
   $t = HTML_append_element ($table, 'tr');
   $x = HTML_append_element ($t, 'td');
@@ -245,8 +245,8 @@ function TopMenu_append_normal_login_form ($where, $action_suffix)
   $z->setAttribute ('name', 'page');
   $z->setAttribute ('class', 'comedit');
   $z->setAttribute ('value', 'login');
-  HTML_append_text ($z, _ ('UL_MBLogin'));
-  HTML_append_text ($y, ' ' . _ ('UL_MBor'));
+  HTML_append_text ($z, __('Login'));
+  HTML_append_text ($y, ' ' . __('or'));
 
   $y = HTML_append_elements ($x, ['td', 'p']);
   $y->setAttribute ('class', 'blogeven');
@@ -255,7 +255,7 @@ function TopMenu_append_normal_login_form ($where, $action_suffix)
   $z->setAttribute ('type', 'button');
   $z->setAttribute ('onclick', 'document.registerform.submit()');
   $z->setAttribute ('class', 'comsubmit');
-  HTML_append_text ($z, _ ('UL_MBRegister'));
+  HTML_append_text ($z, __('Register Account'));
 }
 
 function TopMenu_append_search_field ($where, $additional_action_args)
@@ -272,7 +272,7 @@ function TopMenu_append_search_field ($where, $additional_action_args)
   $input = HTML_append_element ($form, 'input');
   $input->setAttribute ('type', 'search');
   $input->setAttribute ('name', 'petsearch');
-  $input->setAttribute ('placeholder', _ ('SearchField'));
+  $input->setAttribute ('placeholder', __('Search...'));
 
   HTML_append_elements ($form, ['button', 'img'])
     ->setAttribute ('src', '/images/magglass.png');
@@ -401,26 +401,26 @@ function TopMenu_append_user_dropdown ($where, $user, $action_suffix)
   $dropdown_content->setAttribute ('class', 'userdd-content');
 
   TopMenu_user_dropdown_elem
-    ($dropdown_content, 'profile', 'profile', _ ('UM_BTProfile'));
+    ($dropdown_content, 'profile', 'profile', __('My Profile'));
   TopMenu_user_dropdown_elem
-    ($dropdown_content, 'collection', 'collection', _ ('UM_PetCollection'));
+    ($dropdown_content, 'collection', 'collection', __('Pet Collection'));
 
   $new_strategy_comments = User_unread_strategy_comment_count ($user);
   TopMenu_user_dropdown_elem
     ( $dropdown_content
     , 'strategies', 'strategies'
-    , 'My Strategies' . Util_maybe_braced_count ($new_strategy_comments)
+    , __('My Strategies') . Util_maybe_braced_count ($new_strategy_comments)
     );
 
   $new_comments = User_unread_comment_count ($user);
   TopMenu_user_dropdown_elem
     ( $dropdown_content
     , 'mycomments', 'comments'
-    , _ ('UM_BTComments') . Util_maybe_braced_count ($new_comments)
+    , __('My Comments') . Util_maybe_braced_count ($new_comments)
     );
 
   $messages_elem = TopMenu_user_dropdown_elem
-    ($dropdown_content, 'messages', 'messages', _ ('UM_BTMessages'));
+    ($dropdown_content, 'messages', 'messages', __('Messages'));
 
   $new_private_messages = User_unread_private_message_count ($user);
   $messages_elem_in = HTML_append_element ($messages_elem, 'span');
@@ -434,7 +434,7 @@ function TopMenu_append_user_dropdown ($where, $user, $action_suffix)
   HTML_append_text ($messages_elem_out, $new_private_messages ? ')' : '');
 
   TopMenu_user_dropdown_elem
-    ($dropdown_content, 'settings', 'settings', _ ('UM_BTSettings'));
+    ($dropdown_content, 'settings', 'settings', __('Settings'));
   if (User_is_allowed ($user, 'AdmPanel'))
   {
     TopMenu_user_dropdown_elem
@@ -445,9 +445,24 @@ function TopMenu_append_user_dropdown ($where, $user, $action_suffix)
     TopMenu_user_dropdown_elem
     ($dropdown_content, 'loc', 'loc', 'Localization');
   }
-
   TopMenu_user_dropdown_elem
-    ($dropdown_content, 'logout&' . $action_suffix, 'bye', _ ('UM_BTLogout'));
+    ($dropdown_content, 'logout&' . $action_suffix, 'bye', __('Logout'));
+    
+    
+  // Hacky language selector for user Inovindil
+  if ($user->id == 19733) {
+    global $language, $strategy, $subselector;
+    if ($strategy) $action_suffix_lang = 'Strategy='.$strategy;
+    if ($language == 'en_US') {
+      TopMenu_user_dropdown_elem
+      ($dropdown_content, 'make_de&' . $action_suffix_lang, 'de', __('Deutsch'));
+    }
+    if ($language == 'de_DE') {
+      TopMenu_user_dropdown_elem
+      ($dropdown_content, 'make_en&' . $action_suffix_lang, 'en', __('English'));
+    }
+  }
+  // End of hack
 }
 
 function TopMenu_append_language_dropdown ($where, $active_language)
@@ -508,7 +523,7 @@ function TopMenu_create_html ($menus, $user, $action_suffix, $current_menu_highl
     $top_menu_login = HTML_append_element ($top_menu_rhs_table_row, 'td');
     $top_menu_login->setAttribute ('style', 'padding-right: 20px');
 
-    $top_menu_login_link = HTML_append_link_with_text ($top_menu_login, _ ('UL_MBLogin'), '#modallogin');
+    $top_menu_login_link = HTML_append_link_with_text ($top_menu_login, __('Login'), '#modallogin');
     $top_menu_login_link->setAttribute ('class', 'langselector');
     $top_menu_login_link->setAttribute ('style', 'display:block');
     $top_menu_login_link->setAttribute ('onclick', 'hideloadingbnetlogin()');

@@ -11,7 +11,6 @@ require_once ('Admin.php');
 $command = \HTTP\argument_POST_or_GET_or_default ('command', FALSE);
 ?>
 
-
 <div class="blogtitle">
     <table width="100%" border="0" margin="0" cellpadding="0" cellspacing="0">
         <tr>
@@ -19,7 +18,7 @@ $command = \HTTP\argument_POST_or_GET_or_default ('command', FALSE);
                 <img src="images/blank.png" width="50" height="1" alt="" />
             </td>
             <td>
-                <img class="ut_icon" width="84" height="84" <? echo $usericon ?>>
+                <img class="ut_icon" width="84" height="84" <?php echo $usericon ?>>
             </td>
             <td>
                 <img src="images/blank.png" width="50" height="1" alt="" />
@@ -33,7 +32,7 @@ $command = \HTTP\argument_POST_or_GET_or_default ('command', FALSE);
 
 
 <div class="remodal-bg leftmenu">
-    <? print_profile_menu('admin'); ?>
+    <?php print_profile_menu('admin'); ?>
 </div>
 
 <div class="blogentryfirst">
@@ -55,7 +54,7 @@ $command = \HTTP\argument_POST_or_GET_or_default ('command', FALSE);
 <td>
 <table style="width: 85%;" class="profile">
 
-    <? print_admin_menu('adm_petimport'); ?>
+    <?php print_admin_menu('adm_petimport'); ?>
 
     <tr style="background: #bcbcbc; border: 1px solid #bcbcbc;">
         <td class="profile"><br> <?
@@ -72,16 +71,17 @@ $command = \HTTP\argument_POST_or_GET_or_default ('command', FALSE);
                         Contains all pets that players can obtain (including non-battle pets).<br>
                         <a class="wowhead" href="?page=adm_petimport&command=checkuserpets">Check full list</a> - Check the entire pet list adjust where necessary.<br><br>
                     </li>
+                    <li><p class="blogodd"><b>Pet Spells</b><br>
+                        Contains all user pet abilities.<br>
+                        <a class="wowhead" href="?page=adm_petimport&command=checkspells">Check full list</a><br><br>
+                    </li>
                     <li><p class="blogodd"><b>NPC Pets.</b><br>
                         Contains pets that NPCs are using.<br>
                         <a class="wowhead" href="?page=adm_petimport&command=checknpcpets">Check for new NPC Pets</a> - This will go through ALL species IDs one by one and import them as NPC pets, if they are not on the User Pets list.<br><br>
                     </li>
-                    <li><p class="blogodd"><b>Pet Spells</b><br>
-                        Contains all pet abilities in the game.<br>
-                        <a class="wowhead" href="?page=adm_petimport&command=checkspells">Check for new spells</a> - Automatically check if new spells need to be imported. These are all spells used by NPC and user pets. Best use when the other two lists are up to date.<br>
-                    </li>
+
                 </ol>
-                <? }
+                <?php }
 
 
             // ======================= User Pet Import =======================
@@ -106,11 +106,9 @@ $command = \HTTP\argument_POST_or_GET_or_default ('command', FALSE);
             */
 
             // Listing all user pets into table
-
             if ($command == "checkuserpets")  { ?>
             <p class="blogodd">
             <?
-
                 $pet_masterlist = blizzard_api_pets_masterlist("us", "en_US");
                 $pet_masterlist = json_decode($pet_masterlist, TRUE);
 
@@ -371,34 +369,34 @@ $command = \HTTP\argument_POST_or_GET_or_default ('command', FALSE);
                     }
                     ?>
                     <tr class="admin">
-                    <td class="admin"><? echo $value['Species'] ?></td>
+                    <td class="admin"><?php echo $value['Species'] ?></td>
 
-                    <? /*  OLD - this contains a function that allows editing the NPC-ID - not needed anymore, info is via API
-                    <td class="admin" style="white-space: nowrap"><? if ($value['Hideall'] != TRUE) { ?><input class="petselect" value="<? echo $value['PetID'] ?>" style="width: 80px" id="new_npcid_<? echo $value['Species'] ?>">
-                    <input class="comedit" type="submit" onclick="adm_update_petstat('npcid', '<? echo $value['Species'] ?>')" value="✓"><? } ?></td>
+                    <?php /*  OLD - this contains a function that allows editing the NPC-ID - not needed anymore, info is via API
+                    <td class="admin" style="white-space: nowrap"><?php if ($value['Hideall'] != TRUE) { ?><input class="petselect" value="<?php echo $value['PetID'] ?>" style="width: 80px" id="new_npcid_<?php echo $value['Species'] ?>">
+                    <input class="comedit" type="submit" onclick="adm_update_petstat('npcid', '<?php echo $value['Species'] ?>')" value="✓"><?php } ?></td>
                     */ // New one below:?>
-                    <td class="admin"><? echo $value['PetID'] ?></td>
+                    <td class="admin"><?php echo $value['PetID'] ?></td>
 
 
-                    <td class="admin"><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/npc=<? echo $value['PetID'] ?>'><? echo $value['Name_en_US'] ?></a></td>
+                    <td class="admin"><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/npc=<?php echo $value['PetID'] ?>'><?php echo $value['Name_en_US'] ?></a></td>
 
-                    <td class="admin"><center><? if ($value['Hideall'] == TRUE) { echo '<center><p class="smallodd">-'; }
+                    <td class="admin"><center><?php if ($value['Hideall'] == TRUE) { echo '<center><p class="smallodd">-'; }
                         else { echo $value['Family']; } ?>
                     </td>
 
                     <td class="admin">
                         <?
                         if ($value['Hideall'] != TRUE) { ?>
-                        <div id="skills_<? echo $key ?>"><a class="pr_contact" style="cursor: pointer" onclick="$('#skillsf_<? echo $key ?>').show();$('#skills_<? echo $key ?>').hide()"><center>Show</a></div>
-                        <div style="display: none" id="skillsf_<? echo $key ?>">
-                            <b>Skill1:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<? echo $value['Skill1'] ?>'><? echo $value['Skill1'] ?></a><br>
-                            <b>Skill2:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<? echo $value['Skill2'] ?>'><? echo $value['Skill2'] ?></a><br>
-                            <b>Skill3:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<? echo $value['Skill3'] ?>'><? echo $value['Skill3'] ?></a><br>
-                            <b>Skill4:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<? echo $value['Skill4'] ?>'><? echo $value['Skill4'] ?></a><br>
-                            <b>Skill5:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<? echo $value['Skill5'] ?>'><? echo $value['Skill5'] ?></a><br>
-                            <b>Skill6:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<? echo $value['Skill6'] ?>'><? echo $value['Skill6'] ?></a>
+                        <div id="skills_<?php echo $key ?>"><a class="pr_contact" style="cursor: pointer" onclick="$('#skillsf_<?php echo $key ?>').show();$('#skills_<?php echo $key ?>').hide()"><center>Show</a></div>
+                        <div style="display: none" id="skillsf_<?php echo $key ?>">
+                            <b>Skill1:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<?php echo $value['Skill1'] ?>'><?php echo $value['Skill1'] ?></a><br>
+                            <b>Skill2:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<?php echo $value['Skill2'] ?>'><?php echo $value['Skill2'] ?></a><br>
+                            <b>Skill3:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<?php echo $value['Skill3'] ?>'><?php echo $value['Skill3'] ?></a><br>
+                            <b>Skill4:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<?php echo $value['Skill4'] ?>'><?php echo $value['Skill4'] ?></a><br>
+                            <b>Skill5:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<?php echo $value['Skill5'] ?>'><?php echo $value['Skill5'] ?></a><br>
+                            <b>Skill6:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<?php echo $value['Skill6'] ?>'><?php echo $value['Skill6'] ?></a>
                         </div>
-                        <? }
+                        <?php }
                         else { echo '<center><p class="smallodd">-'; } ?>
                     </td>
 
@@ -413,11 +411,11 @@ $command = \HTTP\argument_POST_or_GET_or_default ('command', FALSE);
                     <td class="admin">
                         <?
                         if ($value['Hideall'] != TRUE) { ?>
-                        <div id="bstats_<? echo $key ?>"><a class="pr_contact" style="cursor: pointer" onclick="$('#bstatsf_<? echo $key ?>').show();$('#bstats_<? echo $key ?>').hide()"><center>Show</a></div>
-                        <div style="display: none; white-space: nowrap" id="bstatsf_<? echo $key ?>">
-                            <b>Health:</b> <? echo $value['Health'] ?></a><br>
-                            <b>Power:</b> <? echo $value['Power'] ?></a><br>
-                            <b>Speed:</b> <? echo $value['Speed'] ?></a><br>
+                        <div id="bstats_<?php echo $key ?>"><a class="pr_contact" style="cursor: pointer" onclick="$('#bstatsf_<?php echo $key ?>').show();$('#bstats_<?php echo $key ?>').hide()"><center>Show</a></div>
+                        <div style="display: none; white-space: nowrap" id="bstatsf_<?php echo $key ?>">
+                            <b>Health:</b> <?php echo $value['Health'] ?></a><br>
+                            <b>Power:</b> <?php echo $value['Power'] ?></a><br>
+                            <b>Speed:</b> <?php echo $value['Speed'] ?></a><br>
                                 <?
                                 if ($value['Hideall'] != TRUE) {
                                     if ($value['Cageable'] == "0") { echo "<b>Cageable:</b> N/A<br>"; }
@@ -432,87 +430,87 @@ $command = \HTTP\argument_POST_or_GET_or_default ('command', FALSE);
                                     if ($value['Alliance_Only'] == "0" && $value['Horde_Only'] == "0") { echo "<b>Faction:</b> None<br>"; }
                                 } ?>
                         </div>
-                        <? }
+                        <?php }
                         else {
                             if ($value['Prio'] == "3") echo '<center><p class="smallodd"><b>Missing';
                             else echo '<center><p class="smallodd">-'; }?>
                     </td>
 
-                    <td class="admin"><? if ($value['Hideall'] == TRUE) { echo '<center><p class="smallodd">-'; }
+                    <td class="admin"><?php if ($value['Hideall'] == TRUE) { echo '<center><p class="smallodd">-'; }
                         else { ?>
-                            <select class="petselect" id="adm_source_<? echo $value['Species'] ?>" onchange="adm_update_petstat('source', '<? echo $value['Species'] ?>')">
-                                <option class="petselect" value="0" <? if ($value['Source'] == "0") {echo "selected";} ?>>N/A</option>
-                                <option class="petselect" value="3" <? if ($value['Source'] == "3") {echo "selected";} ?>>Normal</option>
-                                <option class="petselect" value="1" <? if ($value['Source'] == "1") {echo "selected";} ?>>Shop</option>
-                                <option class="petselect" value="2" <? if ($value['Source'] == "2") {echo "selected";} ?>>TCG</option>
+                            <select class="petselect" id="adm_source_<?php echo $value['Species'] ?>" onchange="adm_update_petstat('source', '<?php echo $value['Species'] ?>')">
+                                <option class="petselect" value="0" <?php if ($value['Source'] == "0") {echo "selected";} ?>>N/A</option>
+                                <option class="petselect" value="3" <?php if ($value['Source'] == "3") {echo "selected";} ?>>Normal</option>
+                                <option class="petselect" value="1" <?php if ($value['Source'] == "1") {echo "selected";} ?>>Shop</option>
+                                <option class="petselect" value="2" <?php if ($value['Source'] == "2") {echo "selected";} ?>>TCG</option>
                             </select>
-                        <? } ?>
+                        <?php } ?>
                     </td>
 
-                    <td class="admin"><? if ($value['Hideall'] == TRUE) { echo '<center><p class="smallodd">-'; }
+                    <td class="admin"><?php if ($value['Hideall'] == TRUE) { echo '<center><p class="smallodd">-'; }
                         else { ?>
-                            <select class="petselect" id="adm_obtainable_<? echo $value['Species'] ?>" onchange="adm_update_petstat('obtainable', '<? echo $value['Species'] ?>')">
-                                <option class="petselect" value="0" <? if ($value['Obtainable'] == "0") {echo "selected";} ?>>N/A</option>
-                                <option class="petselect" value="1" <? if ($value['Obtainable'] == "1") {echo "selected";} ?>>Yes</option>
-                                <option class="petselect" value="2" <? if ($value['Obtainable'] == "2") {echo "selected";} ?>>No</option>
+                            <select class="petselect" id="adm_obtainable_<?php echo $value['Species'] ?>" onchange="adm_update_petstat('obtainable', '<?php echo $value['Species'] ?>')">
+                                <option class="petselect" value="0" <?php if ($value['Obtainable'] == "0") {echo "selected";} ?>>N/A</option>
+                                <option class="petselect" value="1" <?php if ($value['Obtainable'] == "1") {echo "selected";} ?>>Yes</option>
+                                <option class="petselect" value="2" <?php if ($value['Obtainable'] == "2") {echo "selected";} ?>>No</option>
                             </select>
-                        <? } ?>
+                        <?php } ?>
                     </td>
 
-                    <td class="admin"><? if ($value['Hideall'] == TRUE) { echo '<center><p class="smallodd">-'; }
+                    <td class="admin"><?php if ($value['Hideall'] == TRUE) { echo '<center><p class="smallodd">-'; }
                         else { ?>
-                            <select class="petselect" id="adm_difficulty_<? echo $value['Species'] ?>" onchange="adm_update_petstat('difficulty', '<? echo $value['Species'] ?>')">
-                                <option class="petselect" value="0" <? if ($value['Difficulty'] == "0") {echo "selected";} ?>>N/A</option>
-                                <option class="petselect" value="1" <? if ($value['Difficulty'] == "1") {echo "selected";} ?>>1</option>
-                                <option class="petselect" value="2" <? if ($value['Difficulty'] == "2") {echo "selected";} ?>>2</option>
-                                <option class="petselect" value="3" <? if ($value['Difficulty'] == "3") {echo "selected";} ?>>3</option>
-                                <option class="petselect" value="4" <? if ($value['Difficulty'] == "4") {echo "selected";} ?>>4</option>
-                                <option class="petselect" value="5" <? if ($value['Difficulty'] == "5") {echo "selected";} ?>>5</option>
-                                <option class="petselect" value="6" <? if ($value['Difficulty'] == "6") {echo "selected";} ?>>6</option>
+                            <select class="petselect" id="adm_difficulty_<?php echo $value['Species'] ?>" onchange="adm_update_petstat('difficulty', '<?php echo $value['Species'] ?>')">
+                                <option class="petselect" value="0" <?php if ($value['Difficulty'] == "0") {echo "selected";} ?>>N/A</option>
+                                <option class="petselect" value="1" <?php if ($value['Difficulty'] == "1") {echo "selected";} ?>>1</option>
+                                <option class="petselect" value="2" <?php if ($value['Difficulty'] == "2") {echo "selected";} ?>>2</option>
+                                <option class="petselect" value="3" <?php if ($value['Difficulty'] == "3") {echo "selected";} ?>>3</option>
+                                <option class="petselect" value="4" <?php if ($value['Difficulty'] == "4") {echo "selected";} ?>>4</option>
+                                <option class="petselect" value="5" <?php if ($value['Difficulty'] == "5") {echo "selected";} ?>>5</option>
+                                <option class="petselect" value="6" <?php if ($value['Difficulty'] == "6") {echo "selected";} ?>>6</option>
                             </select>
-                        <? } ?>
+                        <?php } ?>
                     </td>
 
-                    <td class="admin"><? if ($value['Hideall'] == TRUE) { echo '<center><p class="smallodd">-'; }
+                    <td class="admin"><?php if ($value['Hideall'] == TRUE) { echo '<center><p class="smallodd">-'; }
                         else { ?>
-                            <select class="petselect" id="adm_unique_<? echo $value['Species'] ?>" onchange="adm_update_petstat('unique', '<? echo $value['Species'] ?>')">
-                                <option class="petselect" value="0" <? if ($value['Unique'] == "0") {echo "selected";} ?>>N/A</option>
-                                <option class="petselect" value="1" <? if ($value['Unique'] == "1") {echo "selected";} ?>>1</option>
-                                <option class="petselect" value="3" <? if ($value['Unique'] == "3") {echo "selected";} ?>>3</option>
+                            <select class="petselect" id="adm_unique_<?php echo $value['Species'] ?>" onchange="adm_update_petstat('unique', '<?php echo $value['Species'] ?>')">
+                                <option class="petselect" value="0" <?php if ($value['Unique'] == "0") {echo "selected";} ?>>N/A</option>
+                                <option class="petselect" value="1" <?php if ($value['Unique'] == "1") {echo "selected";} ?>>1</option>
+                                <option class="petselect" value="3" <?php if ($value['Unique'] == "3") {echo "selected";} ?>>3</option>
                             </select>
-                        <? } ?>
+                        <?php } ?>
                     </td>
 
-                    <td class="admin"><? if ($value['Hideall'] == TRUE) { echo '<center><p class="smallodd">-'; }
+                    <td class="admin"><?php if ($value['Hideall'] == TRUE) { echo '<center><p class="smallodd">-'; }
                         else { ?>
-                            <select class="petselect" id="adm_defrarity_<? echo $value['Species'] ?>" onchange="adm_update_petstat('defrarity', '<? echo $value['Species'] ?>')">
-                                <option class="petselect" value="0" <? if ($value['DefRarity'] == "0") {echo "selected";} ?>>N/A</option>
-                                <option class="petselect" value="1" <? if ($value['DefRarity'] == "1") {echo "selected";} ?>>Grey</option>
-                                <option class="petselect" value="2" <? if ($value['DefRarity'] == "2") {echo "selected";} ?>>White</option>
-                                <option class="petselect" value="3" <? if ($value['DefRarity'] == "3") {echo "selected";} ?>>Green</option>
-                                <option class="petselect" value="4" <? if ($value['DefRarity'] == "4") {echo "selected";} ?>>Blue</option>
+                            <select class="petselect" id="adm_defrarity_<?php echo $value['Species'] ?>" onchange="adm_update_petstat('defrarity', '<?php echo $value['Species'] ?>')">
+                                <option class="petselect" value="0" <?php if ($value['DefRarity'] == "0") {echo "selected";} ?>>N/A</option>
+                                <option class="petselect" value="1" <?php if ($value['DefRarity'] == "1") {echo "selected";} ?>>Grey</option>
+                                <option class="petselect" value="2" <?php if ($value['DefRarity'] == "2") {echo "selected";} ?>>White</option>
+                                <option class="petselect" value="3" <?php if ($value['DefRarity'] == "3") {echo "selected";} ?>>Green</option>
+                                <option class="petselect" value="4" <?php if ($value['DefRarity'] == "4") {echo "selected";} ?>>Blue</option>
                             </select>
-                        <? } ?>
+                        <?php } ?>
                     </td>
 
                     <td class="admin" style="white-space: nowrap">
                         <form action="index.php?page=adm_petimport&command=importpet" style="display: inline" method="POST">
-                            <input type="hidden" name="species" value="<? echo $value['Species'] ?>">
-                            <input class="cominputmedium" type="submit" value="<? if ($value['Prio'] == "2") { echo "Import"; } else { echo "Update"; } ?>">
+                            <input type="hidden" name="species" value="<?php echo $value['Species'] ?>">
+                            <input class="cominputmedium" type="submit" value="<?php if ($value['Prio'] == "2") { echo "Import"; } else { echo "Update"; } ?>">
                         </form>
 
-                     <? /* DELETE Option - Reactivate only if required if ($value['Hideal'l] != TRUE) { ?>
-                    <button class="comdelete" data-remodal-target="modal_del_<? echo $value['Species'] ?>">Delete</button>
+                     <?php /* DELETE Option - Reactivate only if required if ($value['Hideal'l] != TRUE) { ?>
+                    <button class="comdelete" data-remodal-target="modal_del_<?php echo $value['Species'] ?>">Delete</button>
 
-                    <div class="remodal remodalstratedit" data-remodal-id="modal_del_<? echo $value['Species'] ?>">
-                        <form enctype="multipart/form-data" action="index.php?Strategy=<? echo $strat->id ?>" method="POST">
+                    <div class="remodal remodalstratedit" data-remodal-id="modal_del_<?php echo $value['Species'] ?>">
+                        <form enctype="multipart/form-data" action="index.php?Strategy=<?php echo $strat->id ?>" method="POST">
                             <input type="hidden" name="save_td" value="true">
                             <table width="350" class="profile">
                                 <tr class="profile">
                                     <td class="collectionbordertwo">
                                         Are you sure you want to delete this pet? This cannot be undone! You will need to reimport the pet to add it again.
                                         <input type="submit" class="comdelete" value="Delete Pet">
-                                        <input data-remodal-action="close" class="comedit" value="<? echo _("FormButtonCancel"); ?>">
+                                        <input data-remodal-action="close" class="comedit" value="<?php echo __("Cancel"); ?>">
                                     </td>
                                 </tr>
                             </table>
@@ -523,10 +521,10 @@ $command = \HTTP\argument_POST_or_GET_or_default ('command', FALSE);
                     var options = {
                         hashTracking: false
                     };
-                    $('[data-remodal-id=modal_del_<? echo $value['Species'] ?>]').remodal(options);
+                    $('[data-remodal-id=modal_del_<?php echo $value['Species'] ?>]').remodal(options);
                     </script>
 
-                 <? } */ ?>
+                 <?php } */ ?>
 
                     </td>
 
@@ -536,6 +534,152 @@ $command = \HTTP\argument_POST_or_GET_or_default ('command', FALSE);
                 }
             }
 
+            
+            
+            
+            // ABILITIES
+            
+            
+            
+            // Updating a single ability
+
+            if ($command == "update_ability") {
+                $update_ability = \HTTP\argument_POST ('ability', FALSE);
+                $result = \ADMIN\update_single_ability($update_ability, 'update');
+                $command = "checkspells";
+                echo '<p class="blogodd"><b>Ability '.$result.' updated.</b><br><br>';
+            }
+
+            // Listing all user abilities
+            if ($command == "checkspells")  { ?>
+            <p class="blogodd">The list below shows all pet abilities from user pets.<br>
+                If new abilities are available via the API, they will be imported automatically when you load this page.<br><br>
+            <?
+                $all_abilities = get_all_abilities();
+                $abilities_masterlist = blizzard_api_abilities_masterlist("us", "");
+                $abilities_masterlist = json_decode($abilities_masterlist, TRUE);
+
+                foreach ($abilities_masterlist['abilities'] as $key => $ability) {
+                    if (!$all_abilities[$ability['id']]['id']) {
+                        echo "<b>New spell found and imported: ".$ability['name']['en_US']."</b><br>";
+                        Database_INSERT_INTO
+                          ( 'Pet_Abilities'
+                          , [ 'id'
+                            ]
+                          , 'i'
+                            , $ability['id']
+                          );
+                        \ADMIN\update_single_ability($ability['id']);
+                    }
+                }
+                
+                $all_abilities = get_all_abilities();
+                sortBy('ENName', $all_abilities, 'asc');
+                ?>
+                
+                
+                <table width="100%" id="t1" style="border-collapse: collapse;" class="admin example table-autosort table-autofilter table-autopage:100 table-page-number:t1page table-page-count:t1pages table-filtered-rowcount:t1filtercount table-rowcount:t1allcount">
+                    
+                    <thead>
+                        <tr>
+                            <th class="admin"></th>
+                            <th class="admin"></th>
+                            <th class="admin table-sortable:alphabetic" style="cursor: pointer">Name</th>
+                            <th class="admin table-sortable:alphabetic" style="cursor: pointer">Family</th>
+                            <th class="admin table-sortable:numeric" style="cursor: pointer">Rounds</th>
+                            <th class="admin table-sortable:numeric" style="cursor: pointer">Cooldown</th>
+                            <th class="admin">Options</th>
+                        </tr>
+                        <tr>
+                            <th class="admin"></th>
+                            <th class="admin table-sortable:numeric" style="cursor: pointer">ID</th>
+                            <th class="admin">
+                                <input class="petselect" name="filter" size="25" id="namefilter" onkeyup="Table.filter(this,this)">
+                            </th>
+                            <th align="center" class="admin">
+                                <select class="petselect" style="width:150px;" id="familiesfilter" onchange="Table.filter(this,this)">
+                                    <option class="petselect" value=""><?php echo __("All") ?></option>
+                                    <option class="petselect" value="<?php echo __("Humanoid") ?>"><?php echo __("Humanoid") ?></option>
+                                    <option class="petselect" value="<?php echo __("Dragonkin") ?>"><?php echo __("Dragonkin") ?></option>
+                                    <option class="petselect" value="<?php echo __("Flying") ?>"><?php echo __("Flying") ?></option>
+                                    <option class="petselect" value="<?php echo __("Undead") ?>"><?php echo __("Undead") ?></option>
+                                    <option class="petselect" value="<?php echo __("Critter") ?>"><?php echo __("Critter") ?></option>
+                                    <option class="petselect" value="<?php echo __("Magic") ?>"><?php echo __("Magic") ?></option>
+                                    <option class="petselect" value="<?php echo __("Elemental") ?>"><?php echo __("Elemental") ?></option>
+                                    <option class="petselect" value="<?php echo __("Beast") ?>"><?php echo __("Beast") ?></option>
+                                    <option class="petselect" value="<?php echo __("Aquatic") ?>"><?php echo __("Aquatic") ?></option>
+                                    <option class="petselect" value="<?php echo __("Mechanical") ?>"><?php echo __("Mechanical") ?></option>
+                                </select>
+                            </th>
+                            <th class="admin">
+                                <select class="petselect" style="width:100px;" id="roundsfilter" onchange="Table.filter(this,this)">
+                                    <option class="petselect" value=""><?php echo __("All") ?></option>
+                                    <option class="petselect" value="3">3</option>
+                                    <option class="petselect" value="2">2</option>
+                                    <option class="petselect" value="1">1</option>
+                                    <option class="petselect" value="0">0</option>
+                                </select>
+                            </th>
+                            <th class="admin">
+                                <select class="petselect" style="width:100px;" id="cdfilter" onchange="Table.filter(this,this)">
+                                    <option class="petselect" value=""><?php echo __("All") ?></option>
+                                    <option class="petselect" value="0">0</option>
+                                    <option class="petselect" value="function(val){return parseFloat(val)>0;}">> 0</option>
+                                    <option class="petselect" value="function(val){return parseFloat(val)>1;}">> 1</option>
+                                    <option class="petselect" value="function(val){return parseFloat(val)>2;}">> 2</option>
+                                    <option class="petselect" value="function(val){return parseFloat(val)>3;}">> 3</option>
+                                    <option class="petselect" value="function(val){return parseFloat(val)>5;}">> 5</option>
+
+                                </select>
+                            </th>
+                            <th class="admin">Options</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        <?
+                        foreach ($all_abilities as $key => $ability) { ?>
+                        <tr class="admin">
+                            <td class="admin" style="text-align: center"><img style="width: 24px" src="images/pet_abilities/<?php echo $ability['id'] ?>.png"></td>
+                            <td class="admin" style="text-align: center"><?php echo $ability['id'] ?></td>
+                            <td class="admin"><a class="pr_contact" href="https://www.wowhead.com/petability=<?php echo $ability['id'] ?>" target="_blank"><?php echo $ability['ENName'] ?></a></td>
+                            <td class="admin" style="text-align: center"><?php echo convert_family($ability['Family']) ?></td>
+                            <td class="admin" style="text-align: center"><?php echo $ability['Rounds'] ?></td>
+                            <td class="admin" style="text-align: center"><?php echo $ability['Cooldown'] ?></td>
+                            <td class="admin" style="white-space: nowrap; text-align: center">
+                                <form action="index.php?page=adm_petimport&command=update_ability" style="display: inline" method="POST">
+                                    <input type="hidden" name="ability" value="<?php echo $ability['id'] ?>">
+                                    <input class="cominputmedium" type="submit" value="Update">
+                                </form>
+                            </td>
+                        </tr>
+                        <?php } ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" align="right" class="table-page:previous" style="cursor:pointer;"><a class="wowhead" style="text-decoration: none;">&lt; &lt; </a></td>
+                            <td align="center"><div style="white-space:nowrap"><p class="blogodd"><span id="t1page"></span> / <span id="t1pages"></span></div></td>
+                            <td colspan="2" align="left" class="table-page:next" style="cursor:pointer;"><a class="wowhead" style="text-decoration: none;"> &gt; &gt;</td>
+                            <td align="right"><div style="white-space:nowrap; margin-right:10px;"><a class="wowhead" style="text-decoration: none; cursor: pointer" onclick="filter_reset()"><?php echo __("Reset Filters") ?></a></div></td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <script>
+                    function filter_reset() {
+                        document.getElementById('namefilter').value = '';
+                        Table.filter(document.getElementById('namefilter'),document.getElementById('namefilter'));
+                        document.getElementById('familiesfilter').value = '';
+                        Table.filter(document.getElementById('familiesfilter'),document.getElementById('familiesfilter'));
+                        document.getElementById('roundsfilter').value = '';
+                        Table.filter(document.getElementById('roundsfilter'),document.getElementById('roundsfilter'));
+                        document.getElementById('cdfilter').value = '';
+                        Table.filter(document.getElementById('cdfilter'),document.getElementById('cdfilter'));
+                    }
+                </script>
+            <?php }
+            
+            
+            
 
             // ======= NPC Pets
 
@@ -543,42 +687,16 @@ $command = \HTTP\argument_POST_or_GET_or_default ('command', FALSE);
 
 
     if ($command == "checknpcpets")  { ?>
-        <p class="blogodd">This process will go through all Species IDs one by one and check if there is a pet available through the API. If yes and it's not a user pet, it will be imported as an NPC pet. <br>
-        This will likely include a lot of unused entries, test pets and weird things that are not available in the game. It's OK to just ignore those.<br><br>
+        <p class="blogodd"><br><br>
 
         <button class="comsubmit" onclick="$('.hiddenrow').show();">Show All Rows</button>
-        <button class="comsubmit" onclick="$('.hiddenrow').hide();">Hide non-NPCs</button>
         <table class="admin" style="width: 100%">
             <tr>
-                <th class="admin">Species</th>
-                <th class="admin">NPC-ID</th>
                 <th class="admin">Name</th>
-                <th class="admin">Localization</th>
-                <th class="admin">Family</th>
-                <th class="admin">Skills</th>
-                <th class="admin">Icon</th>
-                <th class="admin">Result</th>
-                <th class="admin">Options</th>
+                <th class="admin">NPC-ID</th>
             </tr>
 
         <?
-        $token = blizzard_api_cache_token('eu', battlenet_api_client_id, battlenet_api_client_secret, 'data/blizzard_api_token.json');
-        $query_path = '/wow/pet/';
-        $apipets = blizzard_api_query('eu', $query_path, $token);
-        $apipets = json_decode($apipets, TRUE);
-        foreach ($apipets['pets'] as $key => $value) {
-            $userpets[$value['stats']['speciesId']]['API'] = TRUE;
-            $userpets[$value['stats']['speciesId']]['Name'] = $value['name'];
-            $userpets[$value['stats']['speciesId']]['PetID'] = $value['creatureId'];
-            $userpets[$value['stats']['speciesId']]['Species'] = $value['stats']['speciesId'];
-            $userpets[$value['stats']['speciesId']]['Family'] = ucwords($value['family']);
-            $userpets[$value['stats']['speciesId']]['Skill1'] = $allpets[$value['creatureId']]['Skill1'];
-            $userpets[$value['stats']['speciesId']]['Skill2'] = $allpets[$value['creatureId']]['Skill2'];
-            $userpets[$value['stats']['speciesId']]['Skill3'] = $allpets[$value['creatureId']]['Skill3'];
-            $userpets[$value['stats']['speciesId']]['Skill4'] = $allpets[$value['creatureId']]['Skill4'];
-            $userpets[$value['stats']['speciesId']]['Skill5'] = $allpets[$value['creatureId']]['Skill5'];
-            $userpets[$value['stats']['speciesId']]['Skill6'] = $allpets[$value['creatureId']]['Skill6'];
-        }
 
         $dbpetsdb = mysqli_query($dbcon, "SELECT * FROM PetsNPC WHERE Species > 0");
         while ($thispet = mysqli_fetch_object($dbpetsdb)) {
@@ -674,58 +792,58 @@ $command = \HTTP\argument_POST_or_GET_or_default ('command', FALSE);
                     <th class="admin">Result</th>
                     <th class="admin">Options</th>
                 </tr>
-            <? } ?>
+            <?php } ?>
 
-            <tr <? if ($thispet['npc'] != TRUE) { echo 'style="display: none" class="admin hiddenrow"'; } else { echo 'class="admin"'; $countpets++; } ?>>
-            <td class="admin"><center><? echo $checkspecies ?></td>
-            <td class="admin"><center><? if ($thispet['hide'] != TRUE) echo $thispet['PetID']; else echo "-"; ?></td>
-            <td class="admin"><? if ($thispet['hide'] != TRUE) { ?>
-                <a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/npc=<? echo $thispet['PetID'] ?>'><? echo $thispet['Name'] ?></a> <? }
+            <tr <?php if ($thispet['npc'] != TRUE) { echo 'style="display: none" class="admin hiddenrow"'; } else { echo 'class="admin"'; $countpets++; } ?>>
+            <td class="admin"><center><?php echo $checkspecies ?></td>
+            <td class="admin"><center><?php if ($thispet['hide'] != TRUE) echo $thispet['PetID']; else echo "-"; ?></td>
+            <td class="admin"><?php if ($thispet['hide'] != TRUE) { ?>
+                <a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/npc=<?php echo $thispet['PetID'] ?>'><?php echo $thispet['Name'] ?></a> <?php }
                 else echo "-"; ?>
             </td>
 
             <td class="admin"><center>
-                <? if ($thispet['hide'] != TRUE && $thispet['hideloc'] != TRUE) { ?>
-                <div id="loc_<? echo $checkspecies ?>"><a class="pr_contact" style="cursor: pointer" onclick="$('#locf_<? echo $checkspecies ?>').show();$('#loc_<? echo $checkspecies ?>').hide()"><center>Show</a></div>
-                <div style="display: none" id="locf_<? echo $checkspecies ?>">
+                <?php if ($thispet['hide'] != TRUE && $thispet['hideloc'] != TRUE) { ?>
+                <div id="loc_<?php echo $checkspecies ?>"><a class="pr_contact" style="cursor: pointer" onclick="$('#locf_<?php echo $checkspecies ?>').show();$('#loc_<?php echo $checkspecies ?>').hide()"><center>Show</a></div>
+                <div style="display: none" id="locf_<?php echo $checkspecies ?>">
                     <table cellpadding="0" cellspacing="0">
                         <?
                         foreach (['Name_de_DE', 'Name_fr_FR', 'Name_it_IT', 'Name_es_ES', 'Name_pl_PL', 'Name_pt_PT', 'Name_ru_RU', 'Name_es_MX', 'Name_pt_BR', 'Name_ko_KR', 'Name_zh_TW'] as $locale) { ?>
                         <tr>
-                            <td><p class="smallodd"><b><? echo $locale ?>:</b></td>
-                            <td><? echo $thispet[$locale] ?></td>
+                            <td><p class="smallodd"><b><?php echo $locale ?>:</b></td>
+                            <td><?php echo $thispet[$locale] ?></td>
                         </tr>
-                        <? } ?>
+                        <?php } ?>
                     </table>
                 </div>
-                <? }
+                <?php }
                 else echo "-"; ?>
             </td>
 
-            <td class="admin npcpets"><center><? if ($thispet['hide'] != TRUE) echo $thispet['Family']; else echo "-"; ?></td>
+            <td class="admin npcpets"><center><?php if ($thispet['hide'] != TRUE) echo $thispet['Family']; else echo "-"; ?></td>
 
             <td class="admin"><center>
-                <? if ($thispet['hide'] != TRUE) { ?>
-                <div id="skills_<? echo $checkspecies ?>"><a class="pr_contact" style="cursor: pointer" onclick="$('#skillsf_<? echo $checkspecies ?>').show();$('#skills_<? echo $checkspecies ?>').hide()"><center>Show</a></div>
-                <div style="display: none" id="skillsf_<? echo $checkspecies ?>">
-                    <? if ($thispet['Skill1'] != "0" && $thispet['Skill1']) { ?><b>Skill1:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<? echo $thispet['Skill1'] ?>'><? echo $thispet['Skill1'] ?></a><br><? } ?>
-                    <? if ($thispet['Skill2'] != "0" && $thispet['Skill2']) { ?><b>Skill2:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<? echo $thispet['Skill2'] ?>'><? echo $thispet['Skill2'] ?></a><br><? } ?>
-                    <? if ($thispet['Skill3'] != "0" && $thispet['Skill3']) { ?><b>Skill3:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<? echo $thispet['Skill3'] ?>'><? echo $thispet['Skill3'] ?></a><br><? } ?>
-                    <? if ($thispet['Skill4'] != "0" && $thispet['Skill4']) { ?><b>Skill4:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<? echo $thispet['Skill4'] ?>'><? echo $thispet['Skill4'] ?></a><br><? } ?>
-                    <? if ($thispet['Skill5'] != "0" && $thispet['Skill5']) { ?><b>Skill5:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<? echo $thispet['Skill5'] ?>'><? echo $thispet['Skill5'] ?></a><br><? } ?>
-                    <? if ($thispet['Skill6'] != "0" && $thispet['Skill6']) { ?><b>Skill6:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<? echo $thispet['Skill6'] ?>'><? echo $thispet['Skill6'] ?></a><? } ?>
+                <?php if ($thispet['hide'] != TRUE) { ?>
+                <div id="skills_<?php echo $checkspecies ?>"><a class="pr_contact" style="cursor: pointer" onclick="$('#skillsf_<?php echo $checkspecies ?>').show();$('#skills_<?php echo $checkspecies ?>').hide()"><center>Show</a></div>
+                <div style="display: none" id="skillsf_<?php echo $checkspecies ?>">
+                    <?php if ($thispet['Skill1'] != "0" && $thispet['Skill1']) { ?><b>Skill1:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<?php echo $thispet['Skill1'] ?>'><?php echo $thispet['Skill1'] ?></a><br><?php } ?>
+                    <?php if ($thispet['Skill2'] != "0" && $thispet['Skill2']) { ?><b>Skill2:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<?php echo $thispet['Skill2'] ?>'><?php echo $thispet['Skill2'] ?></a><br><?php } ?>
+                    <?php if ($thispet['Skill3'] != "0" && $thispet['Skill3']) { ?><b>Skill3:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<?php echo $thispet['Skill3'] ?>'><?php echo $thispet['Skill3'] ?></a><br><?php } ?>
+                    <?php if ($thispet['Skill4'] != "0" && $thispet['Skill4']) { ?><b>Skill4:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<?php echo $thispet['Skill4'] ?>'><?php echo $thispet['Skill4'] ?></a><br><?php } ?>
+                    <?php if ($thispet['Skill5'] != "0" && $thispet['Skill5']) { ?><b>Skill5:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<?php echo $thispet['Skill5'] ?>'><?php echo $thispet['Skill5'] ?></a><br><?php } ?>
+                    <?php if ($thispet['Skill6'] != "0" && $thispet['Skill6']) { ?><b>Skill6:</b><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<?php echo $thispet['Skill6'] ?>'><?php echo $thispet['Skill6'] ?></a><?php } ?>
                 </div>
-                <? }
+                <?php }
                 else echo "-"; ?>
             </td>
 
-            <td class="admin"><center><? if ($thispet['hide'] != TRUE && $thispet['hideicon'] != TRUE) echo $thispet['Icon']; else echo "-"; ?></td>
+            <td class="admin"><center><?php if ($thispet['hide'] != TRUE && $thispet['hideicon'] != TRUE) echo $thispet['Icon']; else echo "-"; ?></td>
 
-            <td class="admin"><? echo $thispet['Result'] ?></td>
+            <td class="admin"><?php echo $thispet['Result'] ?></td>
 
             <td class="admin" style="white-space: nowrap">
                 <form action="index.php?page=adm_petimport&command=importnpcpet" style="display: inline" method="POST">
-                    <input type="hidden" name="species" value="<? echo $thispet['Species'] ?>">
+                    <input type="hidden" name="species" value="<?php echo $thispet['Species'] ?>">
                     <input class="cominputmedium" type="submit" value="Update">
                 </form>
 
@@ -740,8 +858,8 @@ $command = \HTTP\argument_POST_or_GET_or_default ('command', FALSE);
         </table>
         <br>
         <form action="index.php?page=adm_petimport&command=checknpcpets" style="display: inline" method="POST">
-            <input type="hidden" name="startfrom" value="<? echo $checkspecies ?>">
-            <input class="cominputmedium" type="submit" value="Check the next <? echo $numimports ?>">
+            <input type="hidden" name="startfrom" value="<?php echo $checkspecies ?>">
+            <input class="cominputmedium" type="submit" value="Check the next <?php echo $numimports ?>">
         </form>
         <br>
         <form action="index.php?page=adm_petimport&command=checknpcpets" style="display: inline" method="POST">
@@ -750,7 +868,7 @@ $command = \HTTP\argument_POST_or_GET_or_default ('command', FALSE);
         <br><br>
 
 
-     <? }
+     <?php }
 
             ?>
 
@@ -828,7 +946,7 @@ die;
         if ($command == "checkspells")  { ?>
             <p class="blogodd">
 
-            <? foreach ($allpets as $value) {
+            <?php foreach ($allpets as $value) {
                 $spells[$value['Skill1']]['SpellID'] = $value['Skill1'];
                 $spells[$value['Skill2']]['SpellID'] = $value['Skill2'];
                 $spells[$value['Skill3']]['SpellID'] = $value['Skill3'];
@@ -972,7 +1090,7 @@ die;
                         <th class="admin">Result</th>
                         <th class="admin">Options</th>
                     </tr>
-                <? }
+                <?php }
 
                 if ($value['Command'] == "Update" OR $value['Command'] == "ImportNew") {
                     $updatespell = \ADMIN\import_single_spell($value['SpellID']);
@@ -1026,37 +1144,37 @@ die;
                 } ?>
 
                 <tr class="admin">
-                <td class="admin"><? echo $value['SpellID'] ?></td>
-                <td class="admin"><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<? echo $value['SpellID'] ?>'><? echo $value['en_US'] ?></a></td>
+                <td class="admin"><?php echo $value['SpellID'] ?></td>
+                <td class="admin"><a class='pr_contact' style='line-height: 14px;' target='_blank' href='http://www.wowhead.com/petability=<?php echo $value['SpellID'] ?>'><?php echo $value['en_US'] ?></a></td>
                 <td class="admin">
-                    <div id="loc_<? echo $key ?>"><a class="pr_contact" style="cursor: pointer" onclick="$('#locf_<? echo $key ?>').show();$('#loc_<? echo $key ?>').hide()"><center>Show</a></div>
-                    <div style="display: none" id="locf_<? echo $key ?>">
+                    <div id="loc_<?php echo $key ?>"><a class="pr_contact" style="cursor: pointer" onclick="$('#locf_<?php echo $key ?>').show();$('#loc_<?php echo $key ?>').hide()"><center>Show</a></div>
+                    <div style="display: none" id="locf_<?php echo $key ?>">
                         <table cellpadding="0" cellspacing="0">
                             <?
                             foreach (['de_DE', 'fr_FR', 'it_IT', 'es_ES', 'pl_PL', 'pt_PT', 'ru_RU', 'es_MX', 'pt_BR', 'ko_KR', 'zh_TW'] as $locale) { ?>
                             <tr>
-                                <td><p class="smallodd"><b><? echo $locale ?>:</b></td>
-                                <td><p class="smallodd"><? echo $value[$locale] ?></td>
+                                <td><p class="smallodd"><b><?php echo $locale ?>:</b></td>
+                                <td><p class="smallodd"><?php echo $value[$locale] ?></td>
                             </tr>
-                            <? } ?>
+                            <?php } ?>
 
                         </table>
                     </div>
                 </td>
 
-                <td class="admin"><? echo $value['Family'] ?></td>
-                <td class="admin"><? echo $value['Cooldown'] ?></td>
-                <td class="admin"><? echo $value['Rounds'] ?></td>
-                <td class="admin"><? echo $value['Passive'] ?></td>
-                <td class="admin"><? echo $value['HideHints'] ?></td>
-                <td class="admin"><? echo $value['Icon'] ?></td>
-                <td class="admin"><? echo $value['PetSpell'] ?></td>
-                <td class="admin"><? echo $value['Result'] ?></td>
+                <td class="admin"><?php echo $value['Family'] ?></td>
+                <td class="admin"><?php echo $value['Cooldown'] ?></td>
+                <td class="admin"><?php echo $value['Rounds'] ?></td>
+                <td class="admin"><?php echo $value['Passive'] ?></td>
+                <td class="admin"><?php echo $value['HideHints'] ?></td>
+                <td class="admin"><?php echo $value['Icon'] ?></td>
+                <td class="admin"><?php echo $value['PetSpell'] ?></td>
+                <td class="admin"><?php echo $value['Result'] ?></td>
 
 
                 <td class="admin" style="white-space: nowrap">
                     <form action="index.php?page=adm_petimport&command=updatespell" style="display: inline" method="POST">
-                        <input type="hidden" name="spellid" value="<? echo $value['SpellID'] ?>">
+                        <input type="hidden" name="spellid" value="<?php echo $value['SpellID'] ?>">
                         <input class="cominputmedium" type="submit" value="Update">
                     </form>
                 </td>

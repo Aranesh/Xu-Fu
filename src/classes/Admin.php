@@ -4,6 +4,69 @@ require_once ('Database.php');
 require_once ('BattleNet.php');
 require_once ('Growl.php');
 
+
+function update_single_ability ($ability) {
+    $dbcon = $GLOBALS['dbcon'];
+    $api_ability = blizzard_api_ability_details($ability);
+    $api_ability = json_decode($api_ability, TRUE);
+    
+    $rounds = $api_ability['rounds'];
+    $cooldown = $api_ability['cooldown'];
+    if (!$rounds) $rounds = 0;
+    if (!$cooldown) $cooldown = 0;
+    
+    Database_UPDATE
+      ( 'Pet_Abilities'
+      , [ 'Family'
+        , 'Cooldown'
+        , 'Rounds'
+        , 'en_US'
+        , 'de_DE'
+        , 'fr_FR'
+        , 'it_IT'
+        , 'es_ES'
+        , 'pl_PL'
+        , 'ru_RU'
+        , 'es_MX'
+        , 'pt_BR'
+        , 'ko_KR'
+        , 'zh_TW'
+        ]
+      , 'WHERE id = ?'
+      , 'iiisssssssssssi'
+        , $api_ability['battle_pet_type']['id']
+        , $cooldown
+        , $rounds
+        , $api_ability['name']['en_US']
+        , $api_ability['name']['de_DE']
+        , $api_ability['name']['fr_FR']
+        , $api_ability['name']['it_IT']
+        , $api_ability['name']['es_ES']
+        , $api_ability['name']['en_US']
+        , $api_ability['name']['ru_RU']
+        , $api_ability['name']['es_MX']
+        , $api_ability['name']['pt_BR']
+        , $api_ability['name']['ko_KR']
+        , $api_ability['name']['zh_TW']
+      , $ability
+      );
+
+    $api_ability_m = blizzard_api_ability_media($ability);
+    $api_ability_m = json_decode($api_ability_m, TRUE);
+    $target_path = 'images/pet_abilities/'.$ability.'.png';
+    
+    if (checkExternalFile($api_ability_m['assets'][0]['value']) == 200) {
+        if (file_exists($target_path)) {
+            unlink($target_path);
+        }
+        copy($api_ability_m['assets'][0]['value'], $target_path);
+    }
+    $time_now = date('Y-m-d H:i:s');
+    mysqli_query($dbcon, "UPDATE Pet_Abilities SET `LastImport` = '$time_now' WHERE id = '$ability'") OR die(mysqli_error($dbcon));
+    return $api_ability['name']['en_US'];
+}
+
+
 function import_single_pet ($species) {
     $dbcon = $GLOBALS['dbcon'];
     echo "<p class='blogodd'><b>Fetching data for pet <font color='blue'>species ".htmlentities($species)."</font>...</b><br><br>";
@@ -339,302 +402,4 @@ function import_single_pet ($species) {
           Growl_show_notice ( 'Pet imported!', 5000 );
     }
     echo "<br><br>";
-}
-
-
-function import_single_spell ($spellid) {
-    $dbcon = $GLOBALS['dbcon'];
-    $token = blizzard_api_cache_token('eu', battlenet_api_client_id, battlenet_api_client_secret, 'data/blizzard_api_token.json');
-    $query_path = '/wow/pet/ability/'.$spellid;
-    $apispell = blizzard_api_query('eu', $query_path, $token);
-    if ($apispell == "error") {
-        return "error";
-    }
-    $apispell = json_decode($apispell, TRUE);
-
-    foreach (['de_DE', 'fr_FR', 'it_IT', 'es_ES', 'pl_PL', 'pt_PT', 'ru_RU', 'es_MX', 'pt_BR', 'ko_KR', 'zh_TW'] as $locale)
-        {
-            $region = "eu";
-            switch ($locale) {
-                case "pt_BR":
-                    $region = "us";
-                    break;
-                case "es_MX":
-                    $region = "us";
-                    break;
-                case "ko_KR":
-                    $region = "kr";
-                    break;
-                case "zh_TW":
-                    $region = "tw";
-                    break;
-            }
-            $query_path = '/wow/pet/ability/'.$spellid.'?locale='.$locale;
-            $apispelll = blizzard_api_query($region, $query_path, $token);
-            if ($apispelll == "error") {
-                return "error";
-            }
-            $apispelll = json_decode($apispelll, TRUE);
-            if ($apispelll['name'] == "") { $apispelll['name'] = " "; }
-            $apispell[$locale]['name'] = $apispelll['name'];
-        }
-        if ($apispell['hideHints'] == FALSE) {
-            $apispell['hideHints'] = "0";
-        }
-        if ($apispell['isPassive'] == FALSE) {
-            $apispell['isPassive'] = "0";
-        }
-
-    $checkspelldb = mysqli_query($dbcon, "SELECT * FROM Spells WHERE SpellID = '$spellid' LIMIT 1") or die(mysqli_error($dbcon));
-    if (mysqli_num_rows($checkspelldb) > "0") {
-        Database_UPDATE
-          ( 'Spells'
-          , [ 'Icon'
-            , 'Family'
-            , 'Cooldown'
-            , 'Rounds'
-            , 'Passive'
-            , 'HideHints'
-            , 'en_US'
-            , 'de_DE'
-            , 'fr_FR'
-            , 'it_IT'
-            , 'es_ES'
-            , 'pl_PL'
-            , 'pt_PT'
-            , 'ru_RU'
-            , 'es_MX'
-            , 'pt_BR'
-            , 'ko_KR'
-            , 'zh_TW'
-            ]
-          , 'WHERE SpellID = ?'
-          , 'ssiiiissssssssssssi'
-            , $apispell['icon']
-            , convert_family($apispell['petTypeId'])
-            , $apispell['cooldown']
-            , $apispell['rounds']
-            , $apispell['isPassive']
-            , $apispell['hideHints']
-            , $apispell['name']
-            , $apispell['de_DE']['name']
-            , $apispell['fr_FR']['name']
-            , $apispell['it_IT']['name']
-            , $apispell['es_ES']['name']
-            , $apispell['pl_PL']['name']
-            , $apispell['pt_PT']['name']
-            , $apispell['ru_RU']['name']
-            , $apispell['es_MX']['name']
-            , $apispell['pt_BR']['name']
-            , $apispell['ko_KR']['name']
-            , $apispell['zh_TW']['name']
-          , $apispell['id']
-          );
-    }
-    else {
-        Database_INSERT_INTO
-          ( 'Spells'
-          , [ 'SpellID'
-            , 'Icon'
-            , 'Family'
-            , 'Cooldown'
-            , 'Rounds'
-            , 'Passive'
-            , 'HideHints'
-            , 'en_US'
-            , 'de_DE'
-            , 'fr_FR'
-            , 'it_IT'
-            , 'es_ES'
-            , 'pl_PL'
-            , 'pt_PT'
-            , 'ru_RU'
-            , 'es_MX'
-            , 'pt_BR'
-            , 'ko_KR'
-            , 'zh_TW'
-            , 'PetSpell'
-            ]
-          , 'issiiiissssssssssssi'
-            , $apispell['id']
-            , $apispell['icon']
-            , convert_family($apispell['petTypeId'])
-            , $apispell['cooldown']
-            , $apispell['rounds']
-            , $apispell['isPassive']
-            , $apispell['hideHints']
-            , $apispell['name']
-            , $apispell['de_DE']['name']
-            , $apispell['fr_FR']['name']
-            , $apispell['it_IT']['name']
-            , $apispell['es_ES']['name']
-            , $apispell['pl_PL']['name']
-            , $apispell['pt_PT']['name']
-            , $apispell['ru_RU']['name']
-            , $apispell['es_MX']['name']
-            , $apispell['pt_BR']['name']
-            , $apispell['ko_KR']['name']
-            , $apispell['zh_TW']['name']
-            , "1"
-          );
-    }
-    return $apispell;
-}
-
-
-function import_npc_pet ($species) {
-    $dbcon = $GLOBALS['dbcon'];
-    $token = blizzard_api_cache_token('eu', battlenet_api_client_id, battlenet_api_client_secret, 'data/blizzard_api_token.json');
-    $query_path = '/wow/pet/species/'.$species;
-    $apipet = blizzard_api_query('eu', $query_path, $token);
-    if ($apipet == "error") {
-        return "no_pet";
-    }
-    $apipet = json_decode($apipet, TRUE);
-
-    $apipet['PetID'] = $apipet['creatureId'];
-    $apipet['Name'] = $apipet['name'];
-    $apipet['Family'] = convert_family($apipet['petTypeId']);
-
-    $skills = [0, 0, 0, 0, 0, 0];
-    foreach ($apipet['abilities'] as $abilities)
-    {
-      $skills[$abilities['order']] = $abilities['id'];
-    }
-
-    foreach (['de_DE', 'fr_FR', 'it_IT', 'es_ES', 'pl_PL', 'pt_PT', 'ru_RU', 'es_MX', 'pt_BR', 'ko_KR', 'zh_TW'] as $locale)
-        {
-            $region = "eu";
-            switch ($locale) {
-                case "pt_BR":
-                    $region = "us";
-                    break;
-                case "es_MX":
-                    $region = "us";
-                    break;
-                case "ko_KR":
-                    $region = "kr";
-                    break;
-                case "zh_TW":
-                    $region = "tw";
-                    break;
-            }
-            $query_path = '/wow/pet/species/'.$species.'?locale='.$locale;
-            $apipetl = blizzard_api_query($region, $query_path, $token);
-            if ($apipetl == "error") {
-                return "error";
-            }
-            $apipetl = json_decode($apipetl, TRUE);
-            if ($apipetl['name'] == "") { $apipetl['name'] = " "; }
-            $apipet[$locale]['name'] = $apipetl['name'];
-        }
-
-    $apipet['Name_de_DE'] = $apipet['de_DE']['name'];
-    $apipet['Name_fr_FR'] = $apipet['fr_FR']['name'];
-    $apipet['Name_it_IT'] = $apipet['it_IT']['name'];
-    $apipet['Name_es_ES'] = $apipet['es_ES']['name'];
-    $apipet['Name_pl_PL'] = $apipet['pl_PL']['name'];
-    $apipet['Name_pt_PT'] = $apipet['pt_PT']['name'];
-    $apipet['Name_ru_RU'] = $apipet['ru_RU']['name'];
-    $apipet['Name_es_MX'] = $apipet['es_MX']['name'];
-    $apipet['Name_pt_BR'] = $apipet['pt_BR']['name'];
-    $apipet['Name_ko_KR'] = $apipet['ko_KR']['name'];
-    $apipet['Name_zh_TW'] = $apipet['zh_TW']['name'];
-
-    $checkpetdb = mysqli_query($dbcon, "SELECT * FROM PetsNPC WHERE Species = '$species' LIMIT 1") or die(mysqli_error($dbcon));
-    if (mysqli_num_rows($checkpetdb) > "0") {
-        Database_UPDATE
-          ( 'PetsNPC'
-          , [ 'Name'
-            , 'PetID'
-            , 'Species'
-            , 'Skill1'
-            , 'Skill2'
-            , 'Skill3'
-            , 'Skill4'
-            , 'Skill5'
-            , 'Skill6'
-            , 'Family'
-            , 'Icon'
-            , 'Name_de_DE'
-            , 'Name_fr_FR'
-            , 'Name_it_IT'
-            , 'Name_es_ES'
-            , 'Name_pl_PL'
-            , 'Name_pt_PT'
-            , 'Name_ru_RU'
-            , 'Name_es_MX'
-            , 'Name_pt_BR'
-            , 'Name_ko_KR'
-            , 'Name_zh_TW'
-            ]
-          , 'WHERE Species = ?'
-          , 'siiiiiiiisssssssssssssi'
-            , $apipet['name']
-            , $apipet['creatureId']
-            , $apipet['speciesId']
-            , $skills[0], $skills[1], $skills[2], $skills[3], $skills[4], $skills[5]
-            , convert_family($apipet['petTypeId'])
-            , $apipet['icon']
-            , $apipet['de_DE']['name']
-            , $apipet['fr_FR']['name']
-            , $apipet['it_IT']['name']
-            , $apipet['es_ES']['name']
-            , $apipet['pl_PL']['name']
-            , $apipet['pt_PT']['name']
-            , $apipet['ru_RU']['name']
-            , $apipet['es_MX']['name']
-            , $apipet['pt_BR']['name']
-            , $apipet['ko_KR']['name']
-            , $apipet['zh_TW']['name']
-          , $apipet['speciesId']
-          );
-    }
-    else {
-        Database_INSERT_INTO
-          ( 'PetsNPC'
-          , [ 'Name'
-            , 'PetID'
-            , 'Species'
-            , 'Skill1'
-            , 'Skill2'
-            , 'Skill3'
-            , 'Skill4'
-            , 'Skill5'
-            , 'Skill6'
-            , 'Family'
-            , 'Icon'
-            , 'Name_de_DE'
-            , 'Name_fr_FR'
-            , 'Name_it_IT'
-            , 'Name_es_ES'
-            , 'Name_pl_PL'
-            , 'Name_pt_PT'
-            , 'Name_ru_RU'
-            , 'Name_es_MX'
-            , 'Name_pt_BR'
-            , 'Name_ko_KR'
-            , 'Name_zh_TW'
-            ]
-          , 'siiiiiiiisssssssssssss'
-            , $apipet['name']
-            , $apipet['creatureId']
-            , $apipet['speciesId']
-            , $skills[0], $skills[1], $skills[2], $skills[3], $skills[4], $skills[5]
-            , convert_family($apipet['petTypeId'])
-            , $apipet['icon']
-            , $apipet['de_DE']['name']
-            , $apipet['fr_FR']['name']
-            , $apipet['it_IT']['name']
-            , $apipet['es_ES']['name']
-            , $apipet['pl_PL']['name']
-            , $apipet['pt_PT']['name']
-            , $apipet['ru_RU']['name']
-            , $apipet['es_MX']['name']
-            , $apipet['pt_BR']['name']
-            , $apipet['ko_KR']['name']
-            , $apipet['zh_TW']['name']
-          );
-    }
-    return $apipet;
 }

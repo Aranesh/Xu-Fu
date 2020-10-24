@@ -2,17 +2,14 @@
 
 $retrievepage = "retrieveform";
 
-
 $retrievesubmit = $_POST['retrievesubmit'];
 if ($retrievesubmit == "true"){
-
-
 $submail = $_POST['email'];
 $subtext = $_POST['acrecovery'];
 
 if (!filter_var($submail, FILTER_VALIDATE_EMAIL)) {
 $acretrievefail = "true";
-$acretrievefailreason = _("AR_EMInv");
+$acretrievefailreason = __("Please enter a valid email address.");
 }
 
 $submail = mysqli_real_escape_string($dbcon, $submail);
@@ -36,20 +33,20 @@ if ($acretrievefail != "true" ){
 
     $nonhtmlbody = "";
 
-    xufu_mail($recipient, $recname, $subject, $content, $nonhtmlbody);
+    xufu_mail($recipient, $recname, $subject, $content, $nonhtmlbody, '');
 
 
     // Send confirmation mail to Requester
     $recipient = $submail;
     $recname = "";
-    $subject = _("AR_CMSubj");
+    $subject = __("Account Retrieval Request");
 
-    $content = '<br>'._("AR_CMMsg").' <br><br>';
-    $content = $content.'<hr><i>'.$subsendtext.'</i><hr><br><br><p style="display: inline;font-size:14px;font-family: Verdana,sans-serif">'._("AR_CMSig");
+    $content = '<br>'.__("WoW-Petguide.com received an account retrieval request from your email address.<br> If you did not send any request, you can safely ignore this email. <br><br>Below is the information that was submitted:").' <br><br>';
+    $content = $content.'<hr><i>'.$subsendtext.'</i><hr><br><br><p style="display: inline;font-size:14px;font-family: Verdana,sans-serif">'.__("Yours,");
 
-    $nonhtmlbody = _("AR_CMMsg").' '.$subtext;
+    $nonhtmlbody = __("WoW-Petguide.com received an account retrieval request from your email address.<br> If you did not send any request, you can safely ignore this email. <br><br>Below is the information that was submitted:").' '.$subtext;
 
-    xufu_mail($recipient, $recname, $subject, $content, $nonhtmlbody);
+    xufu_mail($recipient, $recname, $subject, $content, $nonhtmlbody, '');
 
     $retrievepage = "mailsent";
 }
@@ -65,14 +62,13 @@ if ($acretrievefail != "true" ){
 
 
 
-
 ?>
 <div class="blogtitle">
 
 <table width="100%" border="0" margin="0" cellpadding="0" cellspacing="0">
 <tr>
 <td><img src="images/main_bg02_1.png"></td>
-<td width="100%"><center><h class="megatitle"><? echo _("AR_PTitle") ?></h></td>
+<td width="100%"><center><h class="megatitle"><?php echo __("Retrieve Your Account") ?></h></td>
 <td><img src="images/main_bg02_2.png"></td>
 </tr>
 </table>
@@ -102,8 +98,8 @@ if ($retrievepage == "retrieveform"){
         <td valign="top"><img src="/images/xufu_small.png"></td>
         <td><img src="/images/blank.png" width="10"></td>
         <td valign="top"><p class="blogodd"><br>
-            <? echo _("AR_Instr1") ?><br><br>
-            <? echo _("AR_Instr2") ?><br><br>
+            <?php echo __("If you are unable to login or recover your password, you can use below form to request help.") ?><br><br>
+            <?php echo __("Please add every bit of info you might find relevant, such as your username, the icon you used, which character you linked through the armory or how many comments you wrote.<br> Anything you remember might help us recover your account for you. Please note that we cannot guarantee a successful retrieval of your account.") ?><br><br>
             </p></td>
         </tr>
     </table>
@@ -115,9 +111,9 @@ if ($retrievepage == "retrieveform"){
     <input type="hidden" name="retrievesubmit" value="true">
 <table>
 <tr>
-<td align="right"><p class="blogodd"><b><? if ($pwresetfail == "true"){ echo "<font color=\"red\">"; } ?><? echo _("RG_RepMail1") ?>:</b></td>
+<td align="right"><p class="blogodd"><b><?php if ($pwresetfail == "true"){ echo "<font color=\"red\">"; } ?><?php echo __("Email") ?>:</b></td>
 <td><img src="images/blank.png" width="5" height="1"/></td>
-<td><input tabindex="1" placeholder="" type="text" name="email" value="<? echo $submail ?>" maxlength="50" required>
+<td><input tabindex="1" placeholder="" type="text" name="email" value="<?php echo $submail ?>" maxlength="50" required>
 </td>
 </tr>
 
@@ -132,9 +128,9 @@ echo '<tr><td></td><td></td><td><div class="registerError"><p class="commenteven
 </tr>
 
 <tr>
-<td align="right"><p class="blogodd"><b><? if ($pwresetfail == "true"){ echo "<font color=\"red\">"; } ?><? echo _("AR_YD") ?>:</b></td>
+<td align="right"><p class="blogodd"><b><?php if ($pwresetfail == "true"){ echo "<font color=\"red\">"; } ?><?php echo __("Your details") ?>:</b></td>
 <td><img src="images/blank.png" width="5" height="1"/></td>
-<td><textarea tabindex="2" name="acrecovery" rows="4" onClick="auto_adjust_textarea_size(this)" onkeyup="auto_adjust_textarea_size(this)" required="true" required><? echo $subtext ?></textarea>
+<td><textarea tabindex="2" name="acrecovery" rows="4" onClick="auto_adjust_textarea_size(this)" onkeyup="auto_adjust_textarea_size(this)" required="true" required><?php echo $subtext ?></textarea>
 </td>
 </tr>
 
@@ -147,11 +143,11 @@ echo '<tr><td></td><td></td><td><div class="registerError"><p class="commenteven
             <table border="0">
             <tr>
                 <td>
-                    <p class="blogodd"><button type="submit" tabindex="3" class="myGreenButton"><? echo _("AR_BTSend") ?></button></form> <? echo _("UL_MBor") ?>
+                    <p class="blogodd"><button type="submit" tabindex="3" class="comedit"><?php echo __("Send Retrieval request") ?></button></form> <?php echo __("or") ?>
                 </td>
-                <form class="form-style-login" action="index.php?m=Home" method="post">
+                <form class="form-style-login" action="index.php" method="post">
                 <td>
-                    <p class="blogeven"><button tabindex="4" type="submit" class="myRedButton"><? echo _("FormButtonCancel") ?></button>
+                    <p class="blogeven"><button tabindex="4" type="submit" class="comdelete"><?php echo __("Cancel") ?></button></form>
                 </td>
             </tr>
         </table>
@@ -179,9 +175,9 @@ if ($retrievepage == "mailsent"){
                 <td><img src="/images/xufu_small.png"></td>
                 <td><img src="/images/blank.png" width="10"></td>
                 <td valign="top"><p class="blogodd"><br>
-<? echo _("AR_SucMsg1") ?>
+<?php echo __("Your request was sent successfully. We will get back to you as soon as possible.<br><br>A copy of your request was also sent to your email address as confirmation.") ?>
 <br><br>
-<? echo _("AR_SucMsg2") ?></p></td>
+<?php echo __("You will be redirected to the front page in <span id=\"counter\">10</span> seconds.") ?></p></td>
 
 <META HTTP-EQUIV="refresh" CONTENT="10; URL=index.php?m=Home">
 <script type="text/javascript">
